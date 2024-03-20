@@ -20,8 +20,6 @@ return new class extends Migration
             $table->unsignedInteger('user_role_id')->nullable();
 
             $table->foreign('user_role_id')->references('role_id')->on('tbl_role');
-            
-            $table->timestamps();
         });
     }
 

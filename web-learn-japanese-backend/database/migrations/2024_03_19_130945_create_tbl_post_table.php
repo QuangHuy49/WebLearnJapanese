@@ -23,8 +23,6 @@ return new class extends Migration
             $table->integer('post_comment')->default(0); 
 
             $table->foreign('user_id')->references('user_id')->on('tbl_user');
-
-            $table->timestamps();
         });
     }
 

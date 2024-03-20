@@ -15,7 +15,6 @@ return new class extends Migration
             $table->increments('language_id')->unsigned();
             $table->string('language_name')->nullable();
             $table->string('language_img')->nullable();
-            $table->timestamps();
         });
     }
 

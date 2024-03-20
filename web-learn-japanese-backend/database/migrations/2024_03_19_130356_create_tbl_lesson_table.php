@@ -22,8 +22,6 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('user_id')->on('tbl_user');
             $table->foreign('type_id')->references('type_id')->on('tbl_type');
-
-            $table->timestamps();
         });
     }
 

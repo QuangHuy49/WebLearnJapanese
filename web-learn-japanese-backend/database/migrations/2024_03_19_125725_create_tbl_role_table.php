@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('tbl_role', function (Blueprint $table) {
             $table->increments('role_id')->unsigned(); 
             $table->string('role_type', 255)->collation('utf8_unicode_ci');
-            $table->timestamps();
         });
     }
 

@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('answer_correct', 255);
 
             $table->foreign('test_id')->references('test_id')->on('tbl_test');
-
-            $table->timestamps();
         });
     }
 

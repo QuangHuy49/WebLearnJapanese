@@ -21,8 +21,6 @@ return new class extends Migration
             $table->string('grammar_note', 255)->nullable();
             
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
-
-            $table->timestamps();
         });
     }
 

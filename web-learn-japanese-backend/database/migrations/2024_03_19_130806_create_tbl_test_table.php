@@ -18,8 +18,6 @@ return new class extends Migration
             $table->tinyInteger('is_complete')->default(0); 
 
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
-
-            $table->timestamps();
         });
     }
 

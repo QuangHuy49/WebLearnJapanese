@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('kaiwa_audio', 255)->nullable();
             
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
-
-            $table->timestamps();
         });
     }
 

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->increments('type_id')->unsigned(); 
             $table->string('type_name', 50)->nullable();
             $table->tinyInteger('type_status')->default(0); 
-            $table->timestamps();
         });
     }
 
