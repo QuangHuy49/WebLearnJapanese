@@ -183,6 +183,7 @@ INSERT INTO tbl_question (test_id, question_name, question_img, question_audio, 
 --     answer_correct varchar(255) COLLATE utf8_unicode_ci NOT NULL,
 --     FOREIGN KEY (question_id) REFERENCES tbl_question(question_id)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+--
 
 CREATE TABLE IF NOT EXISTS tbl_post (
 	post_id INT(10) unsigned NOT NULL PRIMARY KEY AUTO_INCREMENT,
