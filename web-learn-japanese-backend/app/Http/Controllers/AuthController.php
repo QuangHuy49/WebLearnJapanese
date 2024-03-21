@@ -6,12 +6,36 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use JWTException;
+use Validator;
 
 class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+    }
+
+    public function register(Request $request) 
+    {
+        $validator = Validator::make($request->all(), [
+            'user_name' => 'required',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $user = User::create([
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_avatar' => 'storage/app/public/img/avatar/male-student.png',
+            'user_role_id' => 2,
+        ]);
+
+        return response()->json(['message' => 'User successfully registered', 'user' => $user], 201);
     }
 
     public function login()
