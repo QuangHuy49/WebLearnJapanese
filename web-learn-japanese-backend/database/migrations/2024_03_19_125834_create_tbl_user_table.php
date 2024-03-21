@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('tbl_user', function (Blueprint $table) {
             $table->increments('user_id')->unsigned(); 
             $table->string('user_name', 30)->collation('utf8_unicode_ci')->nullable();
-            $table->string('user_email', 255)->collation('utf8_unicode_ci')->nullable();
-            $table->string('user_password', 60)->collation('utf8_unicode_ci')->nullable();
+            $table->string('email', 255)->collation('utf8_unicode_ci')->nullable();
+            $table->string('password', 60)->collation('utf8_unicode_ci')->nullable();
             $table->string('user_avatar', 255)->nullable();
             $table->unsignedInteger('user_role_id')->nullable();
 
