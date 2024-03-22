@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -30,3 +31,13 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     // Route::post('refresh', [AuthController::class, 'refresh']);
 });
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'user'
+], function ($router) {
+    Route::get('list', [UserController::class, 'index']);
+    Route::post('add', [UserController::class, 'create']);
+    Route::post('delete/{id}', [UserController::class, 'destroy']);
+    Route::post('edit/{id}', [UserController::class, 'update']);
+});
+
