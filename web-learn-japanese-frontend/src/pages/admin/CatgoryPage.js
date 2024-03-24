@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CatogoryLayout = () => {
+const CatogoryPage = () => {
     return (
         <div>
             <h1>Đây là Catogory</h1>
@@ -8,4 +8,4 @@ const CatogoryLayout = () => {
     );
 }
 
-export default CatogoryLayout;
+export default CatogoryPage;

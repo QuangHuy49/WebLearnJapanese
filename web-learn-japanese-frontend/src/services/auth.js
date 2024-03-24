@@ -11,6 +11,7 @@ const handleLogin = async (email, password, csrfToken, setError) => {
             }
         });
         localStorage.setItem('token', response.data.access_token);
+        return response.status;
     } catch (error) {
         if (error.response && error.response.status === 401) {
             setError('Incorrect email or password. Please try again.');

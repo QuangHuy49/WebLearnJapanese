@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import handleLogin from '../services/auth';
+import axios from 'axios';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -19,8 +20,23 @@ const LoginPage = () => {
     const handleLoginSubmit = async (e) => { 
         e.preventDefault();
         try {
-            await handleLogin(email, password, csrfToken, setError);
-            navigate('/');
+            const loginResult = await handleLogin(email, password, csrfToken, setError);
+            if (loginResult === 200) {
+                const profileResponse = await axios.get('http://127.0.0.1:8000/api/auth/profile', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                const userRole = profileResponse.data.user_role_id;
+                console.log(userRole);
+                if (userRole === 1) {
+                    navigate('/admin');
+                } else if (userRole === 2) {
+                    navigate('/');
+                } else {
+                    setError('Unknown user role');
+                }
+            }
         } catch (error) {
             console.error('Login failed:', error);
         }

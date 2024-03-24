@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TestLayout = () => {
+const TestPage = () => {
     return (
         <div>
             <h1>Đây là Trang bài kiểm tra</h1>
@@ -8,4 +8,4 @@ const TestLayout = () => {
     );
 }
 
-export default TestLayout;
+export default TestPage;

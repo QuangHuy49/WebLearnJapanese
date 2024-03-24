@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PostLayout = () => {
+const PostPage = () => {
     return (
         <div>
             <h1>Đây là Trang bài viết</h1>
@@ -8,4 +8,4 @@ const PostLayout = () => {
     );
 }
 
-export default PostLayout;
+export default PostPage;
