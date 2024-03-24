@@ -1,9 +1,9 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
+import LoginPage from '../pages/LoginPage';
+import SignupPage from '../pages/SignupPage';
 import UserLayout from '../pages/user/UserLayout';
 import HomePage from '../pages/user/HomePage';
-import LoginPage from '../pages/user/LoginPage';
-import SignupPage from '../pages/user/SignupPage';
 import AdminLayout from '../pages/admin/AdminLayout';
 import DashboardLayout from '../pages/admin/DashboardLayout';
 import CatogoryLayout from '../pages/admin/CatgoryLayout';
