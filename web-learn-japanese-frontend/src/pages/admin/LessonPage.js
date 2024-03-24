@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LessonLayout = () => {
+const LessonPage = () => {
     return (
         <div>
             <h1>Đây là Trang bài học</h1>
@@ -8,4 +8,4 @@ const LessonLayout = () => {
     );
 }
 
-export default LessonLayout;
+export default LessonPage;

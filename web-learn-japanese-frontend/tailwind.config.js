@@ -4,10 +4,14 @@ module.exports = {
   theme: {
     extend: {
       textColor: {
-        'custom-text-color-blue': '#415A80',
+        'custom-color-blue': '#14375f', //#0891b2
       },
       backgroundColor: {
-        'custom-color-blue': '#0891b2'
+        'custom-color-blue': '#14375f',
+        'custom-color-gray': '#6c8299'
+      },
+      colors: {
+        'custom-color-gray': '#6c8299'
       }
     },
   },

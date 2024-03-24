@@ -1,6 +1,6 @@
 import React from 'react';
 
-const UserLayout = () => {
+const UserPage = () => {
     return (
         <div>
             <h1>Đây là Trang học viên</h1>
@@ -8,4 +8,4 @@ const UserLayout = () => {
     );
 }
 
-export default UserLayout;
+export default UserPage;
