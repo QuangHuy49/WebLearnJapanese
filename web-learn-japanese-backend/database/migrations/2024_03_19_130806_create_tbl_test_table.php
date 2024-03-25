@@ -15,7 +15,8 @@ return new class extends Migration
             $table->increments('test_id')->unsigned();
             $table->unsignedInteger('lesson_id')->nullable();
             $table->string('test_name', 50);
-            $table->tinyInteger('is_complete')->default(0); 
+            $table->tinyInteger('is_complete')->default(0);
+            $table->tinyInteger('test_status')->default(0);
 
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
         });

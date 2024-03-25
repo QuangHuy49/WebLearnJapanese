@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('answer_c', 255); 
             $table->string('answer_d', 255); 
             $table->string('answer_correct', 255);
+            $table->tinyInteger('answer_status')->default(0);
 
             $table->foreign('test_id')->references('test_id')->on('tbl_test');
         });

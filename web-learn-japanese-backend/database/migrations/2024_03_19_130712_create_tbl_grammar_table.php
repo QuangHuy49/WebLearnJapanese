@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('grammar_detail', 255); 
             $table->string('grammar_example', 255)->nullable();
             $table->string('grammar_note', 255)->nullable();
+            $table->tinyInteger('grammar_status')->default(0);
             
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
         });
