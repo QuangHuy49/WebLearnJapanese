@@ -25,15 +25,17 @@ class QuestionSeeder extends Seeder
                 'answer_b' => $question[6],
                 'answer_c' => $question[7],
                 'answer_d' => $question[8],
-                'answer_correct' => $question[9]
+                'answer_correct' => $question[9],
+                'question_status' => $question[10]
+
             ]);
         }
     }
 
     public function getQuestion() {
         return [
-            [1, 1, 'a', NULL, './audio/a.mp3', 'い', 'う', 'あ', 'え', 'C'],
-            [2, 1, 'i', NULL, './audio/i.mp3', 'い', 'う', 'あ', 'え', 'A']
+            [1, 1, 'a', NULL, './audio/a.mp3', 'い', 'う', 'あ', 'え', 'C',1],
+            [2, 1, 'i', NULL, './audio/i.mp3', 'い', 'う', 'あ', 'え', 'A',1]
         ];
     }
 }

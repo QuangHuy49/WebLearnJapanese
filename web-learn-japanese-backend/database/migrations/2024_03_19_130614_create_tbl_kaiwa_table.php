@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('kaiwa_name', 255)->nullable();
             $table->string('kaiwa_mean', 255)->nullable();
             $table->string('kaiwa_audio', 255)->nullable();
+            $table->tinyInteger('kaiwa_status')->default(0);
             
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
         });

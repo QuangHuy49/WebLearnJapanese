@@ -20,18 +20,19 @@ class KaiwaSeeder extends Seeder
                 'lesson_id' => $kaiwa[1],
                 'kaiwa_name' => $kaiwa[2],
                 'kaiwa_mean' => $kaiwa[3],
-                'kaiwa_audio' => $kaiwa[4]
+                'kaiwa_audio' => $kaiwa[4],
+                'kaiwa_status' => $kaiwa[5]
             ]);
         }
     }
 
     public function getKaiwa() {
         return [
-            [1, 1, '初めまして。', 'Rất vui được gặp anh/chị.', './audio/hajimemashite.mp3'],
-            [2, 1, 'どうぞよろしく「お願いします」。', 'Rất vui khi được làm quen.', './audio/douzo.mp3'],
-            [3, 1, '～から来ました。', 'Tôi đến từ ～.', './audio/karakimashita.mp3'],
-            [4, 1, 'お名前は？', 'Tên anh/chị là gì?', './audio/onamae.mp3'],
-            [5, 1, 'どちらは～さんです。', 'Đây là anh/chị/ông/bà ～.', './audio/dochirawa.mp3']
+            [1, 1, '初めまして。', 'Rất vui được gặp anh/chị.', './audio/hajimemashite.mp3',1],
+            [2, 1, 'どうぞよろしく「お願いします」。', 'Rất vui khi được làm quen.', './audio/douzo.mp3',1],
+            [3, 1, '～から来ました。', 'Tôi đến từ ～.', './audio/karakimashita.mp3',1],
+            [4, 1, 'お名前は？', 'Tên anh/chị là gì?', './audio/onamae.mp3',1],
+            [5, 1, 'どちらは～さんです。', 'Đây là anh/chị/ông/bà ～.', './audio/dochirawa.mp3',1]
         ];
     }
 }

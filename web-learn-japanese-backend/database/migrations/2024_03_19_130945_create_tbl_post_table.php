@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('post_view')->default(0); 
             $table->integer('post_like')->default(0); 
             $table->integer('post_comment')->default(0); 
+            $table->tinyInteger('post_status')->default(0);
 
             $table->foreign('user_id')->references('user_id')->on('tbl_user');
         });
