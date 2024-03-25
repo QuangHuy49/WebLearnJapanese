@@ -14,7 +14,7 @@ const handleLogin = async (email, password, csrfToken, setError) => {
         return response.status;
     } catch (error) {
         if (error.response && error.response.status === 401) {
-            setError('Incorrect email or password. Please try again.');
+            setError('Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.');
         } else {
             setError('An error occurred. Please try again later.');
         }

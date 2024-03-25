@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import handleLogin from '../services/auth';
+import handleLogin from '../services/LoginServices';
 import axios from 'axios';
 
 const LoginPage = () => {
@@ -46,7 +46,6 @@ const LoginPage = () => {
         <div className="min-h-screen bg-[#e24943] flex justify-center items-center">
             <div className="absolute w-60 h-60 rounded-xl bg-[#fbc4c2] -top-5 -left-16 z-0 transform rotate-45 hidden md:block"></div>
             <div className="absolute w-48 h-48 rounded-xl bg-[#fbc4c2] -bottom-[-40px] -right-[-40px] transform rotate-12 hidden md:block"></div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
             <form className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20" onSubmit={handleLoginSubmit}>
                 <div className="w-80">
                     <h1 className="text-3xl font-bold text-center mb-8 cursor-pointer text-[#14375f]">
@@ -60,10 +59,11 @@ const LoginPage = () => {
                     <input type="password" placeholder="Password" className="block text-sm py-3 px-4 rounded-lg w-full border outline-[#14375f]" 
                         value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <div className="space-y-4 mt-4">
+                <div className="space-y-4 my-4">
                     <p className="text-right text-sm font-semibold tracking-wide cursor-pointer text-[#14375f]">Quên mật khẩu?</p>
                 </div>
-                <div className="text-center mt-6">
+                {error && <p className="text-center" style={{ color: 'red' }}>{error}</p>}
+                <div className="text-center mt-2">
                     <button type="submit" className="w-full text-center text-xl py-2 my-3 border flex space-x-2 items-center justify-center rounded-lg text-white bg-[#14375f] hover:border-slate-400 hover:shadow transition duration-150">
                         Đăng nhập
                     </button>

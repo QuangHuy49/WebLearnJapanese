@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse, faLayerGroup, faBook, faBrain, faImagePortrait, faFileLines, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import handleLogout from '../../services/logoutServices';
+import handleLogout from '../../services/LogoutServices';
 
 const Sidebar = () => {
     const [active, setActive] = useState(1);
@@ -52,37 +52,37 @@ const Sidebar = () => {
                     <div className="flex-1 flex flex-col px-1 pt-2 pb-4 overflow-y-auto">
                         <div className="flex-1 px-3 bg-white divide-y space-y-1">
                             <ul className="space-y-2 pb-2">
-                                <li className={active === 1 ? "text-base text-white font-normal rounded-lg bg-custom-color-blue flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"}>
+                                <li className={active === 1 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg flex items-center p-2 hover:bg-gray-100 group"}>
                                     <Link to={'/admin'} className="px-2" onClick={() => setActive(1)}>
                                         <FontAwesomeIcon icon={faHouse} className={active === 1 ? "text-white" : "text-red-500"} />
                                         <span className="ml-3">Dashboard</span>
                                     </Link>
                                 </li>
-                                <li className={active === 2 ? "text-base text-white font-normal rounded-lg bg-custom-color-blue flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
+                                <li className={active === 2 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
                                     <Link to={'/admin/category'} className="px-2" onClick={() => setActive(2)}>
                                         <FontAwesomeIcon icon={faLayerGroup} className={active === 2 ? "text-white" : "text-amber-500"} />
                                         <span className="ml-3 flex-1 whitespace-nowrap">Quản lý thể loại</span>
                                     </Link>
                                 </li>
-                                <li className={active === 3 ? "text-base text-white font-normal rounded-lg bg-custom-color-blue flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
+                                <li className={active === 3 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
                                     <Link to={'/admin/lesson'} className="px-2" onClick={() => setActive(3)}>
                                         <FontAwesomeIcon icon={faBook} className={active === 3 ? "text-white" : "text-emerald-500"} />
                                         <span className="ml-3 flex-1 whitespace-nowrap">Quản lý bài học</span>
                                     </Link>
                                 </li>
-                                <li className={active === 4 ? "text-base text-white font-normal rounded-lg bg-custom-color-blue flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
+                                <li className={active === 4 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
                                     <Link to={'/admin/test'} className="px-2" onClick={() => setActive(4)}>
                                         <FontAwesomeIcon icon={faBrain} className={active === 4 ? "text-white" : "text-cyan-500"} />
                                         <span className="ml-3 flex-1 whitespace-nowrap">Quản lý bài kiểm tra</span>
                                     </Link>
                                 </li>
-                                <li className={active === 5 ? "text-base text-white font-normal rounded-lg bg-custom-color-blue flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
+                                <li className={active === 5 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
                                     <Link to={'/admin/user'} className="px-2" onClick={() => setActive(5)}>
                                         <FontAwesomeIcon icon={faImagePortrait} className={active === 5 ? "text-white" : "text-blue-500"} />
                                         <span className="ml-3 flex-1 whitespace-nowrap">Quản lý học viên</span>
                                     </Link>
                                 </li>
-                                <li className={active === 6 ? "text-base text-white font-normal rounded-lg bg-custom-color-blue flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
+                                <li className={active === 6 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group " : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group "}>
                                     <Link to={'/admin/post'} className="px-2" onClick={() => setActive(6)}>
                                         <FontAwesomeIcon icon={faFileLines} className={active === 6 ? "text-white" : "text-purple-500"} />
                                         <span className="ml-3 flex-1 whitespace-nowrap">Quản lý bài viết</span>
