@@ -22,11 +22,11 @@ class KaiwaController extends Controller
     public function create(Request $request)
     {
         $request-> validate([
-            'lesson_id'=>'required|int',
-            'kaiwa_name'=>'required|string|max:255',
-            'kaiwa_mean'=>'required|string|max:255',
-            'kaiwa_audio'=>'required|string|max:255',
-            'kaiwa_status'=>'nullable|integer|between:0,1'
+            'lesson_id'=>'nullable|int',
+            'kaiwa_name'=>'nullable|string|max:255',
+            'kaiwa_mean'=>'nullable|string|max:255',
+            'kaiwa_audio'=>'nullable|string|max:255',
+            'kaiwa_status'=>'required|integer|between:0,1'
         ]);
         $kaiwa=Kaiwa::create([
             'lesson_id'=>$request->lesson_id,
@@ -74,11 +74,11 @@ class KaiwaController extends Controller
             return response()->json(['message' => 'Kaiwa not found'],404);
         }
         $request -> validate([
-            'lesson_id'=>'required|int',
-            'kaiwa_name'=>'required|string|max:255',
-            'kaiwa_mean'=>'required|string|max:255',
-            'kaiwa_audio'=>'required|string|max:255',
-            'kaiwa_status'=>'nullable|integer|between:0,1'
+            'lesson_id'=>'nullable|int|10',
+            'kaiwa_name'=>'nullable|string|max:255',
+            'kaiwa_mean'=>'nullable|string|max:255',
+            'kaiwa_audio'=>'nullable|string|max:255',
+            'kaiwa_status'=>'required|integer|between:0,1'
         ]);
         $kaiwa->update([
             'lesson_id'=>$request->lesson_id,

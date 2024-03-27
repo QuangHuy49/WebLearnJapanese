@@ -41,7 +41,7 @@ Route::group([
     Route::post('edit/{id}', [UserController::class, 'update']);
 });
 
-//Vai trò
+//Api Vai trò
 Route::group([
     'middleware' => 'api',
     'prefix' => 'role'
@@ -53,7 +53,7 @@ Route::group([
    
 });
 
-//Thể loại bài học
+//Api Thể loại bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'type'
@@ -64,7 +64,7 @@ Route::group([
     Route::post('delete/{id}', [TypeController::class, 'destroy']);   
 });
 
-//Bài học
+//Api Bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'lesson'
@@ -75,7 +75,7 @@ Route::group([
     Route::post('delete/{id}', [LessonController::class, 'destroy']);   
 });
 
-//Kaiwa
+//Api Kaiwa
 Route::group([
     'middleware' => 'api',
     'prefix' => 'kaiwa'
@@ -85,6 +85,18 @@ Route::group([
     Route::post('edit/{id}', [KaiwaController::class, 'update']);
     Route::post('delete/{id}', [KaiwaController::class, 'destroy']);   
 });
+
+//Api Grammar
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'grammar'
+], function ($router) {
+    Route::get('list', [GrammarController::class, 'index']);
+    Route::post('add', [GrammarController::class, 'create']);
+    Route::post('edit/{id}', [GrammarController::class, 'update']);
+    Route::post('delete/{id}', [GrammarController::class, 'destroy']);   
+});
+
 
 
 
