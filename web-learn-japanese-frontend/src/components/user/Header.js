@@ -68,7 +68,7 @@ const Header = () => {
                         </div>
                     </form>
                 </div>
-                {user ? (
+                {user ? ( 
                     <div className="items-center h-full pl-6 ml-6 border-l border-gray-200 mr-[20px] flex cursor-pointer" onClick={toggleSubNav}>
                         <button onClick={toggleSubNav}>
                             <img src={user.user_avatar} alt="User Avatar" className="w-8 h-8 rounded-full cursor-pointer hover:scale-110 transition-all" />
