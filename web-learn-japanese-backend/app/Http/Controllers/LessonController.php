@@ -43,6 +43,7 @@ class LessonController extends Controller
             'lesson_img'=>'required|string|max:255',
             'lesson_status' => 'nullable|integer|between:0,1',
         ]);
+        
         $lesson->update([
             'lesson_id'=>$id,
             'type_id'=>$request->type_id,

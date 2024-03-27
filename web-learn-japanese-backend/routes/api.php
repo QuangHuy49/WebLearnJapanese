@@ -40,6 +40,8 @@ Route::group([
     Route::post('delete/{id}', [UserController::class, 'destroy']);
     Route::post('edit/{id}', [UserController::class, 'update']);
 });
+
+//Vai trò
 Route::group([
     'middleware' => 'api',
     'prefix' => 'role'
@@ -51,6 +53,7 @@ Route::group([
    
 });
 
+//Thể loại bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'type'
@@ -60,6 +63,8 @@ Route::group([
     Route::post('edit/{id}', [TypeController::class, 'update']);
     Route::post('delete/{id}', [TypeController::class, 'destroy']);   
 });
+
+//Bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'lesson'
@@ -69,4 +74,18 @@ Route::group([
     Route::post('edit/{id}', [LessonController::class, 'update']);
     Route::post('delete/{id}', [LessonController::class, 'destroy']);   
 });
+
+//Kaiwa
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'kaiwa'
+], function ($router) {
+    Route::get('list', [KaiwaController::class, 'index']);
+    Route::post('add', [KaiwaController::class, 'create']);
+    Route::post('edit/{id}', [KaiwaController::class, 'update']);
+    Route::post('delete/{id}', [KaiwaController::class, 'destroy']);   
+});
+
+
+
 
