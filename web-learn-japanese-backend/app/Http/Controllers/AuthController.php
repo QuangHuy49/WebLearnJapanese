@@ -7,7 +7,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use JWTException;
 use Validator;
-
+    
 class AuthController extends Controller
 {
     public function __construct()

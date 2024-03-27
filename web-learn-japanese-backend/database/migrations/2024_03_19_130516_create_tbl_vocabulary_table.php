@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('vocabulary_yin_han', 255)->nullable();
             $table->string('vocabulary_mean', 255);
             $table->string('vocabulary_audio', 255)->nullable();
+            $table->tinyInteger('vocabulary_status')->default(0);
 
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
         });

@@ -25,9 +25,9 @@ class LanguageSeeder extends Seeder
 
     public function getLanguage() {
         return [
-            [1, 'Tiếng Việt', 'storage/app/public/img/language/vietnam.png'],
-            [2, 'English', 'storage/app/public/img/language/english.png'],
-            [3, '日本語', 'storage/app/public/img/language/japan.png'],
+            [1, 'Tiếng Việt', 'http://127.0.0.1:8000/storage/img/language/vietnam.png'],
+            [2, 'English', 'http://127.0.0.1:8000/storage/img/language/english.png'],
+            [3, '日本語', 'http://127.0.0.1:8000/storage/img/language/japan.png'],
         ];
     }
 }
