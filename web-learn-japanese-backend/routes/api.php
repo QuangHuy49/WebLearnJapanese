@@ -108,6 +108,14 @@ Route::group([
     Route::delete('delete/{id}', [VocabularyController::class, 'destroy']);   
 });
 
+//Api Read Language
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'language'
+], function ($router) {
+    Route::get('list', [LanguageController::class, 'index']);
+});
+
 
 
 
