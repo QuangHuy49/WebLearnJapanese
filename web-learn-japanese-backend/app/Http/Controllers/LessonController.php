@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lesson;
+use App\Models\Type;
+
 
 class LessonController extends Controller
 {
@@ -65,6 +67,7 @@ class LessonController extends Controller
             'lesson_img'=>'required|string|max:255',
             'lesson_status' => 'nullable|integer|between:0,1',
         ]);
+        
         $lesson->update([
             'lesson_id'=>$id,
             'type_id'=>$request->type_id,
@@ -82,5 +85,16 @@ class LessonController extends Controller
         }
         $lesson->delete();
         return response()->json(['message' =>'Lesson deleted successfully'], 200);
+    }
+    
+    public function show($id)
+    {
+        $lesson = Lesson::with('type')->find($id);
+
+        if (!$lesson) {
+            return response()->json(['message' =>'Lesson not found'], 404);
+        }
+
+        return response()->json($lesson, 200);
     }
 }
