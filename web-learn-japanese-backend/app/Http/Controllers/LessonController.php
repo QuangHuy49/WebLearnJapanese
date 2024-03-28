@@ -39,7 +39,18 @@ class LessonController extends Controller
             'lesson_img'=>$request->lesson_img,
             'lesson_status'=>$request->lesson_status
         ]);
-        return response()->json($lesson,201);
+        return response()->json($lesson, 201);
+    }
+
+    public function show($id)
+    {
+        $lesson = Lesson::with('type')->find($id);
+
+        if (!$lesson) {
+            return response()->json(['message' =>'Lesson not found'], 404);
+        }
+
+        return response()->json($lesson, 200);
     }
 
     public function update( Request $request, $id){

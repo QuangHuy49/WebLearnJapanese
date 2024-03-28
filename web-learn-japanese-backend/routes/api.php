@@ -69,6 +69,7 @@ Route::group([
 ], function ($router) {
     Route::get('list', [LessonController::class, 'index']);
     Route::post('add', [LessonController::class, 'create']);
+    Route::get('get/{id}', [LessonController::class, 'show']);
     Route::post('edit/{id}', [LessonController::class, 'update']);
     Route::delete('delete/{id}', [LessonController::class, 'destroy']);   
 });

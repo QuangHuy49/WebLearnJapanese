@@ -7,6 +7,7 @@ import DashboardPage from '../pages/admin/DashboardPage';
 import CategoryPage from '../pages/admin/CategoryPage';
 import LessonAdminPage from '../pages/admin/lesson/LessonPage';
 import AddLessonAdminPage from '../pages/admin/lesson/AddLessonPage';
+import EditLessonAdminPage from '../pages/admin/lesson/EditLessonPage';
 import TestAdminPage from '../pages/admin/TestPage';
 import UserPage from '../pages/admin/UserPage';
 import PostAdminPage from '../pages/admin/PostPage';
@@ -27,6 +28,7 @@ function App() {
         <Route path='/admin/category' element={<CategoryPage />} />
         <Route path='/admin/lesson' element={<LessonAdminPage />} />
         <Route path='/admin/lesson/add-lesson' element={<AddLessonAdminPage />} />
+        <Route path='/admin/lesson/edit-lesson/:id' element={<EditLessonAdminPage />} />
         <Route path='/admin/test' element={<TestAdminPage />} />
         <Route path='/admin/user' element={<UserPage />} />
         <Route path='/admin/post' element={<PostAdminPage />} />

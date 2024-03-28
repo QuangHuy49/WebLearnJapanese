@@ -28,7 +28,6 @@ const LoginPage = () => {
                     }
                 });
                 const userRole = profileResponse.data.user_role_id;
-                console.log(userRole);
                 if (userRole === 1) {
                     navigate('/admin');
                 } else if (userRole === 2) {

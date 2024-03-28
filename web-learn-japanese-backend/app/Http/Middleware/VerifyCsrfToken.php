@@ -22,7 +22,8 @@ class VerifyCsrfToken extends Middleware
         '/api/delete/image',
 
         // lesson
-        'api/lesson/add',
-        'api/lesson/delete'
+        '/api/lesson/add',
+        '/api/lesson/edit/*',
+        '/api/lesson/delete/*'
     ];
 }

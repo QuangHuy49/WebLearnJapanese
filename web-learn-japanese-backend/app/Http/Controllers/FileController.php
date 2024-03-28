@@ -16,7 +16,7 @@ class FileController extends Controller
             if (in_array($extension, $allowedfileExtension)) {
                 $date = date('Ymd_His'); 
                 $name = $date . "_" . $file->getClientOriginalName();
-                $file->storeAs('upload/img', $name, 'public');
+                $file->storeAs('img', $name, 'public');
                 return response()->json(['success' => 1, 'filename' => $name], 200);
             } else {
                 return response()->json(['success' => 0, 'error' => 'File không hợp lệ.'], 400);
@@ -31,7 +31,7 @@ class FileController extends Controller
         if ($request->has('imageName')) {
             $imageName = $request->input('imageName');
 
-            Storage::disk('public')->delete('upload/img/' . $imageName);
+            Storage::disk('public')->delete('img/' . $imageName);
 
             return response()->json(['success' => true], 200);
         } else {

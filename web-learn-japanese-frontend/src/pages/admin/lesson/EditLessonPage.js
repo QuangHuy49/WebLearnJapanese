@@ -1,28 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { getLessonByid, updateLesson } from '../../../services/LessonServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faImage} from '@fortawesome/free-solid-svg-icons';
+import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
 import { getType } from '../../../services/TypeServices';
-import { addLesson } from '../../../services/LessonServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
 
-const AddLessonPage = () => {
-    const [uploadedImage, setUploadedImage] = useState(null);
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const [showProgressBar, setShowProgressBar] = useState(false);
-    const [types, setTypes] = useState([]);
-    const statusOptions = [
-        { value: 1, label: 'Xuất bản' },
-        { value: 0, label: 'Chưa xuất bản' }
-    ];
-    const [csrfToken, setCsrfToken] = useState('');
-    const [formData, setFormData] = useState({
+const EditLessonPage = () => {
+    let { id } = useParams();
+    id = id ?? 0;
+    const initState = {
         type_id: '',
         lesson_name: '',
         lesson_img: '',
         lesson_status: ''
-    });
+    }, [lesson, setLesson] = useState(initState);
+    const statusOptions = [
+        { value: 1, label: 'Xuất bản' },
+        { value: 0, label: 'Chưa xuất bản' }
+    ];
+    const [uploadedImage, setUploadedImage] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [showProgressBar, setShowProgressBar] = useState(false);
+    const [types, setTypes] = useState([]);
+    const [csrfToken, setCsrfToken] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,8 +34,18 @@ const AddLessonPage = () => {
             setCsrfToken(token.getAttribute('content'));
         }
 
+        getLesson();
         fetchTypes();
     }, []);
+
+    const getLesson = async () => {
+        const data = await getLessonByid(id);
+        if (data) {
+            setLesson(data);
+        } else {
+            setLesson([]);
+        }
+    }
 
     const fetchTypes = async () => {
         try {
@@ -55,7 +68,7 @@ const AddLessonPage = () => {
         const response = await handleUploadImage(file, handleProgress);
         if (response.status === 200) {
             setUploadedImage(response.data);
-            setFormData({ ...formData, lesson_img: createImageUrl(response.data.filename) });
+            setLesson({ ...lesson, lesson_img: createImageUrl(response.data.filename) });
         }
     };
 
@@ -70,6 +83,7 @@ const AddLessonPage = () => {
                 setUploadedImage(null);
                 setUploadProgress(0);
                 setShowProgressBar(false);
+                setLesson({...lesson, lesson_img: ''});
             } else {
                 console.error(deleteResult.error);
             }
@@ -85,29 +99,29 @@ const AddLessonPage = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setLesson({ ...lesson, [name]: value });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await addLesson(formData, csrfToken);
+            const response = await updateLesson(id, lesson, csrfToken);
             if (response.status === 201) {
-                toast.success('Thêm bài học mới thành công!');
+                toast.success('Cập nhật bài học thành công!');
                 navigate('/admin/lesson');
             } else {
-                toast.error('Thêm bài học mới thất bại. Vui lòng thử lại!');
+                toast.error('Cập nhật bài học thất bại. Vui lòng thử lại!');
             }
         } catch (error) {
             console.error('Failed to register:', error);
-            toast.error('Đã xảy ra lỗi trong quá trình thêm bài học.');
+            toast.error('Đã xảy ra lỗi trong quá trình cập nhật bài học.');
         }
     };
-    
+
     return (
         <div class="flex items-center justify-center p-2">
             <div class="mx-auto w-full bg-white">
-                <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Thêm bài học mới</div>
+                <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Cập nhật bài học</div>
                 <form class="py-4 px-9" method="POST">
                     <div class="mb-5">
                         <label
@@ -121,8 +135,8 @@ const AddLessonPage = () => {
                             id="lesson_name"
                             placeholder="Bài 1 - Minna no Nihongo"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            value={formData.lesson_name}
-                                onChange={handleChange}
+                            value={lesson.lesson_name}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -152,33 +166,63 @@ const AddLessonPage = () => {
                         </div>
                     </div>
 
-                    {uploadedImage && (
+                    {lesson.lesson_img ? (
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
                                     <FontAwesomeIcon icon={faImage} />
                                     <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                        {uploadedImage.filename}
+                                        {lesson.lesson_img}
                                     </span>
                                 </div>
                             </div>
                             {showProgressBar && (
-                                <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                    <button
-                                        className="absolute top-[-59px] right-4 text-gray-500"
-                                        onClick={handleDeleteButtonClick}>
-                                        <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                    </button>
-                                    <div
-                                        className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                        style={{ width: `${uploadProgress}%` }}>
+                                    <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                        <button
+                                            className="absolute top-[-59px] right-4 text-gray-500"
+                                            onClick={handleDeleteButtonClick}>
+                                            <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
+                                        </button>
+                                        <div
+                                            className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                            style={{ width: `${uploadProgress}%` }}>
+                                        </div>
+                                        <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                            {uploadProgress}%
+                                        </span>
                                     </div>
-                                    <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                        {uploadProgress}%
-                                    </span>
-                                </div>
-                            )}
+                                )}
                         </div>
+
+                    ) : (
+                        uploadedImage && (
+                            <div className="mb-5">
+                                <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
+                                    <div className="flex items-center">
+                                        <FontAwesomeIcon icon={faImage} />
+                                        <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                            {uploadedImage.filename}
+                                        </span>
+                                    </div>
+                                </div>
+                                {showProgressBar && (
+                                    <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                        <button
+                                            className="absolute top-[-59px] right-4 text-gray-500"
+                                            onClick={handleDeleteButtonClick}>
+                                            <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
+                                        </button>
+                                        <div
+                                            className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                            style={{ width: `${uploadProgress}%` }}>
+                                        </div>
+                                        <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                            {uploadProgress}%
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                        )
                     )}
 
                     <div class="mb-5">
@@ -191,7 +235,7 @@ const AddLessonPage = () => {
                             <select
                                 name="type_id"
                                 id="type_id"
-                                value={formData.type_id}
+                                value={lesson.type_id}
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                                 <option value="">Chọn thể loại</option>
@@ -213,7 +257,7 @@ const AddLessonPage = () => {
                         <select
                             name="lesson_status"
                             id="lesson_status"
-                            value={formData.lesson_status}
+                            value={lesson.lesson_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                             <option value="">Chọn trạng thái</option>
@@ -227,11 +271,10 @@ const AddLessonPage = () => {
 
                     <div>
                         <button
-                            className={`hover:shadow-form w-full rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none ${uploadProgress < 100 ? 'bg-[#E5E7EB] cursor-not-allowed' : 'bg-[#6A64F1] hover:bg-[#5C59C2] cursor-pointer'}`}
-                            disabled={uploadProgress < 100}
+                            className='hover:shadow-form w-full rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none bg-[#6A64F1] hover:bg-[#5C59C2] cursor-pointer'
                             onClick={handleSubmit}
                         >
-                            Thêm bài học mới
+                            Cập nhật bài học
                         </button>
                     </div>
                 </form>
@@ -240,4 +283,4 @@ const AddLessonPage = () => {
     );
 }
 
-export default AddLessonPage;
+export default EditLessonPage;

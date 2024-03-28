@@ -28,6 +28,29 @@ export async function addLesson(formData, csrfToken) {
     }
 }
 
+export async function getLessonByid(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lesson/get/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to get lesson by id:', error);
+    }
+}
+
+export async function updateLesson(id, formData, csrfToken) {
+    try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/lesson/edit/${id}`, formData,
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response;
+    } catch (error) {
+        console.error('Failed to update lesson:', error);
+    }
+}
+
 export async function deleteLesson(id, csrfToken) {
     try {
         const response = await axios.delete(`http://127.0.0.1:8000/api/lesson/delete/${id}`,

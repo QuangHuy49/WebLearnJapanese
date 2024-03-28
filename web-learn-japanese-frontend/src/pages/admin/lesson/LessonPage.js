@@ -26,13 +26,6 @@ const LessonPage = () => {
         }
     }, [currentPage]);
 
-    useEffect(() => {
-        const token = document.querySelector('meta[name="csrf-token"]');
-        if (token) {
-            setCsrfToken(token.getAttribute('content'));
-        }
-    }, []);
-
     const loadLessons = async (page) => {
         const data = await getLessson(page, perPage);
         if (data) {
@@ -185,7 +178,9 @@ const LessonPage = () => {
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center gap-x-6">
                                                         <FontAwesomeIcon icon={faEye} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
-                                                        <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
+                                                        <Link to={`/admin/lesson/edit-lesson/${item.lesson_id}`}>
+                                                            <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
+                                                        </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
                                                             onClick={() => handleDeleteLesson(item.lesson_id)} />
                                                     </div>
