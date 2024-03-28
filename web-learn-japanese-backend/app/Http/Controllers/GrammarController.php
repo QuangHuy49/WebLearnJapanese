@@ -53,9 +53,15 @@ class GrammarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $grammar = Grammar::with('lesson')->find($id);
+
+        if (!$grammar) {
+            return response()->json(['message' =>'Grammar not found'], 404);
+        }
+
+        return response()->json($grammar, 200);
     }
 
     /**
@@ -109,4 +115,6 @@ class GrammarController extends Controller
         $grammar -> delete();
         return response()->json(['message' => 'Grammar deleted successfully!'],200);
     }
+    
+    
 }

@@ -15,6 +15,6 @@ class Grammar extends Model
     public $timestamps = false;
 
     public function lesson() {
-        return $this->belongsTo(Lesson::class, 'lesson_id', 'lesson_id');
+        return $this->belongsTo(Lesson::class, 'lesson_id');
     }
 }

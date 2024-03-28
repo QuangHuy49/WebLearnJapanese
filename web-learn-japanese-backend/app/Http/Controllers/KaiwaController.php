@@ -51,10 +51,17 @@ class KaiwaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $kaiwa = Kaiwa::with('lesson')->find($id);
+
+        if (!$kaiwa) {
+            return response()->json(['message' =>'Kaiwa not found'], 404);
+        }
+
+        return response()->json($kaiwa, 200);
     }
+
 
     /**
      * Show the form for editing the specified resource.
