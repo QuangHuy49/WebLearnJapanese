@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('type_id')->nullable();
             $table->string('lesson_name', 255)->nullable();
-            $table->string('lesson_description', 255)->nullable();
             $table->string('lesson_img', 255)->nullable();
             $table->tinyInteger('lesson_status')->default(0);
 

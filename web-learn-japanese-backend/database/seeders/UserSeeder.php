@@ -29,9 +29,9 @@ class UserSeeder extends Seeder
 
     public function getUser() {
         return [
-            [1, 'QuangHuy', 'huydq@gmail.com', '1', 'storage/app/public/img/avatar/male-student.png', 1],
-            [2, 'HoaiTrang', 'tranght@gmail.com', '1', 'storage/app/public/img/avatar/male-student.png', 1],
-            [3, 'QuanHy', 'huydq1@gmail.com', '1', 'storage/app/public/img/avatar/male-student.png', 2],
+            [1, 'QuangHuy', 'huydq@gmail.com', '1', 'http://127.0.0.1:8000/storage/img/avatar/male-student.png', 1],
+            [2, 'HoaiTrang', 'tranght@gmail.com', '1', 'http://127.0.0.1:8000/storage/img/avatar/male-student.png', 1],
+            [3, 'QuanHy', 'huydq1@gmail.com', '1', 'http://127.0.0.1:8000/storage/img/avatar/male-student.png', 2],
         ];
     }
 }
