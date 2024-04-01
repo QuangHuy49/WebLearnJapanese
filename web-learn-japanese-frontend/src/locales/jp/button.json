@@ -1,0 +1,11 @@
+{
+    "button" : {
+        "login": "書き物",
+        "register": "応募",
+        "google": "Googleでサ書き物する"
+    },
+
+    "search": {
+        "search": "調べ出す ..."
+    }
+}

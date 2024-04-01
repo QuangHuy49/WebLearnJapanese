@@ -14,7 +14,8 @@ class Grammar extends Model
     protected $fillable = ['lesson_id', 'grammar_title', 'grammar_mean', 'grammar_detail', 'grammar_example', 'grammar_note'];
     public $timestamps = false;
 
-    public function lesson() {
+    public function lesson()
+    {
         return $this->belongsTo(Lesson::class, 'lesson_id');
     }
 }

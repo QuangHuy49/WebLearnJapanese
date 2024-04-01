@@ -156,7 +156,7 @@ const AddLessonPage = () => {
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faImage} />
+                                    <img src={`http://127.0.0.1:8000/storage/img/${uploadedImage.filename}`} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
                                     <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
                                         {uploadedImage.filename}
                                     </span>

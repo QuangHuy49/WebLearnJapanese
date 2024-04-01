@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kaiwa;
+use App\Models\Lesson;
 
 class KaiwaController extends Controller
 {
@@ -108,5 +109,26 @@ class KaiwaController extends Controller
         }
         $kaiwa -> delete();
         return response()->json(['message'=>'Kaiwa deleted successfully'],200);
+    }
+
+    // get data kaiwa by lesson_id
+    public function getKaiwaDataByIdLesson(Request $request, $id)
+    {
+        $perPage = $request->input('perPage', 10);
+        $page = $request->input('page', 1);
+    
+        $totalkaiwas = Kaiwa::count();
+        $totalPages = ceil($totalkaiwas / $perPage);
+        $kaiwas = Kaiwa::where('lesson_id', $id)
+                        ->skip(($page - 1) * $perPage)
+                        ->take($perPage)
+                        ->get();
+                        
+        $lesson = Lesson::find($id);
+        return response()->json([
+            'kaiwas' => $kaiwas,
+            'lesson' => $lesson,
+            'totalPages' => $totalPages
+        ], 200);
     }
 }

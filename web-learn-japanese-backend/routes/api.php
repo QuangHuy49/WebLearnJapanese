@@ -74,7 +74,7 @@ Route::group([
     Route::post('add', [LessonController::class, 'create']);
     Route::get('get/{id}', [LessonController::class, 'show']);
     Route::post('edit/{id}', [LessonController::class, 'update']);
-    Route::delete('delete/{id}', [LessonController::class, 'destroy']);   
+    Route::delete('delete/{id}', [LessonController::class, 'destroy']);
 });
 
 //Api Kaiwa
@@ -87,6 +87,7 @@ Route::group([
     Route::post('edit/{id}', [KaiwaController::class, 'update']);
     Route::delete('delete/{id}', [KaiwaController::class, 'destroy']);   
     Route::get('get/{id}', [KaiwaController::class, 'show']);
+    Route::get('{id}/kaiwa-data', [KaiwaController::class, 'getKaiwaDataByIdLesson']);
 });
 
 //Api Grammar
@@ -99,7 +100,7 @@ Route::group([
     Route::post('edit/{id}', [GrammarController::class, 'update']);
     Route::delete('delete/{id}', [GrammarController::class, 'destroy']);   
     Route::get('get/{id}', [GrammarController::class, 'show']);
-
+    Route::get('{id}/grammar-data', [GrammarController::class, 'getGrammarDataByIdLesson']);
 });
 
 //Api Vocabulary
@@ -112,6 +113,7 @@ Route::group([
     Route::post('edit/{id}', [VocabularyController::class, 'update']);
     Route::delete('delete/{id}', [VocabularyController::class, 'destroy']);   
     Route::get('get/{id}', [VocabularyController::class, 'show']);
+    Route::get('{id}/vocabulary-data', [VocabularyController::class, 'getVocabularyDataByIdLesson']);
 });
 
 //Api Read Language

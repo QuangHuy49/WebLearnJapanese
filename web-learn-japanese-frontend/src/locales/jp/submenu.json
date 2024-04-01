@@ -1,0 +1,7 @@
+{
+    "submenu": {
+        "my_profile": "個人ページ",
+        "my_post": "私の記事",
+        "logout": "サインアウ"
+    }
+}

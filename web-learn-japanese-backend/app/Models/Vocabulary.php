@@ -14,7 +14,8 @@ class Vocabulary extends Model
     protected $fillable = ['lesson_id', 'vocabulary_name', 'vocabulary_character', 'vocabulary_yin_han', 'vocabulary_mean', 'vocabulary_audio'];
     public $timestamps = false;
 
-    public function lesson() {
-        return $this->belongsTo(Lesson::class, 'lesson_id', 'lesson_id');
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class, 'lesson_id');
     }
 }

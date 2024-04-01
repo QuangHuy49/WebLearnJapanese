@@ -1,0 +1,11 @@
+{
+    "button" : {
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "google": "Đăng nhập với Google"
+    },
+
+    "search": {
+        "search": "Tìm kiếm ..."
+    }
+}

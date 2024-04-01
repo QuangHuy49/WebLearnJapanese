@@ -56,7 +56,6 @@ class LessonController extends Controller
     }
 
     public function update( Request $request, $id){
-        //$lesson=Lesson::find($id);
         $lesson = Lesson::findOrFail($id);
         if (!$lesson){
             return response()->json(['mesage'=>'Lesson not found'], 404);
@@ -85,16 +84,5 @@ class LessonController extends Controller
         }
         $lesson->delete();
         return response()->json(['message' =>'Lesson deleted successfully'], 200);
-    }
-    
-    public function show($id)
-    {
-        $lesson = Lesson::with('type')->find($id);
-
-        if (!$lesson) {
-            return response()->json(['message' =>'Lesson not found'], 404);
-        }
-
-        return response()->json($lesson, 200);
     }
 }

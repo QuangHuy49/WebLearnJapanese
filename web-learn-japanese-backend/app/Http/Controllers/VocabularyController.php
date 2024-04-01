@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vocabulary;
+use App\Models\Lesson;
 
 class VocabularyController extends Controller
 {
@@ -39,7 +40,7 @@ class VocabularyController extends Controller
             'vocabulary_audio'=>$request->vocabulary_audio,
             'vocabulary_status'=>$request->vocabulary_status,
         ]);
-        return response()->json($vocabulary,201);
+        return response()->json($vocabulary, 201);
     }
 
     /**
@@ -79,7 +80,7 @@ class VocabularyController extends Controller
     {
         $vocabulary=Vocabulary::findOrFail($id);
         if(!$vocabulary){
-            return response()->json(['message'=>'Vocabulary not found'],404);
+            return response()->json(['message'=>'Vocabulary not found'], 404);
         }
         $request->validate([
             'lesson_id'=>'nullable|int|max:10',
@@ -99,7 +100,7 @@ class VocabularyController extends Controller
             'vocabulary_audio'=>$request->vocabulary_audio,
             'vocabulary_status'=>$request->vocabulary_status
         ]);
-        return response()->json($vocabulary,201);
+        return response()->json($vocabulary, 201);
     }
 
     /**
@@ -109,9 +110,30 @@ class VocabularyController extends Controller
     {
         $vocabulary=Vocabulary::find($id);
         if(!$vocabulary){
-            return response()->json(['message'=>'Vocabulary not found'],404);
+            return response()->json(['message'=>'Vocabulary not found'], 404);
         }
         $vocabulary -> delete();
-        return response()->json(['message'=>'Vocabulary deleted successfully!'],200);
+        return response()->json(['message'=>'Vocabulary deleted successfully!'], 200);
+    }
+
+    // get data vocabulary by lesson_id
+    public function getVocabularyDataByIdLesson(Request $request, $id)
+    {
+        $perPage = $request->input('perPage', 10);
+        $page = $request->input('page', 1);
+    
+        $totalVocabularies = Vocabulary::count();
+        $totalPages = ceil($totalVocabularies / $perPage);
+        $vocabularies = Vocabulary::where('lesson_id', $id)
+                        ->skip(($page - 1) * $perPage)
+                        ->take($perPage)
+                        ->get();
+                        
+        $lesson = Lesson::find($id);
+        return response()->json([
+            'vocabularies' => $vocabularies,
+            'lesson' => $lesson,
+            'totalPages' => $totalPages
+        ], 200);
     }
 }

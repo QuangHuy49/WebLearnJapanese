@@ -1,0 +1,11 @@
+{
+    "button" : {
+        "login": "Log in",
+        "register": "Sign up",
+        "google": "Log in with Google"
+    },
+
+    "search": {
+        "search": "Search ..."
+    }
+}

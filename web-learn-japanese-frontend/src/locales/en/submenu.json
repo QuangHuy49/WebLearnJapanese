@@ -1,0 +1,7 @@
+{
+    "submenu": {
+        "my_profile": "My profile",
+        "my_post": "My post",
+        "logout": "Log out"
+    }
+}

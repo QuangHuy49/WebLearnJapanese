@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import handleLogin from '../services/LoginServices';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const [csrfToken, setCsrfToken] = useState('');
     const navigate = useNavigate();
+    const { t } = useTranslation(['button', 'login']);
 
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -47,8 +49,8 @@ const LoginPage = () => {
             <div className="absolute w-48 h-48 rounded-xl bg-[#fbc4c2] -bottom-[-40px] -right-[-40px] transform rotate-12 hidden md:block"></div>
             <form className="py-12 px-12 bg-white rounded-2xl shadow-xl z-20" onSubmit={handleLoginSubmit}>
                 <div className="w-80">
-                    <h1 className="text-3xl font-bold text-center mb-8 cursor-pointer text-[#14375f]">
-                        ĐĂNG NHẬP
+                    <h1 className="text-3xl font-bold text-center mb-8 text-[#14375f]">
+                        {t('button.login')}
                     </h1>
                 </div>
                 <div className="space-y-4">
@@ -59,30 +61,30 @@ const LoginPage = () => {
                         value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className="space-y-4 my-4">
-                    <p className="text-right text-sm font-semibold tracking-wide cursor-pointer text-[#14375f]">Quên mật khẩu?</p>
+                    <p className="text-right text-sm font-semibold tracking-wide cursor-pointer text-[#14375f]">{t('login.forgot_password', { ns: 'login' })}</p>
                 </div>
                 {error && <p className="text-center" style={{ color: 'red' }}>{error}</p>}
                 <div className="text-center mt-2">
                     <button type="submit" className="w-full text-center text-xl py-2 my-3 border flex space-x-2 items-center justify-center rounded-lg text-white bg-[#14375f] hover:border-slate-400 hover:shadow transition duration-150">
-                        Đăng nhập
+                        {t('button.login')}
                     </button>
                     <div className="flex justify-evenly space-x-2 mt-4">
                         <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
-                        <span className="flex-none uppercase text-xs text-gray-400 font-semibold">Hoặc</span>
+                        <span className="flex-none uppercase text-xs text-gray-400 font-semibold">{t('login.or', { ns: 'login' })}</span>
                         <span className="bg-gray-300 h-px flex-grow t-2 relative top-2"></span>
                     </div>
                     <div className="">
                         <button className="w-full text-center py-2 my-3 border flex space-x-2 items-center justify-center border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150">
                             <img src="https://www.svgrepo.com/show/355037/google.svg" className="w-6 h-6" alt="" /> 
                             <span>
-                                Đăng nhập với Google
+                                {t('button.google')}
                             </span>
                         </button>
                     </div>
                     <p className="mt-10 text-sm text-[#14375f]">
-                        Bạn chưa có tài khoản? 
+                        {t('login.no_account', { ns: 'login' })} 
                         <Link to={'/signup'} className="ml-2 underline cursor-pointer font-bold text-[#14375f]">
-                            Đăng ký
+                            {t('button.register')}
                         </Link>
                     </p>
                 </div>

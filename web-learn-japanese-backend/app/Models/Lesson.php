@@ -22,4 +22,19 @@ class Lesson extends Model
     {
         return $this->belongsTo(Type::class, 'type_id');
     }
+
+    public function vocabulary()
+    {
+        return $this->hasMany(Vocabulary::class, 'lesson_id');
+    }
+
+    public function kaiwa()
+    {
+        return $this->hasMany(Kaiwa::class, 'lesson_id');
+    }
+
+    public function grammar()
+    {
+        return $this->hasMany(Grammar::class, 'lesson_id');
+    }
 }

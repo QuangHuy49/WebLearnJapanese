@@ -1,0 +1,8 @@
+{
+    "sidebar" : {
+        "home": "Home",
+        "lesson": "Lesson",
+        "test": "Test",
+        "post": "Post"
+    }
+}

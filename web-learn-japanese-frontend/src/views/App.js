@@ -8,6 +8,7 @@ import CategoryPage from '../pages/admin/CategoryPage';
 import LessonAdminPage from '../pages/admin/lesson/LessonPage';
 import AddLessonAdminPage from '../pages/admin/lesson/AddLessonPage';
 import EditLessonAdminPage from '../pages/admin/lesson/EditLessonPage';
+import DetailLessonAdminLayout from '../pages/admin/lesson/detail_lesson/DetailLessonLayout';
 import TestAdminPage from '../pages/admin/TestPage';
 import UserPage from '../pages/admin/UserPage';
 import PostAdminPage from '../pages/admin/PostPage';
@@ -16,6 +17,9 @@ import HomePage from '../pages/user/HomePage';
 import LessonUserPage from '../pages/user/LessonPage';
 import TestUserPage from '../pages/user/TestPage';
 import PostUserPage from '../pages/user/PostPage';
+import VocabularyPage from '../pages/admin/lesson/detail_lesson/vocabulary/VocabularyPage';
+import KaiwaPage from '../pages/admin/lesson/detail_lesson/kaiwa/KaiwaPage';
+import GrammarPage from '../pages/admin/lesson/detail_lesson/grammar/GrammarPage';
 
 function App() {
   return (
@@ -29,6 +33,11 @@ function App() {
         <Route path='/admin/lesson' element={<LessonAdminPage />} />
         <Route path='/admin/lesson/add-lesson' element={<AddLessonAdminPage />} />
         <Route path='/admin/lesson/edit-lesson/:id' element={<EditLessonAdminPage />} />
+        <Route path='/admin/lesson/detail-lesson/:id' element={<DetailLessonAdminLayout />}>
+          <Route path='/admin/lesson/detail-lesson/:id' element={<VocabularyPage />} />
+          <Route path='/admin/lesson/detail-lesson/:id/kaiwa' element={<KaiwaPage />} />
+          <Route path='/admin/lesson/detail-lesson/:id/grammar' element={<GrammarPage />} />
+        </Route>
         <Route path='/admin/test' element={<TestAdminPage />} />
         <Route path='/admin/user' element={<UserPage />} />
         <Route path='/admin/post' element={<PostAdminPage />} />

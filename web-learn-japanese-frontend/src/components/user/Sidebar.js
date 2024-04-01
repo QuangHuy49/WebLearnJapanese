@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faBook, faCopy, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = () => {
     const [active, setActive] = useState(1);
-
     const location = useLocation().pathname;
+    const { t } = useTranslation('sidebar');
 
     useEffect(() => {
         if (location.includes('category')) {
@@ -36,25 +37,25 @@ const Sidebar = () => {
                                 <li className={active === 1 ? "h-[84px] w-[84px] flex flex-col justify-center text-xs text-white font-normal rounded-2xl bg-custom-color-gray items-center p-2 group hover:scale-110 transition-all" : "h-[84px] w-[84px] flex flex-col justify-center text-xs text-gray-900 font-normal rounded-2xl hover:bg-gray-100 items-center p-2 group hover:scale-110 transition-all"}>
                                     <Link to={'/'} className="flex flex-col" onClick={() => setActive(1)}>
                                         <FontAwesomeIcon icon={faHouse} className={active === 1 ? "text-white text-lg" : "text-red-500 text-lg"} />
-                                        <span className="mt-2">Trang chủ</span>
+                                        <span className="mt-2 flex items-center justify-center">{t('sidebar.home')}</span>
                                     </Link>
                                 </li>
                                 <li className={active === 2 ? "h-[84px] w-[84px] flex flex-col justify-center text-xs text-white font-normal rounded-2xl bg-custom-color-gray items-center p-2 group hover:scale-110 transition-all" : "h-[84px] w-[84px] flex flex-col justify-center text-xs text-gray-900 font-normal rounded-2xl hover:bg-gray-100 items-center p-2 group hover:scale-110 transition-all"}>
                                     <Link to={'/lesson'} className="px-2 flex flex-col" onClick={() => setActive(2)}>
                                         <FontAwesomeIcon icon={faBook} className={active === 2 ? "text-white text-lg" : "text-amber-500 text-lg"} />
-                                        <span className="mt-2">Bài học</span>
+                                        <span className="mt-2">{t('sidebar.lesson')}</span>
                                     </Link>
                                 </li>
                                 <li className={active === 3 ? "h-[84px] w-[84px] flex flex-col justify-center text-xs text-white font-normal rounded-2xl bg-custom-color-gray items-center p-2 group hover:scale-110 transition-all" : "h-[84px] w-[84px] flex flex-col justify-center text-xs text-gray-900 font-normal rounded-2xl hover:bg-gray-100 items-center p-2 group hover:scale-110 transition-all"}>
                                     <Link to={'/test'} className="px-2 flex flex-col" onClick={() => setActive(3)}>
                                         <FontAwesomeIcon icon={faPuzzlePiece} className={active === 3 ? "text-white text-lg" : "text-emerald-500 text-lg"} />
-                                        <span className="mt-2">Kiểm tra</span>
+                                        <span className="mt-2">{t('sidebar.test')}</span>
                                     </Link>
                                 </li>
                                 <li className={active === 4 ? "h-[84px] w-[84px] flex flex-col justify-center text-xs text-white font-normal rounded-2xl bg-custom-color-gray items-center p-2 group hover:scale-110 transition-all" : "h-[84px] w-[84px] flex flex-col justify-center text-xs text-gray-900 font-normal rounded-2xl hover:bg-gray-100 items-center p-2 group hover:scale-110 transition-all"}>
                                     <Link to={'/post'} className="px-2 flex flex-col" onClick={() => setActive(4)}>
                                         <FontAwesomeIcon icon={faCopy} className={active === 4 ? "text-white text-lg" : "text-cyan-500 text-lg"} />
-                                        <span className="mt-2">Bài viết</span>
+                                        <span className="mt-2">{t('sidebar.post')}</span>
                                     </Link>
                                 </li>
                             </ul>
