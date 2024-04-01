@@ -113,6 +113,14 @@ Route::group([
     Route::get('get/{id}', [VocabularyController::class, 'show']);
 });
 
+//Api Test
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'test'
+], function ($router) {
+    Route::get('list', [TestController::class, 'index']);
+   
+});
 //Api Read Language
 Route::group([
     'middleware' => 'api',
