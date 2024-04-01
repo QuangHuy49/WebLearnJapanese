@@ -28,11 +28,11 @@ class KaiwaSeeder extends Seeder
 
     public function getKaiwa() {
         return [
-            [1, 1, '初めまして。', 'Rất vui được gặp anh/chị.', './audio/hajimemashite.mp3',1],
-            [2, 1, 'どうぞよろしく「お願いします」。', 'Rất vui khi được làm quen.', './audio/douzo.mp3',1],
-            [3, 1, '～から来ました。', 'Tôi đến từ ～.', './audio/karakimashita.mp3',1],
-            [4, 1, 'お名前は？', 'Tên anh/chị là gì?', './audio/onamae.mp3',1],
-            [5, 1, 'どちらは～さんです。', 'Đây là anh/chị/ông/bà ～.', './audio/dochirawa.mp3',1]
+            [1, 3, '初めまして。', 'Rất vui được gặp anh/chị.', 'http://127.0.0.1:8000/storage/audio/hajimemashite.mp3', 1],
+            [2, 3, 'どうぞよろしく「お願いします」。', 'Rất vui khi được làm quen.', 'http://127.0.0.1:8000/storage/audio/douzo.mp3', 1],
+            [3, 3, '～から来ました。', 'Tôi đến từ ～.', 'http://127.0.0.1:8000/storage/audio/karakimashita.mp3', 1],
+            [4, 3, 'お名前は？', 'Tên anh/chị là gì?', 'http://127.0.0.1:8000/storage/audio/onamae.mp3', 1],
+            [5, 3, 'どちらは～さんです。', 'Đây là anh/chị/ông/bà ～.', 'http://127.0.0.1:8000/storage/audio/dochirawa.mp3', 1]
         ];
     }
 }
