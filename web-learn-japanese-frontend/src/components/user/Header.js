@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLayerGroup, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { CSSTransition } from 'react-transition-group';
 import '../../styles/global.css';
-import handleLogout from '../../services/LogoutServices';
+import handleLogout from '../../services/logoutServices';
 
 const Header = () => {
     const [user, setUser] = useState(null);

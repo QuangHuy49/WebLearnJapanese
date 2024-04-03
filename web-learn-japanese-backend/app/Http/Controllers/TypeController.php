@@ -25,6 +25,16 @@ class TypeController extends Controller
         ]);
         return response()->json($type,201);
     }
+    public function show($id)
+    {
+        $type = Type::find($id);
+
+        if (!$type) {
+            return response()->json(['message' =>'Type not found'], 404);
+        }
+
+        return response()->json($type, 200);
+    }
     public function update(Request $request,$id){
         $type=Type::find($id);
         if (!$type){
