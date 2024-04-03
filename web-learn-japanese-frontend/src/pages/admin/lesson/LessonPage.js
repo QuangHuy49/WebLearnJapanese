@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { deleteLesson, getLessson } from '../../../services/LessonServices';
+import { deleteLesson, getLessonPaging } from '../../../services/LessonServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faEye, faFileContract, faFile } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -27,7 +27,7 @@ const LessonPage = () => {
     }, [currentPage]);
 
     const loadLessons = async (page) => {
-        const data = await getLessson(page, perPage);
+        const data = await getLessonPaging(page, perPage);
         if (data) {
             setLessons(data.lessons);
             setTotalPages(data.totalPages);

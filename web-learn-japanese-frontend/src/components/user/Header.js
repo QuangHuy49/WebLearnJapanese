@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLayerGroup, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLayerGroup, faRightFromBracket, faBook } from '@fortawesome/free-solid-svg-icons';
 import { CSSTransition } from 'react-transition-group';
 import '../../styles/global.css';
 import handleLogout from '../../services/LogoutServices';
@@ -141,6 +141,8 @@ const Header = () => {
                 ) : (
                     null
                 )}
+
+                {/* get User */}
                 {user ? (
                     <div className="items-center h-full pl-6 ml-6 border-l border-gray-200 mr-[20px] flex cursor-pointer relative" onClick={toggleSubNav}>
                         <button onClick={toggleSubNav}>
@@ -154,24 +156,31 @@ const Header = () => {
                         >
                             <div className="absolute top-8 right-0">
                                 <ul className="text-sm">
-                                    <div id="dropdown-menu" className="origin-top-right absolute right-0 mt-2 w-56 px-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                                        <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
-                                            <div className="flex item-center items-stretch p-2">
+                                    <div id="dropdown-menu" className="origin-top-right absolute right-0 mt-2 px-4 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                        <div className="py-2 p-2 whitespace-nowrap" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
+                                            <div className="flex item-center p-2 pr-8">
                                                 <img src={user.user_avatar} alt="User Avatar" className="w-8 h-8 rounded-full" />
-                                                <span className="ml-3 text-sm font-normal text-custom-color-blue self-center">{user.user_name}</span>
+                                                <span className="ml-2 text-sm font-normal text-custom-color-blue self-center">{user.user_name}</span>
                                             </div>
                                             <div className="border-t-2 border-b-2">
-                                                <a className="flex item-center items-stretch block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+                                                <a className="flex item-center block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
                                                     <FontAwesomeIcon icon={faUser} className="self-center" />
                                                     <div className="self-center ml-2">{t('submenu.my_profile', { ns: 'submenu' })}</div>
                                                 </a>
-                                                <a className="flex item-center items-stretch block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+
+                                                <Link to={'/my-course'} className="flex item-center block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+                                                    <FontAwesomeIcon icon={faBook} className="self-center" />
+                                                    <div className="self-center ml-2">{t('submenu.my_course', { ns: 'submenu' })}</div>
+                                                </Link>
+
+                                                <a className="flex item-center block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
                                                     <FontAwesomeIcon icon={faLayerGroup} className="self-center" />
                                                     <div className="self-center ml-2">{t('submenu.my_post', { ns: 'submenu' })}</div>
                                                 </a>
                                             </div>
+
                                             <div className="">
-                                                <Link onClick={handleLogoutSubmit} className="flex item-center items-stretch block rounded-md px-4 py-2 mt-1 text-sm text-custom-color-red-gray hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+                                                <Link onClick={handleLogoutSubmit} className="flex item-center block rounded-md px-4 py-2 mt-1 text-sm text-custom-color-red-gray hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
                                                     <FontAwesomeIcon icon={faRightFromBracket} className="self-center" />
                                                     <div className="self-center ml-2">{t('submenu.logout', { ns: 'submenu' })}</div>
                                                 </Link>

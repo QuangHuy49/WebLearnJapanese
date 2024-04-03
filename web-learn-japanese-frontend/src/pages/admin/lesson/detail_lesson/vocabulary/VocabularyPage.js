@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getVocabularyDataByid } from '../../../../../services/VocabularyServices';
+import { deleteVocabulary, getVocabularyDataByIdWithPaging } from '../../../../../services/VocabularyServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faPlay, faPencil, faHeadphonesSimple, faSpellCheck } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonAdd from '../../../../../components/button/ButtonAdd';
 import { CSSTransition } from 'react-transition-group';
 import '../../../../../styles/global.css';
+import { toast } from 'react-toastify';
 
 const VocabularyPage = () => {
     let { id } = useParams();
-    console.log(id); 
     const navigate = useNavigate();
     const [vocabularies, setVocabularies] = useState(null);
     const [lesson, setLesson] = useState(null);
@@ -18,13 +18,19 @@ const VocabularyPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const perPage = 10;
     const [showSubNav, setShowSubNav] = useState(false);
+    const [csrfToken, setCsrfToken] = useState('');
 
     useEffect(() => {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        if (token) {
+            setCsrfToken(token.getAttribute('content'));
+        }
+
         getVocabularyData(currentPage);
     }, [currentPage]);
 
     const getVocabularyData = async (page) => {
-        const data = await getVocabularyDataByid(id, page, perPage);
+        const data = await getVocabularyDataByIdWithPaging(id, page, perPage);
         if (data) {
             setLesson(data.lesson);
             setVocabularies(data.vocabularies);
@@ -58,6 +64,17 @@ const VocabularyPage = () => {
     const toggleSubNav = () => {
         setShowSubNav(!showSubNav);
     };
+
+    const handleDeleteVocabulary = async (id_vocabulary) => {
+        const response = await deleteVocabulary(id_vocabulary, csrfToken);
+        if (response === 200) {
+            toast.success('Xóa từ vựng thành công!');
+            navigate(`/admin/lesson/detail-lesson/${id}`);
+            window.location.reload();
+        } else {
+            toast.error('Xóa từ vựng thất bại. Vui lòng thử lại!');
+        }
+    };
     
     return (
         <div className="px-4">
@@ -80,7 +97,7 @@ const VocabularyPage = () => {
                                     <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
                                         <div className="border-t-2 border-b-2">
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={'/admin/lesson/add-lesson'} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-vocabulary'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faPencil} className="self-center" />
                                                     <div className="self-center ml-3">Thêm từ vựng mới</div>
                                                 </Link>
@@ -210,11 +227,11 @@ const VocabularyPage = () => {
                                                 )}
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center gap-x-6">
-                                                        <Link to={``}>
+                                                        <Link to={`/admin/edit-vocabulary/${item.vocabulary_id}`}>
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                             />
+                                                             onClick={() => handleDeleteVocabulary(item.vocabulary_id)} />
                                                     </div>
                                                 </td>
                                             </tr>

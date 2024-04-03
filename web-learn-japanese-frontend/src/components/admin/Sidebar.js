@@ -15,7 +15,7 @@ const Sidebar = () => {
         if (token) {
             setCsrfToken(token.getAttribute('content'));
         }
-
+        
         if (location.includes('category')) {
             setActive(2)
         }

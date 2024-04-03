@@ -20,6 +20,10 @@ import PostUserPage from '../pages/user/PostPage';
 import VocabularyPage from '../pages/admin/lesson/detail_lesson/vocabulary/VocabularyPage';
 import KaiwaPage from '../pages/admin/lesson/detail_lesson/kaiwa/KaiwaPage';
 import GrammarPage from '../pages/admin/lesson/detail_lesson/grammar/GrammarPage';
+import AddVocabularyPage from '../pages/admin/lesson/detail_lesson/vocabulary/AddVocabularyPage';
+import EditVocabularyPage from '../pages/admin/lesson/detail_lesson/vocabulary/EditVocabularyPage';
+import MyCoursePage from '../pages/user/MyCoursePage';
+import LessonDetailPage from '../pages/user/LessonDetailPage';
 
 function App() {
   return (
@@ -33,11 +37,15 @@ function App() {
         <Route path='/admin/lesson' element={<LessonAdminPage />} />
         <Route path='/admin/lesson/add-lesson' element={<AddLessonAdminPage />} />
         <Route path='/admin/lesson/edit-lesson/:id' element={<EditLessonAdminPage />} />
+
         <Route path='/admin/lesson/detail-lesson/:id' element={<DetailLessonAdminLayout />}>
           <Route path='/admin/lesson/detail-lesson/:id' element={<VocabularyPage />} />
           <Route path='/admin/lesson/detail-lesson/:id/kaiwa' element={<KaiwaPage />} />
           <Route path='/admin/lesson/detail-lesson/:id/grammar' element={<GrammarPage />} />
         </Route>
+
+        <Route path='/admin/add-vocabulary' element={<AddVocabularyPage />} />
+        <Route path='/admin/edit-vocabulary/:id' element={<EditVocabularyPage />} />
         <Route path='/admin/test' element={<TestAdminPage />} />
         <Route path='/admin/user' element={<UserPage />} />
         <Route path='/admin/post' element={<PostAdminPage />} />
@@ -47,6 +55,8 @@ function App() {
         <Route path='/lesson' element={<LessonUserPage />} />
         <Route path='/test' element={<TestUserPage />} />
         <Route path='/post' element={<PostUserPage />} />
+        <Route path='/my-course' element={<MyCoursePage />} />
+        <Route path='/lesson-detail/:id' element={<LessonDetailPage />} />
       </Route>
     </Routes>
   );

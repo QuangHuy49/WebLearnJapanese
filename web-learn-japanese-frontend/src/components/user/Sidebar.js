@@ -29,7 +29,7 @@ const Sidebar = () => {
 
     return (
         <div className="flex overflow-hidden bg-white pt-16">
-            <aside id="sidebar" className="fixed hidden z-20 h-full top-0 left-0 pt-10 flex lg:flex flex-shrink-0 flex-col transition-width duration-75" aria-label="Sidebar">
+            <aside id="sidebar" className="fixed hidden z-20 h-full top-4 left-10 pt-10 flex lg:flex flex-shrink-0 flex-col transition-width duration-75" aria-label="Sidebar">
                 <div className="relative flex-1 flex flex-col min-h-0 bg-white pt-6">
                     <div className="flex-1 flex flex-col px-1 pt-2 pb-4 overflow-y-auto">
                         <div className="flex-1 px-3 bg-white divide-y space-y-1">

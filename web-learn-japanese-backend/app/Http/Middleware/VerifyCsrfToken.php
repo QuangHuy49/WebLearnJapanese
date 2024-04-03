@@ -17,13 +17,25 @@ class VerifyCsrfToken extends Middleware
         '/api/auth/logout',
         '/api/auth/register',
 
-        // upload file
+        // upload file image
         '/api/upload/image',
         '/api/delete/image',
+
+        // upload file audio
+        '/api/upload/audio',
+        '/api/delete/audio',
 
         // lesson
         '/api/lesson/add',
         '/api/lesson/edit/*',
-        '/api/lesson/delete/*'
+        '/api/lesson/delete/*',
+
+        // vocabulary
+        '/api/vocabulary/add',
+        '/api/vocabulary/edit/*',
+        '/api/vocabulary/delete/*',
+
+        // lesson-user
+        '/api/lesson-user/add-lesson-user/*',
     ];
 }

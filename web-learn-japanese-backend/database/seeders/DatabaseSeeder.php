@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             KaiwaSeeder::class,
             GrammarSeeder::class,
             TestSeeder::class,
-            QuestionSeeder::class
+            QuestionSeeder::class,
+            LessonUserSeeder::class
         ]);
     }
 }

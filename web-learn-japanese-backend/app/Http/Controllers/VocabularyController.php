@@ -23,7 +23,7 @@ class VocabularyController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'lesson_id'=>'nullable|int|max:10',
+            'lesson_id'=>'required|int|max:10',
             'vocabulary_name'=>'required|string|max:255',
             'vocabulary_character'=>'nullable|string|max:255',
             'vocabulary_yin_han'=>'nullable|string|max:255',
@@ -116,8 +116,8 @@ class VocabularyController extends Controller
         return response()->json(['message'=>'Vocabulary deleted successfully!'], 200);
     }
 
-    // get data vocabulary by lesson_id
-    public function getVocabularyDataByIdLesson(Request $request, $id)
+    // get data vocabulary by lesson_id with paging
+    public function getVocabularyDataByIdLessonPaging(Request $request, $id)
     {
         $perPage = $request->input('perPage', 10);
         $page = $request->input('page', 1);
@@ -134,6 +134,19 @@ class VocabularyController extends Controller
             'vocabularies' => $vocabularies,
             'lesson' => $lesson,
             'totalPages' => $totalPages
+        ], 200);
+    }
+
+     // get data vocabulary by lesson_id with no paging
+    public function getVocabularyDataByIdLesson(Request $request, $id)
+    {
+        $vocabularies = Vocabulary::where('lesson_id', $id)->get();
+                        
+        $lesson = Lesson::find($id);
+
+        return response()->json([
+            'vocabularies' => $vocabularies,
+            'lesson' => $lesson
         ], 200);
     }
 }

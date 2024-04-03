@@ -54,7 +54,7 @@ const KaiwaPage = () => {
         <div className="px-4">
             <div className="px-14 flex justify-between text-custom-color-blue items-end pb-2">
                 <div className="font-medium text-lg">
-                    Danh sách từ vựng của 
+                    Danh sách câu kaiwa của 
                     {lesson && <span className="font-semibold ml-1">'{lesson.lesson_name}'</span>}
                 </div>
 
@@ -71,7 +71,7 @@ const KaiwaPage = () => {
                                     <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
                                         <div className="border-t-2 border-b-2">
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={'/admin/lesson/add-lesson'} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-vocabulary'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faPencil} className="self-center" />
                                                     <div className="self-center ml-3">Thêm từ vựng mới</div>
                                                 </Link>

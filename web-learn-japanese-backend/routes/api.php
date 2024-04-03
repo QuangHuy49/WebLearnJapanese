@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -62,7 +61,7 @@ Route::group([
     Route::get('list', [TypeController::class, 'index']);
     Route::post('add', [TypeController::class, 'create']);
     Route::post('edit/{id}', [TypeController::class, 'update']);
-    Route::delete('delete/{id}', [TypeController::class, 'destroy']);   
+    Route::delete('delete/{id}', [TypeController::class, 'destroy']); 
 });
 
 //Api Bài học
@@ -70,11 +69,16 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'lesson'
 ], function ($router) {
+    Route::get('all', [LessonController::class, 'get_all_lesson']);
     Route::get('list', [LessonController::class, 'index']);
     Route::post('add', [LessonController::class, 'create']);
     Route::get('get/{id}', [LessonController::class, 'show']);
     Route::post('edit/{id}', [LessonController::class, 'update']);
     Route::delete('delete/{id}', [LessonController::class, 'destroy']);
+    // get 8 latest lesson if status = 1
+    Route::get('/latest-lessons/{id}', [LessonController::class, 'getLatestLessons']);
+    // get lesson by user_id
+    Route::get('/lessons-user/{id}', [LessonController::class, 'getLessonsByIdUser']);
 });
 
 //Api Kaiwa
@@ -113,6 +117,7 @@ Route::group([
     Route::post('edit/{id}', [VocabularyController::class, 'update']);
     Route::delete('delete/{id}', [VocabularyController::class, 'destroy']);   
     Route::get('get/{id}', [VocabularyController::class, 'show']);
+    Route::get('{id}/vocabulary-data-paging', [VocabularyController::class, 'getVocabularyDataByIdLessonPaging']);
     Route::get('{id}/vocabulary-data', [VocabularyController::class, 'getVocabularyDataByIdLesson']);
 });
 
@@ -130,6 +135,7 @@ Route::group([
     'prefix' => 'upload'
 ], function ($router) {
     Route::post('image', [FileController::class, 'uploadImage']);
+    Route::post('audio', [FileController::class, 'uploadAudio']);
 });
 
 // api delete file
@@ -138,4 +144,13 @@ Route::group([
     'prefix' => 'delete'
 ], function ($router) {
     Route::post('image', [FileController::class, 'deleteImage']);
+    Route::post('audio', [FileController::class, 'deleteAudio']);
+});
+
+//api lesson-user
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'lesson-user'
+], function ($router) {
+    Route::post('add-lesson-user/{id}', [LessonUserController::class, 'addLessonUser']);
 });
