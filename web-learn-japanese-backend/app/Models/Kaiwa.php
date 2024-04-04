@@ -11,10 +11,11 @@ class Kaiwa extends Model
 
     protected $table = 'tbl_kaiwa';
     protected $primaryKey = 'kaiwa_id';
-    protected $fillable = ['lesson_id', 'kaiwa_name', 'kaiwa_mean', 'kaiwa_audio'];
+    protected $fillable = ['lesson_id', 'kaiwa_name', 'kaiwa_mean', 'kaiwa_audio', 'kaiwa_status'];
     public $timestamps = false;
 
-    public function lesson() {
-        return $this->belongsTo(Lesson::class, 'lesson_id', 'lesson_id');
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class, 'lesson_id');
     }
 }

@@ -1,0 +1,8 @@
+{
+    "submenu": {
+        "my_profile": "個人ページ",
+        "my_course": "私のコース",
+        "my_post": "私の記事",
+        "logout": "サインアウ"
+    }
+}

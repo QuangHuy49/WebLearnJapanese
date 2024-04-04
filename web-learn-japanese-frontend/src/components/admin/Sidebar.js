@@ -15,8 +15,7 @@ const Sidebar = () => {
         if (token) {
             setCsrfToken(token.getAttribute('content'));
         }
-
-        if (location.includes('category')) {
+        if (location.includes('type')) {
             setActive(2)
         }
         if (location.includes('lesson')) {
@@ -59,7 +58,7 @@ const Sidebar = () => {
                                     </Link>
                                 </li>
                                 <li className={active === 2 ? "text-base text-white font-normal rounded-lg bg-custom-color-gray flex items-center p-2 group hover:scale-110 cursor-pointer transition-all" : "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 flex items-center p-2 group hover:scale-110 cursor-pointer transition-all"}>
-                                    <Link to={'/admin/category'} className="px-2" onClick={() => setActive(2)}>
+                                    <Link to={'/admin/type'} className="px-2" onClick={() => setActive(2)}>
                                         <FontAwesomeIcon icon={faLayerGroup} className={active === 2 ? "text-white" : "text-amber-500"} />
                                         <span className="ml-3 flex-1 whitespace-nowrap">Quản lý thể loại</span>
                                     </Link>

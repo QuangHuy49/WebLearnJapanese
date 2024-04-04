@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,17 +30,20 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     // Route::post('refresh', [AuthController::class, 'refresh']);
 });
-
+//api user
 Route::group([
     'middleware' => 'api',
     'prefix' => 'user'
 ], function ($router) {
     Route::get('list', [UserController::class, 'index']);
+    Route::get('get/{id}', [UserController::class, 'show']);
+    Route::get('getUser', [UserController::class, 'getUsers']);
     Route::post('add', [UserController::class, 'create']);
-    Route::post('delete/{id}', [UserController::class, 'destroy']);
+    Route::delete('delete/{id}', [UserController::class, 'destroy']);
     Route::post('edit/{id}', [UserController::class, 'update']);
 });
 
+//Api Vai trò
 Route::group([
     'middleware' => 'api',
     'prefix' => 'role'
@@ -49,28 +51,95 @@ Route::group([
     Route::get('list', [RoleController::class, 'index']);
     Route::post('add', [RoleController::class, 'create']);
     Route::post('edit/{id}', [RoleController::class, 'update']);
-    Route::post('delete/{id}', [RoleController::class, 'destroy']);
+    Route::delete('delete/{id}', [RoleController::class, 'destroy']);
    
 });
 
+//Api Thể loại bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'type'
 ], function ($router) {
-    Route::get('list', [TypeController::class, 'index']);
+    Route::get('list', [TypeController::class, 'index']);  
+    Route::get('get/{id}', [TypeController::class, 'show']);
     Route::post('add', [TypeController::class, 'create']);
     Route::post('edit/{id}', [TypeController::class, 'update']);
-    Route::post('delete/{id}', [TypeController::class, 'destroy']);   
+    Route::delete('delete/{id}', [TypeController::class, 'destroy']); 
 });
 
+//Api Bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'lesson'
 ], function ($router) {
+    Route::get('all', [LessonController::class, 'get_all_lesson']);
     Route::get('list', [LessonController::class, 'index']);
     Route::post('add', [LessonController::class, 'create']);
+    Route::get('get/{id}', [LessonController::class, 'show']);
     Route::post('edit/{id}', [LessonController::class, 'update']);
-    Route::delete('delete/{id}', [LessonController::class, 'destroy']);   
+    Route::delete('delete/{id}', [LessonController::class, 'destroy']);
+    // get 8 latest lesson if status = 1
+    Route::get('/latest-lessons/{id}', [LessonController::class, 'getLatestLessons']);
+    // get lesson by user_id
+    Route::get('/lessons-user/{id}', [LessonController::class, 'getLessonsByIdUser']);
+});
+
+//Api Kaiwa
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'kaiwa'
+], function ($router) {
+    Route::get('list', [KaiwaController::class, 'index']);
+    Route::post('add', [KaiwaController::class, 'create']);
+    Route::post('edit/{id}', [KaiwaController::class, 'update']);
+    Route::delete('delete/{id}', [KaiwaController::class, 'destroy']);   
+    Route::get('get/{id}', [KaiwaController::class, 'show']);
+    Route::get('{id}/kaiwa-data-paging', [KaiwaController::class, 'getKaiwaDataByIdLessonPaging']);
+    Route::get('{id}/kaiwa-data', [KaiwaController::class, 'getKaiwaDataByIdLesson']);
+});
+
+//Api Grammar
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'grammar'
+], function ($router) {
+    Route::get('list', [GrammarController::class, 'index']);
+    Route::post('add', [GrammarController::class, 'create']);
+    Route::post('edit/{id}', [GrammarController::class, 'update']);
+    Route::delete('delete/{id}', [GrammarController::class, 'destroy']);   
+    Route::get('get/{id}', [GrammarController::class, 'show']);
+    Route::get('{id}/grammar-data-paging', [GrammarController::class, 'getGrammarDataByIdLessonPaging']);
+    Route::get('{id}/grammar-data', [GrammarController::class, 'getGrammarDataByIdLesson']);
+});
+
+//Api Vocabulary
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'vocabulary'
+], function ($router) {
+    Route::get('list', [VocabularyController::class, 'index']);
+    Route::post('add', [VocabularyController::class, 'create']);
+    Route::post('edit/{id}', [VocabularyController::class, 'update']);
+    Route::delete('delete/{id}', [VocabularyController::class, 'destroy']);   
+    Route::get('get/{id}', [VocabularyController::class, 'show']);
+    Route::get('{id}/vocabulary-data-paging', [VocabularyController::class, 'getVocabularyDataByIdLessonPaging']);
+    Route::get('{id}/vocabulary-data', [VocabularyController::class, 'getVocabularyDataByIdLesson']);
+});
+
+//Api Test
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'test'
+], function ($router) {
+    Route::get('list', [TestController::class, 'index']);
+   
+});
+//Api Read Language
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'language'
+], function ($router) {
+    Route::get('list', [LanguageController::class, 'index']);
 });
 
 // api upload file
@@ -79,6 +148,7 @@ Route::group([
     'prefix' => 'upload'
 ], function ($router) {
     Route::post('image', [FileController::class, 'uploadImage']);
+    Route::post('audio', [FileController::class, 'uploadAudio']);
 });
 
 // api delete file
@@ -87,4 +157,13 @@ Route::group([
     'prefix' => 'delete'
 ], function ($router) {
     Route::post('image', [FileController::class, 'deleteImage']);
+    Route::post('audio', [FileController::class, 'deleteAudio']);
+});
+
+//api lesson-user
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'lesson-user'
+], function ($router) {
+    Route::post('add-lesson-user/{id}', [LessonUserController::class, 'addLessonUser']);
 });

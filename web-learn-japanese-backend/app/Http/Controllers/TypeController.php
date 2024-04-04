@@ -13,6 +13,7 @@ class TypeController extends Controller
         $types = Type::all();
         return response()->json($types);
     }
+    
     public function create(Request $request)
     {
         $request->validate([
@@ -25,7 +26,19 @@ class TypeController extends Controller
         ]);
         return response()->json($type,201);
     }
-    public function update(Request $request,$id){
+  
+    public function show($id)
+    {
+        $type = Type::find($id);
+
+        if (!$type) {
+            return response()->json(['message' =>'Type not found'], 404);
+        }
+
+        return response()->json($type, 200);
+    }
+
+    public function update(Request $request, $id){
         $type=Type::find($id);
         if (!$type){
             return response()->json(['message'=> 'Type not found'],404);
@@ -41,6 +54,7 @@ class TypeController extends Controller
         ]);
         return response()->json($type,201);
     }
+
     public function destroy($id)
     {
         $type=Type::find($id);

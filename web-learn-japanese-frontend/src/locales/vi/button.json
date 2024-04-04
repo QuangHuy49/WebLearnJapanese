@@ -1,0 +1,16 @@
+{
+    "button" : {
+        "login": "Đăng nhập",
+        "register": "Đăng ký",
+        "google": "Đăng nhập với Google"
+    },
+
+    "search": {
+        "search": "Tìm kiếm ..."
+    },
+
+    "lesson_button": {
+        "view_detail": "Xem chi tiết",
+        "learn_continue": "Học tiếp"
+    }
+}

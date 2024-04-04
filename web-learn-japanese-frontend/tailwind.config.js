@@ -8,7 +8,7 @@ module.exports = {
         'custom-color-red-gray': '#e24943'
       },
       backgroundColor: {
-        'custom-color-blue': '#14375f',
+        'custom-color-blue': '#415A80',
         'custom-color-gray': '#6c8299',
         'custom-color-red-gray': '#e24943',
         'custom-color-red': '#df322b'

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { deleteLesson, getLessson } from '../../../services/LessonServices';
+import { deleteLesson, getLessonPaging } from '../../../services/LessonServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faEye, faFileContract, faFile } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -16,6 +16,8 @@ const LessonPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const perPage = 5;
     const [csrfToken, setCsrfToken] = useState('');
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
+    const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 
     useEffect(() => {
         loadLessons(currentPage);
@@ -26,15 +28,8 @@ const LessonPage = () => {
         }
     }, [currentPage]);
 
-    useEffect(() => {
-        const token = document.querySelector('meta[name="csrf-token"]');
-        if (token) {
-            setCsrfToken(token.getAttribute('content'));
-        }
-    }, []);
-
     const loadLessons = async (page) => {
-        const data = await getLessson(page, perPage);
+        const data = await getLessonPaging(page, perPage);
         if (data) {
             setLessons(data.lessons);
             setTotalPages(data.totalPages);
@@ -59,7 +54,12 @@ const LessonPage = () => {
     };
 
     const handleDeleteLesson = async (id) => {
-        const response = await deleteLesson(id, csrfToken);
+        setLessonIdToDelete(id);
+        setShowConfirmationModal(true);
+    };
+
+    const confirmDeleteLesson = async () => {
+        const response = await deleteLesson(lessonIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa bài học thành công!');
             navigate('/admin/lesson');
@@ -67,37 +67,42 @@ const LessonPage = () => {
         } else {
             toast.error('Xóa bài học thất bại. Vui lòng thử lại!');
         }
+        setShowConfirmationModal(false);
+    };
+
+    const cancelDeleteLesson = () => {
+        setShowConfirmationModal(false);
     };
 
     return (
         <div className="p-4">
-            <div className="px-4 flex justify-between text-custom-color-blue items-end pb-2">
+            <div className="px-14 flex justify-between text-custom-color-blue items-end pb-2">
                 <div className="font-medium text-lg">
                     Danh sách bài học
                 </div>
 
-                <div className="" onClick={toggleSubNav}>
+                <div className="relative" onClick={toggleSubNav}>
                     <ButtonAdd />
                     <CSSTransition
                         in={showSubNav}
                         timeout={300}
                         classNames="dropdown"
                         unmountOnExit>
-                        <div className="absolute top-12 right-10">
+                        <div className="absolute top-9 right-0">
                             <ul className="text-sm">
                                 <div id="dropdown-menu" className="origin-top-right absolute right-0 mt-2 w-64 px-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                                     <div className="py-2 p-2" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-button">
                                         <div className="border-t-2 border-b-2">
-                                            <a className="flex item-center items-stretch block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+                                            <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
                                                 <Link to={'/admin/lesson/add-lesson'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faFile} className="self-center" />
-                                                    <div className="self-center ml-2">Thêm bài học</div>
+                                                    <div className="self-center ml-3">Thêm bài học</div>
                                                 </Link>
                                             </a>
-                                            <a className="flex item-center items-stretch block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+                                            <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
                                                 <Link to={''} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faFileContract} className="self-center" />
-                                                    <div className="self-center ml-2">Thêm nội dung bài học</div>
+                                                    <div className="self-center ml-3">Thêm nội dung bài học</div>
                                                 </Link>
                                             </a>
                                         </div>
@@ -148,7 +153,7 @@ const LessonPage = () => {
                                             <tr>
                                                 <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                                                     <div className="flex items-center text-center ml-2">
-                                                        <span>{item.lesson_id}</span>
+                                                        <span>{index + 1}</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">{item.lesson_name}</td>
@@ -184,8 +189,12 @@ const LessonPage = () => {
                                                 )}
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center gap-x-6">
-                                                        <FontAwesomeIcon icon={faEye} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
-                                                        <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
+                                                        <Link to={`/admin/lesson/detail-lesson/${item.lesson_id}`}>
+                                                            <FontAwesomeIcon icon={faEye} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
+                                                        </Link>
+                                                        <Link to={`/admin/lesson/edit-lesson/${item.lesson_id}`}>
+                                                            <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
+                                                        </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
                                                             onClick={() => handleDeleteLesson(item.lesson_id)} />
                                                     </div>
@@ -231,6 +240,19 @@ const LessonPage = () => {
                     </div>
                 </div>
             </section>
+
+            {showConfirmationModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md">
+                        <p className="text-lg">Bạn có chắc chắn muốn xóa bài học này?</p>
+                        <div className="flex justify-end mt-9">
+                            <button onClick={cancelDeleteLesson} className="bg-gray-300 hover:bg-gray-400 hover:scale-110 transition-all text-gray-800 font-bold py-2 px-4 mr-2 rounded">Hủy</button>
+                            <button onClick={confirmDeleteLesson} className="bg-custom-color-red-gray hover:bg-red-600 hover:scale-110 transition-all text-white font-bold py-2 px-4 rounded">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
