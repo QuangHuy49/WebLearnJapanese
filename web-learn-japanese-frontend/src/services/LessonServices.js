@@ -1,6 +1,20 @@
 import axios from "axios";
 
-export async function getLessson(page, perPage) {
+export async function getLesson() {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lesson/all`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.log('Error', error.message);
+        return null;
+    }
+}
+
+export async function getLessonPaging(page, perPage) {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/lesson/list?page=${page}&perPage=${perPage}`);
         if (response.status === 200) {
@@ -62,5 +76,51 @@ export async function deleteLesson(id, csrfToken) {
         return response.status;
     } catch (error) {
         console.error('Failed to delete lesson:', error);
+    }
+}
+
+// UI user
+// get 5 latest lesson if status = 1
+export async function getLatestLesson(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lesson/latest-lessons/${id}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.log('Error', error.message);
+        return null;
+    }
+}
+
+// get lessons if user learned (My course)
+export async function getLessonsByIdUser(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lesson/lessons-user/${id}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.log('Error', error.message);
+        return null;
+    }
+}
+
+// add lesson into my course of user
+export async function addLessonUser(formData, userId, csrfToken) {
+    try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/lesson-user/add-lesson-user/${userId}`, formData, 
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response;
+    } catch (error) {
+        console.error('Failed to add leson:', error);
     }
 }

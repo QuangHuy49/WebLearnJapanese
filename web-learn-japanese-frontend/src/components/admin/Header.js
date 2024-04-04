@@ -24,7 +24,7 @@ const Header = () => {
 
     return (
         <header className="w-full text-gray-700 bg-white body-font shadow-md shadow-neutral-200 fixed z-30">
-            <div className="container flex flex-col items-center p-3 mx-auto md:flex-row">
+            <div className="flex flex-col items-center p-3 md:flex-row">
                 <Link to="/" className="flex items-center mb-4 font-extrabold text-custom-color-blue title-font md:mb-0 text-2xl pl-[20px]">
                     KUMABERUS
                 </Link>

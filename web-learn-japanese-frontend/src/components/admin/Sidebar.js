@@ -15,7 +15,6 @@ const Sidebar = () => {
         if (token) {
             setCsrfToken(token.getAttribute('content'));
         }
-
         if (location.includes('type')) {
             setActive(2)
         }

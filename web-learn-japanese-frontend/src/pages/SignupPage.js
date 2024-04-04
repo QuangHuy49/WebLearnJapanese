@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import handleRegister from '../services/RegisterServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const SignupPage = () => {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ const SignupPage = () => {
         password: '',
         confirm_password: ''
     });
+    const { t } = useTranslation(['button', 'login']);
 
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -48,7 +50,7 @@ const SignupPage = () => {
             <div className="absolute -bottom-[-40px] -right-[-40px] hidden h-48 w-48 rotate-12 transform rounded-xl bg-[#fbc4c2] md:block"></div>
             <form className="z-20 rounded-2xl bg-white px-12 py-12 shadow-xl" onSubmit={handleSubmit}>
                 <div className="w-80">
-                    <h1 className="mb-8 cursor-pointer text-center text-3xl font-bold text-[#14375f]">ĐĂNG KÝ</h1>
+                    <h1 className="mb-8 text-center text-3xl font-bold text-[#14375f]">{t('button.register')}</h1>
                 </div>
                 <div className="space-y-4">
                     <input type="text" name="user_name" value={formData.user_name} onChange={handleChange} placeholder="Username" className="block w-full rounded-lg border px-4 py-3 text-sm outline-[#14375f]" required />
@@ -58,17 +60,17 @@ const SignupPage = () => {
                 </div>
                 <div className="mt-6 text-center">
                     <button type="submit" className="my-3 flex w-full items-center justify-center space-x-2 rounded-lg border bg-[#14375f] py-2 text-center text-xl text-white transition duration-150 hover:border-slate-400 hover:shadow">
-                        Đăng ký
+                        {t('button.register')}
                     </button>
                     <div className="mt-4 flex justify-evenly space-x-2">
                         <span className="t-2 relative top-2 h-px flex-grow bg-gray-300"></span>
-                        <span className="flex-none text-xs font-semibold uppercase text-gray-400">Hoặc</span>
+                        <span className="flex-none text-xs font-semibold uppercase text-gray-400">{t('login.or', { ns: 'login' })}</span>
                         <span className="t-2 relative top-2 h-px flex-grow bg-gray-300"></span>
                     </div>
                     <div className="">
                         <button className="my-3 flex w-full items-center justify-center space-x-2 rounded-lg border border-slate-200 py-2 text-center text-slate-700 transition duration-150 hover:border-slate-400 hover:text-slate-900 hover:shadow"><img src="https://www.svgrepo.com/show/355037/google.svg" className="h-6 w-6" alt="" />
                             <span>
-                                Đăng ký với Google
+                                {t('button.google')}
                             </span>
                         </button>
                     </div>
