@@ -30,6 +30,15 @@ class VerifyCsrfToken extends Middleware
         '/api/lesson/edit/*',
         '/api/lesson/delete/*',
 
+        // type
+        '/api/type/add',
+        '/api/type/edit/*',
+        '/api/type/delete/*',
+
+        //user
+        '/api/user/add',
+        '/api/user/edit/*',
+        '/api/user/delete/*',
         // vocabulary
         '/api/vocabulary/add',
         '/api/vocabulary/edit/*',

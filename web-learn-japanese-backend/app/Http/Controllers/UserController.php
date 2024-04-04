@@ -10,10 +10,21 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
-        return response()->json($users);
+        $perPage = $request->input('perPage', 5);
+        $page = $request->input('page', 1);
+    
+        $totalUsers = User::count();
+        $totalPages = ceil($totalUsers / $perPage);
+        $users = User::skip(($page - 1) * $perPage)
+                        ->take($perPage)
+                        ->get();
+                        
+        return response()->json([
+            'users' => $users,
+            'totalPages' => $totalPages
+        ]);
     }
 
     /**
@@ -22,16 +33,16 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
         ]);
 
         $user = User::create([
-            'user_name' => $request->name,
+            'user_name' => $request->user_name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'user_avatar' => 'storage/app/public/img/avatar/male-student.png', 
+            'password' => $request->password,
+            'user_avatar' => 'http://127.0.0.1:8000/storage/img/avatar/male-student.png', 
             'user_role_id' => 2, 
         ]);
 
@@ -49,9 +60,15 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' =>'User not found'], 404);
+        }
+
+        return response()->json($user, 200);
     }
 
     /**
@@ -73,7 +90,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
@@ -82,18 +99,18 @@ class UserController extends Controller
         $request->validate([
             'user_name' => 'required|string|max:255',
             'email' => 'required|email',
-            'password' => 'nullable|string|min:6',
-            'user_avatar' => 'nullable|image|max:2048', 
-            'user_role_id' => 'nullable|exists:tbl_role,id', 
+            'password' => 'required|string|min:6',
+            'user_avatar' => 'required|string|max:255', 
+            'user_role_id' => 'nullable|integer|between:1,2', 
         ]);
 
         $user->update([
-            'User_id' => $id,
+            'user_id' => $id,
             'user_name' => $request->user_name,
             'email' => $request->email,
-            'password' => $request->filled('password') ? bcrypt($request->password) : $user->password,
-            'user_avatar' => $request->file('user_avatar') ? $request->file('user_avatar')->store('avatars') : $user->user_avatar,
-            'user_role_id' => $request->filled('user_role_id') ? $request->user_role_id : $user->user_role_id,
+            'password' => $request->password,
+            'user_avatar' => $request->user_avatar,
+            'user_role_id' => $request->user_role_id ,
         ]);
 
         return response()->json($user, 201);
@@ -112,5 +129,25 @@ class UserController extends Controller
     
         $user->delete();    
         return response()->json(['message' => 'User deleted successfully'], 200);
+    }
+    public function getUsers(Request $request)
+    {
+        //$users = User::where('user_role_id', 2)->get();
+
+        //return response()->json($users, 200);
+        $perPage = $request->input('perPage', 5);
+        $page = $request->input('page', 1);
+    
+        $totalUsers = User::where('user_role_id', 2)->count();
+        $totalPages = ceil($totalUsers / $perPage);
+        $users = User::where('user_role_id', 2)
+                        ->skip(($page - 1) * $perPage)
+                        ->take($perPage)
+                        ->get();
+                        
+        return response()->json([
+            'users' => $users,
+            'totalPages' => $totalPages
+        ]);
     }
 }

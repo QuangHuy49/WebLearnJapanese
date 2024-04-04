@@ -30,15 +30,17 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     // Route::post('refresh', [AuthController::class, 'refresh']);
 });
-
+//api user
 Route::group([
     'middleware' => 'api',
     'prefix' => 'user'
 ], function ($router) {
     Route::get('list', [UserController::class, 'index']);
+    Route::get('get/{id}', [UserController::class, 'show']);
+    Route::get('getUser', [UserController::class, 'getUsers']);
     Route::post('add', [UserController::class, 'create']);
-    Route::post('delete/{id}', [UserController::class, 'destroy']);
-    Route::delete('edit/{id}', [UserController::class, 'update']);
+    Route::delete('delete/{id}', [UserController::class, 'destroy']);
+    Route::post('edit/{id}', [UserController::class, 'update']);
 });
 
 //Api Vai trò
@@ -58,7 +60,8 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'type'
 ], function ($router) {
-    Route::get('list', [TypeController::class, 'index']);
+    Route::get('list', [TypeController::class, 'index']);  
+    Route::get('get/{id}', [TypeController::class, 'show']);
     Route::post('add', [TypeController::class, 'create']);
     Route::post('edit/{id}', [TypeController::class, 'update']);
     Route::delete('delete/{id}', [TypeController::class, 'destroy']); 
@@ -123,6 +126,14 @@ Route::group([
     Route::get('{id}/vocabulary-data', [VocabularyController::class, 'getVocabularyDataByIdLesson']);
 });
 
+//Api Test
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'test'
+], function ($router) {
+    Route::get('list', [TestController::class, 'index']);
+   
+});
 //Api Read Language
 Route::group([
     'middleware' => 'api',
