@@ -19,6 +19,8 @@ const KaiwaPage = () => {
     const perPage = 10;
     const [showSubNav, setShowSubNav] = useState(false);
     const [csrfToken, setCsrfToken] = useState('');
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
+    const [kaiwaIdToDelete, setKaiwaIdToDelete] = useState(null);
 
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -65,8 +67,13 @@ const KaiwaPage = () => {
             });
     };
 
-    const handleDeleteKaiwa = async (id_kaiwa) => {
-        const response = await deleteKaiwa(id_kaiwa, csrfToken);
+    const handleDeleteKaiwa = async (id) => {
+        setKaiwaIdToDelete(id);
+        setShowConfirmationModal(true);
+    };
+
+    const confirmDeleteKaiwa = async () => {
+        const response = await deleteKaiwa(kaiwaIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa câu kaiwa thành công!');
             navigate(`/admin/lesson/detail-lesson/${id}/kaiwa`);
@@ -74,6 +81,11 @@ const KaiwaPage = () => {
         } else {
             toast.error('Xóa câu kaiwa thất bại. Vui lòng thử lại!');
         }
+        setShowConfirmationModal(false);
+    };
+
+    const cancelDeleteKaiwa = () => {
+        setShowConfirmationModal(false);
     };
 
     return (
@@ -257,6 +269,19 @@ const KaiwaPage = () => {
                     </div>
                 </div>
             </section>
+
+            {showConfirmationModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md">
+                        <p className="text-lg">Bạn có chắc chắn muốn xóa câu kaiwa này?</p>
+                        <div className="flex justify-end mt-9">
+                            <button onClick={cancelDeleteKaiwa} className="bg-gray-300 hover:bg-gray-400 hover:scale-110 transition-all text-gray-800 font-bold py-2 px-4 mr-2 rounded">Hủy</button>
+                            <button onClick={confirmDeleteKaiwa} className="bg-custom-color-red-gray hover:bg-red-600 hover:scale-110 transition-all text-white font-bold py-2 px-4 rounded">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

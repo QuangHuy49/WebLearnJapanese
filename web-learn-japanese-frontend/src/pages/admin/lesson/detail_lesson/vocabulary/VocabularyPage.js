@@ -19,6 +19,8 @@ const VocabularyPage = () => {
     const perPage = 10;
     const [showSubNav, setShowSubNav] = useState(false);
     const [csrfToken, setCsrfToken] = useState('');
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
+    const [vocabularyIdToDelete, setVocabularyIdToDelete] = useState(null);
 
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -65,8 +67,13 @@ const VocabularyPage = () => {
         setShowSubNav(!showSubNav);
     };
 
-    const handleDeleteVocabulary = async (id_vocabulary) => {
-        const response = await deleteVocabulary(id_vocabulary, csrfToken);
+    const handleDeleteVocabulary = async (id) => {
+        setVocabularyIdToDelete(id);
+        setShowConfirmationModal(true);
+    };
+
+    const confirmDeleteVocabulary = async () => {
+        const response = await deleteVocabulary(vocabularyIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa từ vựng thành công!');
             navigate(`/admin/lesson/detail-lesson/${id}`);
@@ -74,6 +81,11 @@ const VocabularyPage = () => {
         } else {
             toast.error('Xóa từ vựng thất bại. Vui lòng thử lại!');
         }
+        setShowConfirmationModal(false);
+    };
+
+    const cancelDeleteVocabulary = () => {
+        setShowConfirmationModal(false);
     };
     
     return (
@@ -277,6 +289,19 @@ const VocabularyPage = () => {
                     </div>
                 </div>
             </section>
+
+            {showConfirmationModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md">
+                        <p className="text-lg">Bạn có chắc chắn muốn xóa từ vựng này?</p>
+                        <div className="flex justify-end mt-9">
+                            <button onClick={cancelDeleteVocabulary} className="bg-gray-300 hover:bg-gray-400 hover:scale-110 transition-all text-gray-800 font-bold py-2 px-4 mr-2 rounded">Hủy</button>
+                            <button onClick={confirmDeleteVocabulary} className="bg-custom-color-red-gray hover:bg-red-600 hover:scale-110 transition-all text-white font-bold py-2 px-4 rounded">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

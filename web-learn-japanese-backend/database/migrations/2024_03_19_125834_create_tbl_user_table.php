@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password', 60)->collation('utf8_unicode_ci')->nullable();
             $table->string('user_avatar', 255)->nullable();
             $table->unsignedInteger('user_role_id')->nullable();
+            $table->timestamps();
 
             $table->foreign('user_role_id')->references('role_id')->on('tbl_role');
         });

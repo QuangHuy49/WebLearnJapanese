@@ -38,7 +38,7 @@ const TypePage = () => {
         setShowConfirmationModal(true);
     };
 
-    const confirmDeleteType= async () => {
+    const confirmDeleteType = async () => {
         const response = await deleteType(typeIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa thể loại thành công!');
@@ -53,9 +53,10 @@ const TypePage = () => {
     const cancelDeleteType = () => {
         setShowConfirmationModal(false);
     };
+    
     return (
         <div className="p-4">
-            <div className="px-4 flex justify-between text-custom-color-blue items-end pb-2">
+            <div className="px-14 flex justify-between text-custom-color-blue items-end pb-2">
                 <div className="font-medium text-lg">
                     Danh sách thể loại bài học
                 </div>

@@ -16,6 +16,8 @@ const LessonPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const perPage = 5;
     const [csrfToken, setCsrfToken] = useState('');
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
+    const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
 
     useEffect(() => {
         loadLessons(currentPage);
@@ -52,7 +54,12 @@ const LessonPage = () => {
     };
 
     const handleDeleteLesson = async (id) => {
-        const response = await deleteLesson(id, csrfToken);
+        setLessonIdToDelete(id);
+        setShowConfirmationModal(true);
+    };
+
+    const confirmDeleteLesson = async () => {
+        const response = await deleteLesson(lessonIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa bài học thành công!');
             navigate('/admin/lesson');
@@ -60,6 +67,11 @@ const LessonPage = () => {
         } else {
             toast.error('Xóa bài học thất bại. Vui lòng thử lại!');
         }
+        setShowConfirmationModal(false);
+    };
+
+    const cancelDeleteLesson = () => {
+        setShowConfirmationModal(false);
     };
 
     return (
@@ -228,6 +240,19 @@ const LessonPage = () => {
                     </div>
                 </div>
             </section>
+
+            {showConfirmationModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md">
+                        <p className="text-lg">Bạn có chắc chắn muốn xóa bài học này?</p>
+                        <div className="flex justify-end mt-9">
+                            <button onClick={cancelDeleteLesson} className="bg-gray-300 hover:bg-gray-400 hover:scale-110 transition-all text-gray-800 font-bold py-2 px-4 mr-2 rounded">Hủy</button>
+                            <button onClick={confirmDeleteLesson} className="bg-custom-color-red-gray hover:bg-red-600 hover:scale-110 transition-all text-white font-bold py-2 px-4 rounded">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
