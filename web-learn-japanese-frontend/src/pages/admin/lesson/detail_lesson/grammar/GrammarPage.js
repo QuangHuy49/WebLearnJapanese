@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getGrammarDataByid } from '../../../../../services/GrammarServices';
+import { deleteGrammar, getGrammarDataByIdWithPaging } from '../../../../../services/GrammarServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faTrash, faPlay, faPencil, faHeadphonesSimple, faSpellCheck } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash, faPencil, faHeadphonesSimple, faSpellCheck } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonAdd from '../../../../../components/button/ButtonAdd';
 import { CSSTransition } from 'react-transition-group';
+import { toast } from 'react-toastify';
 import '../../../../../styles/global.css';
 
 const GrammarPage = () => {
@@ -17,13 +18,19 @@ const GrammarPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const perPage = 10;
     const [showSubNav, setShowSubNav] = useState(false);
+    const [csrfToken, setCsrfToken] = useState('');
 
     useEffect(() => {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        if (token) {
+            setCsrfToken(token.getAttribute('content'));
+        }
+        
         getGrammarData(currentPage);
     }, [currentPage]);
 
     const getGrammarData = async (page) => {
-        const data = await getGrammarDataByid(id, page, perPage);
+        const data = await getGrammarDataByIdWithPaging(id, page, perPage);
         if (data) {
             setLesson(data.lesson);
             setGrammars(data.grammars);
@@ -48,6 +55,17 @@ const GrammarPage = () => {
 
     const toggleSubNav = () => {
         setShowSubNav(!showSubNav);
+    };
+
+    const handleDeleteGrammar = async (id_grammar) => {
+        const response = await deleteGrammar(id_grammar, csrfToken);
+        if (response === 200) {
+            toast.success('Xóa ngữ pháp thành công!');
+            navigate(`/admin/lesson/detail-lesson/${id}/grammar`);
+            window.location.reload();
+        } else {
+            toast.error('Xóa ngữ pháp thất bại. Vui lòng thử lại!');
+        }
     };
 
     return (
@@ -77,13 +95,13 @@ const GrammarPage = () => {
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-kaiwa'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faHeadphonesSimple} className="self-center" />
                                                     <div className="self-center ml-3">Thêm câu kaiwa mới</div>
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-grammar'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faSpellCheck} className="self-center" />
                                                     <div className="self-center ml-3">Thêm ngữ pháp mới</div>
                                                 </Link>
@@ -201,11 +219,11 @@ const GrammarPage = () => {
                                                 )}
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center gap-x-6">
-                                                        <Link to={``}>
+                                                        <Link to={`/admin/edit-grammar/${item.grammar_id}`}>
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                             />
+                                                            onClick={() => handleDeleteGrammar(item.grammar_id)} />
                                                     </div>
                                                 </td>
                                             </tr>

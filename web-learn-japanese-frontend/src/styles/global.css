@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Hina+Mincho&family=Shippori+Mincho+B1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Coiny&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rokkitt:ital,wght@0,100..900;1,100..900&display=swap');
 
 body {
     font-family: 'Lexend', sans-serif;
@@ -15,6 +16,10 @@ body {
 
 .fontCoiny {
     font-family: "Coiny", system-ui;
+}
+
+.fontRokkitt {
+    font-family: "Rokkitt", serif;
 }
 
 .dropdown-enter {

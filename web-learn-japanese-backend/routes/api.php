@@ -91,6 +91,7 @@ Route::group([
     Route::post('edit/{id}', [KaiwaController::class, 'update']);
     Route::delete('delete/{id}', [KaiwaController::class, 'destroy']);   
     Route::get('get/{id}', [KaiwaController::class, 'show']);
+    Route::get('{id}/kaiwa-data-paging', [KaiwaController::class, 'getKaiwaDataByIdLessonPaging']);
     Route::get('{id}/kaiwa-data', [KaiwaController::class, 'getKaiwaDataByIdLesson']);
 });
 
@@ -104,6 +105,7 @@ Route::group([
     Route::post('edit/{id}', [GrammarController::class, 'update']);
     Route::delete('delete/{id}', [GrammarController::class, 'destroy']);   
     Route::get('get/{id}', [GrammarController::class, 'show']);
+    Route::get('{id}/grammar-data-paging', [GrammarController::class, 'getGrammarDataByIdLessonPaging']);
     Route::get('{id}/grammar-data', [GrammarController::class, 'getGrammarDataByIdLesson']);
 });
 

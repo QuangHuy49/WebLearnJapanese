@@ -24,6 +24,10 @@ import AddVocabularyPage from '../pages/admin/lesson/detail_lesson/vocabulary/Ad
 import EditVocabularyPage from '../pages/admin/lesson/detail_lesson/vocabulary/EditVocabularyPage';
 import MyCoursePage from '../pages/user/MyCoursePage';
 import LessonDetailPage from '../pages/user/LessonDetailPage';
+import AddKaiwaPage from '../pages/admin/lesson/detail_lesson/kaiwa/AddKaiwaPage';
+import EditKaiwaPage from '../pages/admin/lesson/detail_lesson/kaiwa/EditKaiwaPage';
+import AddGrammarPage from '../pages/admin/lesson/detail_lesson/grammar/AddGrammarPage';
+import EditGrammarPage from '../pages/admin/lesson/detail_lesson/grammar/EditGrammarPage';
 
 function App() {
   return (
@@ -46,6 +50,13 @@ function App() {
 
         <Route path='/admin/add-vocabulary' element={<AddVocabularyPage />} />
         <Route path='/admin/edit-vocabulary/:id' element={<EditVocabularyPage />} />
+
+        <Route path='/admin/add-kaiwa' element={<AddKaiwaPage />} />
+        <Route path='/admin/edit-kaiwa/:id' element={<EditKaiwaPage />} />
+
+        <Route path='/admin/add-grammar' element={<AddGrammarPage />} />
+        <Route path='/admin/edit-grammar/:id' element={<EditGrammarPage />} />
+
         <Route path='/admin/test' element={<TestAdminPage />} />
         <Route path='/admin/user' element={<UserPage />} />
         <Route path='/admin/post' element={<PostAdminPage />} />

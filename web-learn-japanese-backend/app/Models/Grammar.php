@@ -11,7 +11,7 @@ class Grammar extends Model
 
     protected $table = 'tbl_grammar';
     protected $primaryKey = 'grammar_id';
-    protected $fillable = ['lesson_id', 'grammar_title', 'grammar_mean', 'grammar_detail', 'grammar_example', 'grammar_note'];
+    protected $fillable = ['lesson_id', 'grammar_title', 'grammar_mean', 'grammar_detail', 'grammar_example', 'grammar_note', 'grammar_status'];
     public $timestamps = false;
 
     public function lesson()

@@ -3,19 +3,17 @@ import { getLesson } from '../../../../../services/LessonServices';
 import { handleDeleteAudio, handleUploadAudio } from '../../../../../services/FileServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faPlay } from '@fortawesome/free-solid-svg-icons';
-import { addVocabulary } from '../../../../../services/VocabularyServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { addKaiwa } from '../../../../../services/KaiwaServices';
 
-const AddVocabularyPage = () => {
+const AddKaiwaPage = () => {
     const [formData, setFormData] = useState({
         lesson_id: '',
-        vocabulary_name: '',
-        vocabulary_character: '',
-        vocabulary_yin_han: '',
-        vocabulary_mean: '',
-        vocabulary_audio: '',
-        vocabulary_status: ''
+        kaiwa_name: '',
+        kaiwa_mean: '',
+        kaiwa_audio: '',
+        kaiwa_status: ''
     });
     const statusOptions = [
         { value: 1, label: 'Xuất bản' },
@@ -62,7 +60,7 @@ const AddVocabularyPage = () => {
         const response = await handleUploadAudio(file, handleProgress);
         if (response.status === 200) {
             setUploadedAudio(response.data);
-            setFormData({ ...formData, vocabulary_audio: createAudioUrl(response.data.filename) });
+            setFormData({ ...formData, kaiwa_audio: createAudioUrl(response.data.filename) });
         }
     };
 
@@ -101,88 +99,54 @@ const AddVocabularyPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await addVocabulary(formData, csrfToken);
+            const response = await addKaiwa(formData, csrfToken);
             if (response.status === 201) {
-                toast.success('Thêm từ vựng mới thành công!');
-                navigate(`/admin/lesson/detail-lesson/${formData.lesson_id}`);
+                toast.success('Thêm câu kaiwa mới thành công!');
+                navigate(`/admin/lesson/detail-lesson/${formData.lesson_id}/kaiwa`);
             } else {
-                toast.error('Thêm từ vựng mới thất bại. Vui lòng thử lại!');
+                toast.error('Thêm câu kaiwa mới thất bại. Vui lòng thử lại!');
             }
         } catch (error) {
             console.error('Failed to add vocabulary:', error);
-            toast.error('Đã xảy ra lỗi trong quá trình thêm từ vựng.');
+            toast.error('Đã xảy ra lỗi trong quá trình thêm kaiwa.');
         }
     };
 
     return (
         <div class="flex items-center justify-center p-2">
             <div class="mx-auto w-full bg-white">
-                <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Thêm từ vựng mới</div>
+                <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Thêm câu kaiwa mới</div>
                 <form class="py-4 px-9" method="POST">
                     <div class="mb-5">
                         <label
-                            for="vocabulary_name"
+                            for="kaiwa_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
-                            Từ vựng
+                            Câu kaiwa
                         </label>
                         <input
                             type="text"
-                            name="vocabulary_name"
-                            id="vocabulary_name"
-                            placeholder="にほんご"
+                            name="kaiwa_name"
+                            id="kaiwa_name"
+                            placeholder="初めまして。"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            value={formData.vocabulary_name}
+                            value={formData.kaiwa_name}
                                 onChange={handleChange}
                         />
                     </div>
 
                     <div class="mb-5">
                         <label
-                            for="vocabulary_character"
-                            class="mb-2 block text-base font-medium text-custom-color-blue">
-                            Hán tự
-                        </label>
-                        <input
-                            type="text"
-                            name="vocabulary_character"
-                            id="vocabulary_character"
-                            placeholder="日本語"
-                            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            value={formData.vocabulary_character}
-                                onChange={handleChange}
-                        />
-                    </div>
-
-                    <div class="mb-5">
-                        <label
-                            for="vocabulary_yin_han"
-                            class="mb-2 block text-base font-medium text-custom-color-blue">
-                            Âm hán
-                        </label>
-                        <input
-                            type="text"
-                            name="vocabulary_yin_han"
-                            id="vocabulary_yin_han"
-                            placeholder="NHẬT BỔN NGỮ"
-                            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            value={formData.vocabulary_yin_han}
-                                onChange={handleChange}
-                        />
-                    </div>
-
-                    <div class="mb-5">
-                        <label
-                            for="vocabulary_mean"
+                            for="kaiwa_mean"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Nghĩa
                         </label>
                         <input
                             type="text"
-                            name="vocabulary_mean"
-                            id="vocabulary_mean"
-                            placeholder="Tiếng Nhật"
+                            name="kaiwa_mean"
+                            id="kaiwa_mean"
+                            placeholder="Rất vui được gặp anh/chị"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
-                            value={formData.vocabulary_mean}
+                            value={formData.kaiwa_mean}
                                 onChange={handleChange}
                         />
                     </div>
@@ -273,14 +237,14 @@ const AddVocabularyPage = () => {
 
                     <div class="mb-5">
                         <label
-                            for="vocabulary_status"
+                            for="kaiwa_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
                         </label>
                         <select
-                            name="vocabulary_status"
-                            id="vocabulary_status"
-                            value={formData.vocabulary_status}
+                            name="kaiwa_status"
+                            id="kaiwa_status"
+                            value={formData.kaiwa_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                             <option value="">Chọn trạng thái</option>
@@ -296,7 +260,7 @@ const AddVocabularyPage = () => {
                         <button
                             className={`hover:shadow-form w-full rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none bg-[#6A64F1] hover:bg-[#5C59C2] cursor-pointer`}
                             onClick={handleSubmit}>
-                            Thêm từ vựng mới
+                            Thêm câu kaiwa mới
                         </button>
                     </div>
                 </form>
@@ -305,4 +269,4 @@ const AddVocabularyPage = () => {
     );
 }
 
-export default AddVocabularyPage;
+export default AddKaiwaPage;

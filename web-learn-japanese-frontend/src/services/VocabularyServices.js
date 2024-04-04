@@ -14,20 +14,6 @@ export async function getVocabularyDataByIdWithPaging(id, page, perPage) {
     }
 }
 
-export async function getVocabularyDataById(id) {
-    try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/vocabulary/${id}/vocabulary-data`);
-        if (response.status === 200) {
-            return response.data;
-        } else {
-            return null;
-        } 
-    } catch (error) {
-        console.error('Failed to get vocabulary data:', error);
-        return null;
-    }
-}
-
 export async function getVocabularyByid(id) {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/vocabulary/get/${id}`);
@@ -76,5 +62,20 @@ export async function deleteVocabulary(id, csrfToken) {
         return response.status;
     } catch (error) {
         console.error('Failed to delete vocabulary:', error);
+    }
+}
+
+// get vocabulary by id lesson if status = 1
+export async function getVocabularyDataById(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/vocabulary/${id}/vocabulary-data`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.error('Failed to get vocabulary data:', error);
+        return null;
     }
 }

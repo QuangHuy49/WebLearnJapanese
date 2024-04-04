@@ -103,13 +103,13 @@ const VocabularyPage = () => {
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-kaiwa'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faHeadphonesSimple} className="self-center" />
                                                     <div className="self-center ml-3">Thêm câu kaiwa mới</div>
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-grammar'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faSpellCheck} className="self-center" />
                                                     <div className="self-center ml-3">Thêm ngữ pháp mới</div>
                                                 </Link>
@@ -200,9 +200,13 @@ const VocabularyPage = () => {
                                                 </td>
 
                                                 <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                                                    <span onClick={() => playAudio(item.vocabulary_audio)}>
-                                                        <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all"/>
-                                                    </span>
+                                                    {item.vocabulary_audio !== null ? (
+                                                        <span onClick={() => playAudio(item.vocabulary_audio)}>
+                                                            <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all"/>
+                                                        </span>
+                                                    ) : (
+                                                        null
+                                                    )}
                                                 </td>
 
                                                 {item.vocabulary_status === 1 ? (

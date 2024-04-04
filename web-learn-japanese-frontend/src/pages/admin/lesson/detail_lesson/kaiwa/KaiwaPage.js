@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getKaiwaDataByid } from '../../../../../services/KaiwaServices';
+import { deleteKaiwa, getKaiwaDataByIdWithPaging } from '../../../../../services/KaiwaServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faPlay, faPencil, faHeadphonesSimple, faSpellCheck } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonAdd from '../../../../../components/button/ButtonAdd';
 import { CSSTransition } from 'react-transition-group';
 import '../../../../../styles/global.css';
+import { toast } from 'react-toastify';
 
 const KaiwaPage = () => {
     let { id } = useParams();
@@ -17,13 +18,19 @@ const KaiwaPage = () => {
     const [totalPages, setTotalPages] = useState(1);
     const perPage = 10;
     const [showSubNav, setShowSubNav] = useState(false);
+    const [csrfToken, setCsrfToken] = useState('');
 
     useEffect(() => {
+        const token = document.querySelector('meta[name="csrf-token"]');
+        if (token) {
+            setCsrfToken(token.getAttribute('content'));
+        }
+        
         getKaiwaData(currentPage);
     }, [currentPage]);
 
     const getKaiwaData = async (page) => {
-        const data = await getKaiwaDataByid(id, page, perPage);
+        const data = await getKaiwaDataByIdWithPaging(id, page, perPage);
         if (data) {
             setLesson(data.lesson);
             setKaiwas(data.kaiwas);
@@ -48,6 +55,25 @@ const KaiwaPage = () => {
 
     const toggleSubNav = () => {
         setShowSubNav(!showSubNav);
+    };
+
+    const playAudio = (audioUrl) => {
+        const audio = new Audio(audioUrl);
+        audio.play()
+            .catch(error => {
+                console.error('Failed to play audio:', error);
+            });
+    };
+
+    const handleDeleteKaiwa = async (id_kaiwa) => {
+        const response = await deleteKaiwa(id_kaiwa, csrfToken);
+        if (response === 200) {
+            toast.success('Xóa câu kaiwa thành công!');
+            navigate(`/admin/lesson/detail-lesson/${id}/kaiwa`);
+            window.location.reload();
+        } else {
+            toast.error('Xóa câu kaiwa thất bại. Vui lòng thử lại!');
+        }
     };
 
     return (
@@ -77,13 +103,13 @@ const KaiwaPage = () => {
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-kaiwa'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faHeadphonesSimple} className="self-center" />
                                                     <div className="self-center ml-3">Thêm câu kaiwa mới</div>
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/add-grammar'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faSpellCheck} className="self-center" />
                                                     <div className="self-center ml-3">Thêm ngữ pháp mới</div>
                                                 </Link>
@@ -154,9 +180,13 @@ const KaiwaPage = () => {
                                                 </td>
 
                                                 <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                                                    <span>
-                                                        {item.kaiwa_audio}
-                                                    </span>
+                                                    {item.kaiwa_audio !== null ? (
+                                                            <span onClick={() => playAudio(item.kaiwa_audio)}>
+                                                                <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all"/>
+                                                            </span>
+                                                        ) : (
+                                                            null
+                                                        )}
                                                 </td>
 
                                                 {item.kaiwa_status === 1 ? (
@@ -181,11 +211,11 @@ const KaiwaPage = () => {
                                                 )}
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center gap-x-6">
-                                                        <Link to={``}>
+                                                        <Link to={`/admin/edit-kaiwa/${item.kaiwa_id}`}>
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                             />
+                                                             onClick={() => handleDeleteKaiwa(item.kaiwa_id)}/>
                                                     </div>
                                                 </td>
                                             </tr>

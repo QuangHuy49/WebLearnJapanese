@@ -10,20 +10,14 @@ const Sidebar = () => {
     const { t } = useTranslation('sidebar');
 
     useEffect(() => {
-        if (location.includes('category')) {
+        if (location.includes('lesson')) {
             setActive(2)
         }
-        if (location.includes('lesson')) {
+        if (location.includes('test')) {
             setActive(3)
         }
-        if (location.includes('test')) {
-            setActive(4)
-        }
-        if (location.includes('user')) {
-            setActive(5)
-        }
         if (location.includes('post')) {
-            setActive(6)
+            setActive(4)
         }
     }, [])
 

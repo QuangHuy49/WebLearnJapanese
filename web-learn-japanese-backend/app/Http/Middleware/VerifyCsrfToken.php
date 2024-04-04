@@ -35,6 +35,16 @@ class VerifyCsrfToken extends Middleware
         '/api/vocabulary/edit/*',
         '/api/vocabulary/delete/*',
 
+        // kaiwa
+        '/api/kaiwa/add',
+        '/api/kaiwa/edit/*',
+        '/api/kaiwa/delete/*',
+
+        // grammar
+        '/api/grammar/add',
+        '/api/grammar/edit/*',
+        '/api/grammar/delete/*',
+
         // lesson-user
         '/api/lesson-user/add-lesson-user/*',
     ];

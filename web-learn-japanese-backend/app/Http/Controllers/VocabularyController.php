@@ -83,7 +83,7 @@ class VocabularyController extends Controller
             return response()->json(['message'=>'Vocabulary not found'], 404);
         }
         $request->validate([
-            'lesson_id'=>'nullable|int|max:10',
+            'lesson_id'=>'required|int',
             'vocabulary_name'=>'required|string|max:255',
             'vocabulary_character'=>'nullable|string|max:255',
             'vocabulary_yin_han'=>'nullable|string|max:255',
@@ -137,16 +137,17 @@ class VocabularyController extends Controller
         ], 200);
     }
 
-     // get data vocabulary by lesson_id with no paging
+    // get data vocabulary by lesson_id with no paging
     public function getVocabularyDataByIdLesson(Request $request, $id)
     {
-        $vocabularies = Vocabulary::where('lesson_id', $id)->get();
+        $vocabularies = Vocabulary::where('lesson_id', $id)
+                                    ->where('vocabulary_status', 1)
+                                    ->get();
                         
         $lesson = Lesson::find($id);
 
         return response()->json([
-            'vocabularies' => $vocabularies,
-            'lesson' => $lesson
+            'vocabularies' => $vocabularies
         ], 200);
     }
 }
