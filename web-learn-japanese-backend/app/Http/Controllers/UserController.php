@@ -42,7 +42,7 @@ class UserController extends Controller
             'user_name' => $request->user_name,
             'email' => $request->email,
             'password' => $request->password,
-            'user_avatar' => 'http://127.0.0.1:8000/storage/img/avatar/male-student.png', 
+            'user_avatar' => 'http://1    7.0.0.1:8000/storage/img/avatar/male-student.png', 
             'user_role_id' => 2, 
         ]);
 

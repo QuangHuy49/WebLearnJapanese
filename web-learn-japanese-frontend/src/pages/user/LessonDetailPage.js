@@ -40,4 +40,4 @@ const LessonDetailPage = () => {
     );
 }
 
-export default LessonDetailPage;
+export default LessonDetailPage;                                                                                                                  

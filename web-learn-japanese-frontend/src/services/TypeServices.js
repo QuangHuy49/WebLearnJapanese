@@ -23,7 +23,7 @@ export async function addType(formData, csrfToken) {
         });
         return response;
     } catch (error) {
-        console.error('Failed to add leson:', error);
+        console.error('Failed to add type:', error);
     }
 }
 export async function deleteType(id, csrfToken) {
@@ -57,7 +57,7 @@ export async function updateType(id,formData, csrfToken) {
         });
         return response;
     } catch (error) {
-        console.error('Failed to update lesson:', error);
+        console.error('Failed to update type:', error);
     }
 }
  
