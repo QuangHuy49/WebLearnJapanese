@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { deleteUser, getUser } from '../../../services/UserServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare, faTrash, faEye, faFileContract, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonAdd from '../../../components/button/ButtonAdd';
 import { toast } from 'react-toastify';
