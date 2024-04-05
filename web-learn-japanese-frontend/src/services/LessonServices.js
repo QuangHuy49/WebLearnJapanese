@@ -124,3 +124,18 @@ export async function addLessonUser(formData, userId, csrfToken) {
         console.error('Failed to add leson:', error);
     }
 }
+
+// delete lesson_img by lesson_id
+export async function deleteLessonImage(id, csrfToken) {
+    try {
+        const response = await axios.delete(`http://127.0.0.1:8000/api/lesson/delete-lesson-image/${id}`,
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response.status;
+    } catch (error) {
+        console.error('Failed to delete lesson:', error);
+    }
+}

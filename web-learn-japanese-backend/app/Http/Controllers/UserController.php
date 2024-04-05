@@ -148,4 +148,20 @@ class UserController extends Controller
             'totalPages' => $totalPages
         ]);
     }
+
+    // delete user_avatar by user_id
+    public function deleteAvatarImage($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if (!empty($user->user_avatar)) {
+            $user->update(['user_avatar' => null]);
+
+            return response()->json(['message' => 'Avatar image deleted successfully'], 200);
+        }
+    }
 }
