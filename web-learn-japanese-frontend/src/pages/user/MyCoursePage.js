@@ -5,10 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPeopleGroup, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import oops_cat from '../../assets/image/oops_cat.png';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const MyCoursePage = () => {
     const [user, setUser] = useState([]);
     const [lessonsUser, setLessonsUser] = useState([]);
+    const { t } = useTranslation('course', 'lesson_button');
 
     useEffect(() => {
         fetchUserData();
@@ -41,7 +43,7 @@ const MyCoursePage = () => {
     return (
         <div className="relative flex flex-col overflow-hidden py-6 sm:py-12">
             <div className="mx-auto w-[1600px]">
-                <h2 className="mb-2 font-bold text-xl text-custom-color-blue">Khóa học của tôi</h2>
+                <h2 className="mb-2 font-bold text-xl text-custom-color-blue">{t('course.my_course')}</h2>
                 {lessonsUser.length > 0 ? (
                     <div className="grid w-full sm:grid-cols-2 xl:grid-cols-4 gap-6">
                         {lessonsUser.map((item, index) => (
@@ -51,7 +53,7 @@ const MyCoursePage = () => {
                                     <div className="w-full h-full p-5 relative">
                                         <div className="absolute bottom-12 group-hover:bottom-16 left-[150px] text-white transition-all ease-in-out duration-500">
                                             <button className="text-sm font-semibold px-4 py-2 bg-blue-500 text-white rounded-lg">
-                                                Học tiếp
+                                                {t('lesson_button.learn_continue', { ns: 'lesson_button' })}
                                             </button>
                                         </div>
                                     </div>

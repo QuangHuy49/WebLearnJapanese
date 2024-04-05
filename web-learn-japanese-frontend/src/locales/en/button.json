@@ -7,5 +7,10 @@
 
     "search": {
         "search": "Search ..."
+    },
+
+    "lesson_button": {
+        "view_detail": "View detail",
+        "learn_continue": "Learn continue"
     }
 }

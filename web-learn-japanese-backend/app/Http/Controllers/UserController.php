@@ -130,12 +130,10 @@ class UserController extends Controller
         $user->delete();    
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
+
     public function getUsers(Request $request)
     {
-        //$users = User::where('user_role_id', 2)->get();
-
-        //return response()->json($users, 200);
-        $perPage = $request->input('perPage', 5);
+        $perPage = $request->input('perPage', 6);
         $page = $request->input('page', 1);
     
         $totalUsers = User::where('user_role_id', 2)->count();

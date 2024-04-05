@@ -7,5 +7,10 @@
 
     "search": {
         "search": "Tìm kiếm ..."
+    },
+
+    "lesson_button": {
+        "view_detail": "Xem chi tiết",
+        "learn_continue": "Học tiếp"
     }
 }

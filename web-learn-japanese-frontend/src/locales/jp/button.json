@@ -7,5 +7,10 @@
 
     "search": {
         "search": "調べ出す ..."
+    },
+
+    "lesson_button": {
+        "view_detail": "詳細を見る  ",
+        "learn_continue": "学び続ける"
     }
 }

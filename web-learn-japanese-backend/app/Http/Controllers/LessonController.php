@@ -121,7 +121,12 @@ class LessonController extends Controller
     // get lesson by user_id
     public function getLessonsByIdUser($userId)
     {
-        $userLessons = LessonUser::where('user_id', $userId)->with('lesson')->get();
+        $userLessons = LessonUser::where('user_id', $userId)
+            ->whereHas('lesson', function ($query) {
+                $query->where('lesson_status', 1);
+            })
+            ->with('lesson')
+            ->get();
 
         $lessonsData = [];
 
