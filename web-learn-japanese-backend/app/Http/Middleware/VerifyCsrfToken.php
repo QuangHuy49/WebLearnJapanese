@@ -17,9 +17,13 @@ class VerifyCsrfToken extends Middleware
         '/api/auth/logout',
         '/api/auth/register',
 
-        // upload file
+        // upload file image
         '/api/upload/image',
         '/api/delete/image',
+
+        // upload file audio
+        '/api/upload/audio',
+        '/api/delete/audio',
 
         // lesson
         '/api/lesson/add',
@@ -35,5 +39,22 @@ class VerifyCsrfToken extends Middleware
         '/api/user/add',
         '/api/user/edit/*',
         '/api/user/delete/*',
+        // vocabulary
+        '/api/vocabulary/add',
+        '/api/vocabulary/edit/*',
+        '/api/vocabulary/delete/*',
+
+        // kaiwa
+        '/api/kaiwa/add',
+        '/api/kaiwa/edit/*',
+        '/api/kaiwa/delete/*',
+
+        // grammar
+        '/api/grammar/add',
+        '/api/grammar/edit/*',
+        '/api/grammar/delete/*',
+
+        // lesson-user
+        '/api/lesson-user/add-lesson-user/*',
     ];
 }

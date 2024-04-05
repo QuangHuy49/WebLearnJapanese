@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse, faLayerGroup, faBook, faBrain, faImagePortrait, faFileLines, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import handleLogout from '../../services/logoutServices';
+import handleLogout from '../../services/LogoutServices';
 
 const Sidebar = () => {
     const [active, setActive] = useState(1);
@@ -15,7 +15,6 @@ const Sidebar = () => {
         if (token) {
             setCsrfToken(token.getAttribute('content'));
         }
-
         if (location.includes('type')) {
             setActive(2)
         }

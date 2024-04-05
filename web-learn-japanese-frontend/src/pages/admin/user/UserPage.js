@@ -11,7 +11,7 @@ const UserPage = () => {
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const perPage = 5;
+    const perPage = 6;
     const [csrfToken, setCsrfToken] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
     const [userIdToDelete, setUserIdToDelete] = useState(null);
@@ -72,7 +72,7 @@ const UserPage = () => {
 
     return (
         <div className="p-4">
-            <div className="px-4 flex justify-between text-custom-color-blue items-end pb-2">
+            <div className="px-14 flex justify-between text-custom-color-blue items-end pb-2">
                 <div className="font-medium text-lg">
                     Danh sách học viên
                 </div>

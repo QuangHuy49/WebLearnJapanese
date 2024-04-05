@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faImage} from '@fortawesome/free-solid-svg-icons';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { getType } from '../../../services/TypeServices';
 import { addLesson } from '../../../services/LessonServices';
 import { toast } from 'react-toastify';
@@ -37,7 +37,6 @@ const AddLessonPage = () => {
     const fetchTypes = async () => {
         try {
             const response = await getType();
-            console.log(response);
             setTypes(response);
         } catch (error) {
             console.error('Error fetching types:', error);
@@ -156,7 +155,7 @@ const AddLessonPage = () => {
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faImage} />
+                                    <img src={`http://127.0.0.1:8000/storage/img/${uploadedImage.filename}`} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
                                     <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
                                         {uploadedImage.filename}
                                     </span>
@@ -229,8 +228,7 @@ const AddLessonPage = () => {
                         <button
                             className={`hover:shadow-form w-full rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none ${uploadProgress < 100 ? 'bg-[#E5E7EB] cursor-not-allowed' : 'bg-[#6A64F1] hover:bg-[#5C59C2] cursor-pointer'}`}
                             disabled={uploadProgress < 100}
-                            onClick={handleSubmit}
-                        >
+                            onClick={handleSubmit}>
                             Thêm bài học mới
                         </button>
                     </div>

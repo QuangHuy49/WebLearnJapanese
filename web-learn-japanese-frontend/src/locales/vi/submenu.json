@@ -1,0 +1,8 @@
+{
+    "submenu": {
+        "my_profile": "Trang cá nhân",
+        "my_course": "Khóa học của tôi",
+        "my_post": "Bài viết của tôi",
+        "logout": "Đăng xuất"
+    }
+}

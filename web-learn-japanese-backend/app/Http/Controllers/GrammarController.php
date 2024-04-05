@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Grammar;
+use App\Models\Lesson;
 
 class GrammarController extends Controller
 {
@@ -116,5 +117,38 @@ class GrammarController extends Controller
         return response()->json(['message' => 'Grammar deleted successfully!'],200);
     }
     
+    // get data grammar by lesson_id
+    public function getGrammarDataByIdLessonPaging(Request $request, $id)
+    {
+        $perPage = $request->input('perPage', 10);
+        $page = $request->input('page', 1);
     
+        $totalGrammars = Grammar::count();
+        $totalPages = ceil($totalGrammars / $perPage);
+        $grammars = Grammar::where('lesson_id', $id)
+                        ->skip(($page - 1) * $perPage)
+                        ->take($perPage)
+                        ->get();
+                        
+        $lesson = Lesson::find($id);
+        return response()->json([
+            'grammars' => $grammars,
+            'lesson' => $lesson,
+            'totalPages' => $totalPages
+        ], 200);
+    }
+
+    // get data vocabulary by lesson_id with no paging
+    public function getGrammarDataByIdLesson(Request $request, $id)
+    {
+        $grammars = Grammar::where('lesson_id', $id)
+                        ->where('grammar_status', 1)
+                        ->get();
+                        
+        $lesson = Lesson::find($id);
+
+        return response()->json([
+            'grammars' => $grammars
+        ], 200);
+    }
 }
