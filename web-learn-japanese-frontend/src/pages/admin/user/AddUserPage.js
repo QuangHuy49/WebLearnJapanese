@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faImage} from '@fortawesome/free-solid-svg-icons';
 import { addUser } from '../../../services/UserServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';

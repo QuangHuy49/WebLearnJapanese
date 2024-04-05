@@ -141,4 +141,20 @@ class LessonController extends Controller
         }
         return response()->json($lessonsData);
     }
+
+    // delete lesson_img by lesson_id
+    public function deleteLessonImage($id)
+    {
+        $lesson = Lesson::find($id);
+
+        if (!$lesson) {
+            return response()->json(['message' => 'Lesson not found'], 404);
+        }
+
+        if (!empty($lesson->lesson_img)) {
+            $lesson->update(['lesson_img' => null]);
+
+            return response()->json(['message' => 'Lesson image deleted successfully'], 200);
+        }
+    }
 }
