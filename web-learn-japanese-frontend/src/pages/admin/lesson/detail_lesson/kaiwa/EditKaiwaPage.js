@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getKaiwaByid, updateKaiwa } from '../../../../../services/KaiwaServices';
+import { deleteKaiwaAudio, getKaiwaByid, updateKaiwa } from '../../../../../services/KaiwaServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { getLesson } from '../../../../../services/LessonServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { handleDeleteAudio, handleUploadAudio } from '../../../../../services/FileServices';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../../../../../firebase';
+import LoadingUploadFile from '../../../../../components/loading/LoadingUploadFile';
 
 const EditKaiwaPage = () => {
     let { id } = useParams();
@@ -59,18 +62,54 @@ const EditKaiwaPage = () => {
         }
     };
 
-    const createIAudioUrl = (audioName) => {
-        return `http://127.0.0.1:8000/storage/audio/${audioName}`;
-    };
-
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        setUploadProgress(0);
-        setShowProgressBar(true);
-        const response = await handleUploadAudio(file, handleProgress);
-        if (response.status === 200) {
-            setUploadedAudio(response.data);
-            setKaiwa({ ...kaiwa, kaiwa_audio: createIAudioUrl(response.data.filename) });
+        setUploadedAudio(file);
+        try {
+            // Create a reference to where you want to store the file in Firebase Storage
+            const storageRef = ref(storage, `audios/${file.name}`);
+
+            // Upload the file using uploadBytesResumable method
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            // Track upload progress
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Update upload progress if needed
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    // Handle error during upload
+                    console.error('Error uploading file:', error);
+                },
+                async () => {
+                    // Handle upload completion
+                    console.log('Upload complete');
+                    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Store the download URL of the uploaded file
+                        setKaiwa({ ...kaiwa, kaiwa_audio: downloadURL });
+                    });
+                }
+            );
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
+    };
+
+    const handleDeleteAudioSubmit = async () => {
+        try {
+            if (!uploadedAudio) {
+                return;
+            }
+
+            const storageRef = ref(storage, `audios/${uploadedAudio.name}`);
+            await deleteObject(storageRef);
+
+            setUploadedAudio(null);
+            setUploadProgress(0);
+        } catch (error) {
+            console.error('Error deleting audio:', error);
         }
     };
 
@@ -82,28 +121,9 @@ const EditKaiwaPage = () => {
             });
     };
 
-    const handleProgress = (progress) => {
-        setUploadProgress(progress);
-    };
-
-    const handleDeleteAudioSubmit = async () => {
-        try {
-            const deleteResult = await handleDeleteAudio(uploadedAudio.filename);
-            if (deleteResult.success) {
-                setUploadedAudio(null);
-                setUploadProgress(0);
-                setShowProgressBar(false);
-                setKaiwa({...kaiwa, kaiwa_audio: ''});
-            } else {
-                console.error(deleteResult.error);
-            }
-        } catch (error) {
-            console.error('Error deleting audio:', error);
-        }
-    };
-
     const handleDeleteButtonClick = (e) => {
         e.preventDefault();
+        handleDeleteKaiwaudio();
         handleDeleteAudioSubmit();
     };
 
@@ -127,6 +147,14 @@ const EditKaiwaPage = () => {
             toast.error('Đã xảy ra lỗi trong quá trình cập nhật câu kaiwa .');
         }
     };
+
+    const handleDeleteKaiwaudio = async () => {
+        const response = await deleteKaiwaAudio(id, csrfToken);
+        if (response === 200) {
+            setKaiwa({ ...kaiwa, kaiwa_audio: null });
+            setUploadedAudio(null);
+        }
+    }
 
     return (
         <div class="flex items-center justify-center p-2">
@@ -197,35 +225,48 @@ const EditKaiwaPage = () => {
                         </div>
                     </div>
 
-                    {uploadedAudio && (
+                    {(kaiwa.kaiwa_audio !== null || uploadedAudio) ? (
                         <div className="mb-5">
-                            <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                <div className="flex items-center">
-                                    <span onClick={() => playAudio(`http://127.0.0.1:8000/storage/audio/${uploadedAudio.filename}`)}>
-                                        <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all text-custom-color-blue"/>
-                                    </span>
-                                    <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                        {uploadedAudio.filename}
-                                    </span>
-                                </div>
-                            </div>
-                            {showProgressBar && (
-                                <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                            <div className="relative rounded-md bg-[#F5F7FB] py-4 px-8">
+                            {(uploadProgress === 100 || kaiwa.kaiwa_audio) && (
                                     <button
-                                        className="absolute top-[-59px] right-4 text-gray-500"
+                                        className="absolute top-1/2 right-4 -translate-y-1/2 text-gray-500 text-xl"
                                         onClick={handleDeleteButtonClick}>
                                         <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                    </button>
-                                    <div
-                                        className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                        style={{ width: `${uploadProgress}%` }}>
-                                    </div>
-                                    <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                        {uploadProgress}%
-                                    </span>
+                                    </button>)}
+                                <div className="flex items-center">
+                                    {(kaiwa.kaiwa_audio) ? (
+                                        <>
+                                            <span onClick={() => playAudio(kaiwa.kaiwa_audio)}>
+                                                <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all text-custom-color-blue" />
+                                            </span>
+                                            <span className="truncate w-[600px] pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                {(kaiwa.kaiwa_audio || uploadedAudio.name)}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <LoadingUploadFile />
+                                    )}
                                 </div>
-                            )}
+                            </div>
+                            <div className="relative">
+                                {uploadedAudio ? (
+                                    <>
+                                        <div className="mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                            <div
+                                                className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                                style={{ width: `${uploadProgress}%` }}>
+                                            </div>
+                                            <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                                {uploadProgress}%
+                                            </span>
+                                        </div>
+                                    </>
+                                ) : (null)}
+                            </div>
                         </div>
+                    ) : (
+                        null
                     )}
 
                     <div class="mb-5">

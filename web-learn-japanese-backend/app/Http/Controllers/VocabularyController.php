@@ -150,4 +150,20 @@ class VocabularyController extends Controller
             'vocabularies' => $vocabularies
         ], 200);
     }
+
+    // delete vocabulary_audio by vocabulary_id
+    public function deleteVocabularyAudio($id)
+    {
+        $vocabulary = Vocabulary::find($id);
+
+        if (!$vocabulary) {
+            return response()->json(['message' => 'Vocabulary not found'], 404);
+        }
+
+        if (!empty($vocabulary->vocabulary_audio)) {
+            $vocabulary->update(['vocabulary_audio' => null]);
+
+            return response()->json(['message' => 'Vocabulary audio deleted successfully'], 200);
+        }
+    }
 }

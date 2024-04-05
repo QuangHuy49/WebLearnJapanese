@@ -30,6 +30,7 @@ Route::group([
     Route::post('logout', [AuthController::class, 'logout']);
     // Route::post('refresh', [AuthController::class, 'refresh']);
 });
+
 //api user
 Route::group([
     'middleware' => 'api',
@@ -41,6 +42,8 @@ Route::group([
     Route::post('add', [UserController::class, 'create']);
     Route::delete('delete/{id}', [UserController::class, 'destroy']);
     Route::post('edit/{id}', [UserController::class, 'update']);
+    // delete user_avatar by user_id
+    Route::delete('/delete-avatar-image/{id}', [UserController::class, 'deleteAvatarImage']);
 });
 
 //Api Vai trò
@@ -82,6 +85,8 @@ Route::group([
     Route::get('/latest-lessons/{id}', [LessonController::class, 'getLatestLessons']);
     // get lesson by user_id
     Route::get('/lessons-user/{id}', [LessonController::class, 'getLessonsByIdUser']);
+    // delete lesson_img by lesson_id
+    Route::delete('/delete-lesson-image/{id}', [LessonController::class, 'deleteLessonImage']);
 });
 
 //Api Kaiwa
@@ -96,6 +101,8 @@ Route::group([
     Route::get('get/{id}', [KaiwaController::class, 'show']);
     Route::get('{id}/kaiwa-data-paging', [KaiwaController::class, 'getKaiwaDataByIdLessonPaging']);
     Route::get('{id}/kaiwa-data', [KaiwaController::class, 'getKaiwaDataByIdLesson']);
+    // delete kaiwa_audio by kaiwa_id
+    Route::delete('/delete-kaiwa-audio/{id}', [KaiwaController::class, 'deleteKaiwaAudio']);
 });
 
 //Api Grammar
@@ -124,6 +131,8 @@ Route::group([
     Route::get('get/{id}', [VocabularyController::class, 'show']);
     Route::get('{id}/vocabulary-data-paging', [VocabularyController::class, 'getVocabularyDataByIdLessonPaging']);
     Route::get('{id}/vocabulary-data', [VocabularyController::class, 'getVocabularyDataByIdLesson']);
+    // delete vocabulary_audio by vocabulary_id
+    Route::delete('/delete-vocabulary-audio/{id}', [VocabularyController::class, 'deleteVocabularyAudio']);
 });
 
 //Api Test

@@ -79,3 +79,18 @@ export async function getKaiwaDataById(id) {
         return null;
     }
 }
+
+// delete kaiwa_audio by kaiwa_id
+export async function deleteKaiwaAudio(id, csrfToken) {
+    try {
+        const response = await axios.delete(`http://127.0.0.1:8000/api/kaiwa/delete-kaiwa-audio/${id}`,
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response.status;
+    } catch (error) {
+        console.error('Failed to delete kaiwa audio:', error);
+    }
+}

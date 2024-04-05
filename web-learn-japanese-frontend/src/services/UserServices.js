@@ -64,3 +64,18 @@ export async function deleteUser(id, csrfToken) {
         console.error('Failed to delete user:', error);
     }
 }
+
+// delete user_avatar by user_id
+export async function deleteAvatarImage(id, csrfToken) {
+    try {
+        const response = await axios.delete(`http://127.0.0.1:8000/api/user/delete-avatar-image/${id}`,
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response.status;
+    } catch (error) {
+        console.error('Failed to delete avatar image:', error);
+    }
+}

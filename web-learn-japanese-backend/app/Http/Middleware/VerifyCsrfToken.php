@@ -29,6 +29,7 @@ class VerifyCsrfToken extends Middleware
         '/api/lesson/add',
         '/api/lesson/edit/*',
         '/api/lesson/delete/*',
+        '/api/lesson/delete-lesson-image/*',
 
         // type
         '/api/type/add',
@@ -39,15 +40,19 @@ class VerifyCsrfToken extends Middleware
         '/api/user/add',
         '/api/user/edit/*',
         '/api/user/delete/*',
+        '/api/user/delete-avatar-image/*',
+
         // vocabulary
         '/api/vocabulary/add',
         '/api/vocabulary/edit/*',
         '/api/vocabulary/delete/*',
-
+        '/api/vocabulary/delete-vocabulary-audio/*',
+        
         // kaiwa
         '/api/kaiwa/add',
         '/api/kaiwa/edit/*',
         '/api/kaiwa/delete/*',
+        '/api/kaiwa/delete-kaiwa-audio/*',
 
         // grammar
         '/api/grammar/add',

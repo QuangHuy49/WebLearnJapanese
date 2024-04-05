@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getLessonByid, updateLesson } from '../../../services/LessonServices';
+import { deleteLessonImage, getLessonByid, updateLesson } from '../../../services/LessonServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
 import { getType } from '../../../services/TypeServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../../../firebase';
+import LoadingUploadFile from '../../../components/loading/LoadingUploadFile';
 
 const EditLessonPage = () => {
     let { id } = useParams();
@@ -23,7 +25,6 @@ const EditLessonPage = () => {
     ];
     const [uploadedImage, setUploadedImage] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [showProgressBar, setShowProgressBar] = useState(false);
     const [types, setTypes] = useState([]);
     const [csrfToken, setCsrfToken] = useState('');
     const navigate = useNavigate();
@@ -50,43 +51,58 @@ const EditLessonPage = () => {
     const fetchTypes = async () => {
         try {
             const response = await getType();
-            console.log(response);
             setTypes(response);
         } catch (error) {
             console.error('Error fetching types:', error);
         }
     };
 
-    const createImageUrl = (imageName) => {
-        return `http://127.0.0.1:8000/storage/img/${imageName}`;
-    };
-
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        setUploadProgress(0);
-        setShowProgressBar(true);
-        const response = await handleUploadImage(file, handleProgress);
-        if (response.status === 200) {
-            setUploadedImage(response.data);
-            setLesson({ ...lesson, lesson_img: createImageUrl(response.data.filename) });
-        }
-    };
+        setUploadedImage(file);
+        try {
+            // Create a reference to where you want to store the file in Firebase Storage
+            const storageRef = ref(storage, `images/${file.name}`);
 
-    const handleProgress = (progress) => {
-        setUploadProgress(progress);
+            // Upload the file using uploadBytesResumable method
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            // Track upload progress
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Update upload progress if needed
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    // Handle error during upload
+                    console.error('Error uploading file:', error);
+                },
+                async () => {
+                    // Handle upload completion
+                    console.log('Upload complete');
+                    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Store the download URL of the uploaded file
+                        setLesson({ ...lesson, lesson_img: downloadURL });
+                    });
+                }
+            );
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleDeleteImageSubmit = async () => {
         try {
-            const deleteResult = await handleDeleteImage(uploadedImage.filename);
-            if (deleteResult.success) {
-                setUploadedImage(null);
-                setUploadProgress(0);
-                setShowProgressBar(false);
-                setLesson({...lesson, lesson_img: ''});
-            } else {
-                console.error(deleteResult.error);
+            if (!uploadedImage) {
+                return;
             }
+
+            const storageRef = ref(storage, `images/${uploadedImage.name}`);
+            await deleteObject(storageRef);
+
+            setUploadedImage(null);
+            setUploadProgress(0);
         } catch (error) {
             console.error('Error deleting image:', error);
         }
@@ -94,6 +110,7 @@ const EditLessonPage = () => {
 
     const handleDeleteButtonClick = (e) => {
         e.preventDefault();
+        handleDeleteLessonImage();
         handleDeleteImageSubmit();
     };
 
@@ -117,6 +134,14 @@ const EditLessonPage = () => {
             toast.error('Đã xảy ra lỗi trong quá trình cập nhật bài học.');
         }
     };
+
+    const handleDeleteLessonImage = async () => {
+        const response = await deleteLessonImage(id, csrfToken);
+        if (response === 200) {
+            setLesson({ ...lesson, lesson_img: null });
+            setUploadedImage(null);
+        }
+    }
 
     return (
         <div class="flex items-center justify-center p-2">
@@ -166,64 +191,46 @@ const EditLessonPage = () => {
                         </div>
                     </div>
 
-                    {lesson.lesson_img ? (
+                    {(lesson.lesson_img !== null || uploadedImage) ? (
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
-                                <img src={lesson.lesson_img} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
-                                    <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                        {lesson.lesson_img}
-                                    </span>
+                                    {(lesson.lesson_img) ? (
+                                        <>
+                                            <img src={lesson.lesson_img} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
+                                            <span className="truncate w-[600px] pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                {(lesson.lesson_img || uploadedImage.name)}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <LoadingUploadFile />
+                                    )}
                                 </div>
                             </div>
-                            {showProgressBar && (
-                                    <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                        <button
-                                            className="absolute top-[-59px] right-4 text-gray-500"
-                                            onClick={handleDeleteButtonClick}>
-                                            <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                        </button>
-                                        <div
-                                            className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                            style={{ width: `${uploadProgress}%` }}>
+                            <div className="relative">
+                                {(uploadProgress === 100 || lesson.lesson_img) && (
+                                    <button
+                                        className="absolute top-[-70px] right-[20px] text-gray-500 text-xl"
+                                        onClick={handleDeleteButtonClick}>
+                                        <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
+                                    </button>)}
+                                {uploadedImage ? (
+                                    <>
+                                        <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                            <div
+                                                className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                                style={{ width: `${uploadProgress}%` }}>
+                                            </div>
+                                            <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                                {uploadProgress}%
+                                            </span>
                                         </div>
-                                        <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                            {uploadProgress}%
-                                        </span>
-                                    </div>
-                                )}
+                                    </>
+                                ) : (null)}
+                            </div>
                         </div>
-
                     ) : (
-                        uploadedImage && (
-                            <div className="mb-5">
-                                <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                    <div className="flex items-center">
-                                        <FontAwesomeIcon icon={faImage} />
-                                        <img src={`http://127.0.0.1:8000/storage/img/${uploadedImage.filename}`} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
-                                        <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                            {uploadedImage.filename}
-                                        </span>
-                                    </div>
-                                </div>
-                                {showProgressBar && (
-                                    <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                        <button
-                                            className="absolute top-[-59px] right-4 text-gray-500"
-                                            onClick={handleDeleteButtonClick}>
-                                            <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                        </button>
-                                        <div
-                                            className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                            style={{ width: `${uploadProgress}%` }}>
-                                        </div>
-                                        <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                            {uploadProgress}%
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        )
+                        null
                     )}
 
                     <div class="mb-5">
