@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getType } from '../../../services/TypeServices';
 import { addType } from '../../../services/TypeServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const AddTypePage = () => {
-    const [types, setTypes] = useState([]);
     const statusOptions = [
         { value: 1, label: 'Xuất bản' },
         { value: 0, label: 'Chưa xuất bản' }
@@ -22,19 +20,7 @@ const AddTypePage = () => {
         if (token) {
             setCsrfToken(token.getAttribute('content'));
         }
-
-        fetchTypes();
     }, []);
-
-    const fetchTypes = async () => {
-        try {
-            const response = await getType();
-            console.log(response);
-            setTypes(response);
-        } catch (error) {
-            console.error('Error fetching types:', error);
-        }
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -61,18 +47,19 @@ const AddTypePage = () => {
         <div class="flex items-center justify-center p-2">
             <div class="mx-auto w-full bg-white">
                 <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Thêm thể loại mới</div>
-                <form class="py-4 px-9" method="POST">
-                                   
+                <form class="py-4 px-9" method="POST">        
                     <div class="mb-5">
                         <label
                             for="type_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên thể loại
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="type_name"
                             id="type_name"
+                            required
                             placeholder="Tên thể loại"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.type_name}
@@ -85,10 +72,12 @@ const AddTypePage = () => {
                             for="type_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="type_status"
                             id="type_status"
+                            required
                             value={formData.type_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">

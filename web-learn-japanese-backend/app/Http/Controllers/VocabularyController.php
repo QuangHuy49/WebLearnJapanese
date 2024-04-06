@@ -91,6 +91,7 @@ class VocabularyController extends Controller
             'vocabulary_audio'=>'nullable|string|max:255',
             'vocabulary_status'=>'required|integer|between:0,1'
         ]);
+        
         $vocabulary->update([
             'lesson_id'=>$request->lesson_id,
             'vocabulary_name'=>$request->vocabulary_name,

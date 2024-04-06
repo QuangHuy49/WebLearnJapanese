@@ -88,6 +88,7 @@ class KaiwaController extends Controller
             'kaiwa_audio'=>'nullable|string|max:255',
             'kaiwa_status'=>'required|integer|between:0,1'
         ]);
+        
         $kaiwa->update([
             'lesson_id'=>$request->lesson_id,
             'kaiwa_name'=>$request->kaiwa_name,

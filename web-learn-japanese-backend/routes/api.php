@@ -31,7 +31,7 @@ Route::group([
     // Route::post('refresh', [AuthController::class, 'refresh']);
 });
 
-//api user
+// api user
 Route::group([
     'middleware' => 'api',
     'prefix' => 'user'
@@ -46,7 +46,7 @@ Route::group([
     Route::delete('/delete-avatar-image/{id}', [UserController::class, 'deleteAvatarImage']);
 });
 
-//Api Vai trò
+// api Vai trò
 Route::group([
     'middleware' => 'api',
     'prefix' => 'role'
@@ -58,7 +58,7 @@ Route::group([
    
 });
 
-//Api Thể loại bài học
+// api Thể loại bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'type'
@@ -70,7 +70,7 @@ Route::group([
     Route::delete('delete/{id}', [TypeController::class, 'destroy']); 
 });
 
-//Api Bài học
+// api Bài học
 Route::group([
     'middleware' => 'api',
     'prefix' => 'lesson'
@@ -89,7 +89,7 @@ Route::group([
     Route::delete('/delete-lesson-image/{id}', [LessonController::class, 'deleteLessonImage']);
 });
 
-//Api Kaiwa
+// api Kaiwa
 Route::group([
     'middleware' => 'api',
     'prefix' => 'kaiwa'
@@ -105,7 +105,7 @@ Route::group([
     Route::delete('/delete-kaiwa-audio/{id}', [KaiwaController::class, 'deleteKaiwaAudio']);
 });
 
-//Api Grammar
+// api Grammar
 Route::group([
     'middleware' => 'api',
     'prefix' => 'grammar'
@@ -119,7 +119,7 @@ Route::group([
     Route::get('{id}/grammar-data', [GrammarController::class, 'getGrammarDataByIdLesson']);
 });
 
-//Api Vocabulary
+// api Vocabulary
 Route::group([
     'middleware' => 'api',
     'prefix' => 'vocabulary'
@@ -135,7 +135,7 @@ Route::group([
     Route::delete('/delete-vocabulary-audio/{id}', [VocabularyController::class, 'deleteVocabularyAudio']);
 });
 
-//Api Test
+// api Test
 Route::group([
     'middleware' => 'api',
     'prefix' => 'test'
@@ -143,7 +143,7 @@ Route::group([
     Route::get('list', [TestController::class, 'index']);
    
 });
-//Api Read Language
+// api Read Language
 Route::group([
     'middleware' => 'api',
     'prefix' => 'language'
@@ -169,10 +169,18 @@ Route::group([
     Route::post('audio', [FileController::class, 'deleteAudio']);
 });
 
-//api lesson-user
+// api lesson-user
 Route::group([
     'middleware' => 'api',
     'prefix' => 'lesson-user'
 ], function ($router) {
     Route::post('add-lesson-user/{id}', [LessonUserController::class, 'addLessonUser']);
+});
+
+// api japanese alphabet
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'alphabet'
+], function ($router) {
+    Route::get('hiragana', [JapaneseAlphabetController::class, 'getHiraganaAlphabet']);
 });

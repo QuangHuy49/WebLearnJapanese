@@ -142,11 +142,13 @@ const EditUserPage = () => {
                             for="lesson_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên học viên
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="user_name"
                             id="user_name"
+                            required
                             placeholder="Tên học viên"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={user.user_name}
@@ -158,11 +160,13 @@ const EditUserPage = () => {
                             for="email"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Email
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="email"
                             name="email"
                             id="email"
+                            required
                             placeholder="Email"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={user.email}
@@ -174,11 +178,14 @@ const EditUserPage = () => {
                             for="password"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Password
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(Tối thiểu 6 ký tự)</span>
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="password"
                             id="password"
+                            required
                             placeholder="Password"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={user.password}
@@ -258,6 +265,7 @@ const EditUserPage = () => {
                             for="user_role_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Vai trò
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="user_role_id"

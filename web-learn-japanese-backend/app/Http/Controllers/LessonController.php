@@ -41,6 +41,7 @@ class LessonController extends Controller
             'lesson_img'=>'required|string|max:255',
             'lesson_status' => 'required|integer|between:0,1',
         ]);
+        
         $lesson=Lesson::create([
             'type_id'=>$request->type_id,
             'lesson_name'=>$request->lesson_name,

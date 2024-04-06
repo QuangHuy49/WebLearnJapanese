@@ -5,6 +5,8 @@ import { faPenToSquare, faTrash, faEye, faFileContract, faFile } from '@fortawes
 import { Link, useNavigate } from 'react-router-dom';
 import ButtonAdd from '../../../components/button/ButtonAdd';
 import { toast } from 'react-toastify';
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '../../../firebase';
 
 const UserPage = () => {
     const navigate = useNavigate();
@@ -15,6 +17,7 @@ const UserPage = () => {
     const [csrfToken, setCsrfToken] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
     const [userIdToDelete, setUserIdToDelete] = useState(null);
+    const [userImageToDelete, setUserImageToDelete] = useState(null);
     
     useEffect(() => {
         loadUsers(currentPage);
@@ -46,15 +49,24 @@ const UserPage = () => {
         }
     };
 
-    const handleAddUser= () => {
-        navigate('/admin/user/add-user');
-    };
-    const handleDeleteUser = async (id) => {
+    const handleDeleteUser = async (id, img) => {
         setUserIdToDelete(id);
+        setUserImageToDelete(img);
         setShowConfirmationModal(true);
     };
 
     const confirmDeleteUser = async () => {
+        // delete file in firebase
+        try {
+            if (!userImageToDelete) {
+                return;
+            }
+            const storageRef = ref(storage, `${userImageToDelete}`);
+            await deleteObject(storageRef);
+        } catch (error) {
+            console.error('Error deleting image:', error);
+        }
+
         const response = await deleteUser(userIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa người dùng thành công!');
@@ -72,14 +84,14 @@ const UserPage = () => {
 
     return (
         <div className="p-4">
-            <div className="px-14 flex justify-between text-custom-color-blue items-end pb-2">
+            <div className="px-12 flex justify-between text-custom-color-blue items-end pb-2">
                 <div className="font-medium text-lg">
                     Danh sách học viên
                 </div>
 
-                <div className="" onClick={handleAddUser}>
+                <Link to={'/admin/user/add-user'}>
                     <ButtonAdd />
-                </div>
+                </Link>
             </div>
 
             <section className="container px-4 mx-auto">
@@ -151,7 +163,7 @@ const UserPage = () => {
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                            onClick={() => handleDeleteUser(item.user_id)} />
+                                                            onClick={() => handleDeleteUser(item.user_id, item.user_avatar)} />
                                                     </div>
                                                 </td>
                                             </tr>

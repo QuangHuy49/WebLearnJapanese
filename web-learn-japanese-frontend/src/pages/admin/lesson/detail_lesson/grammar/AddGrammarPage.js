@@ -71,11 +71,13 @@ const AddGrammarPage = () => {
                             for="grammar_title"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Chủ đề ngữ pháp
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="grammar_title"
                             id="grammar_title"
+                            required
                             placeholder="Danh từ 1 は Danh từ 2 です。"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.grammar_title}
@@ -88,11 +90,13 @@ const AddGrammarPage = () => {
                             for="grammar_mean"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Nghĩa
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="grammar_mean"
                             id="grammar_mean"
+                            required
                             placeholder="Danh từ 1 là danh từ 2"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.grammar_mean}
@@ -106,11 +110,13 @@ const AddGrammarPage = () => {
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Giải thích ngữ pháp
                             <span className="ml-2 text-sm text-custom-color-red-gray">(Mỗi dòng giải thích cách nhau bởi dấu ".")</span>
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <textarea rows="10"
                             type="text"
                             name="grammar_detail"
                             id="grammar_detail"
+                            required
                             placeholder="Trợ từ 「は」 được dừng sau Danh từ 1 để biểu thị Danh từ 1 là chủ đề của câu. です được dùng ở cuối câu khẳng định thì hiện tại dạng “Danh từ 1 là Danh từ 2” và thể hiện sự tôn trọng, lịch sự đối với người nghe. Trợ từ「は」đọc là 「わ」。"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.grammar_detail}
@@ -158,11 +164,13 @@ const AddGrammarPage = () => {
                             for="lesson_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Bài học
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         {lessons && lessons.length > 0 && (
                             <select
                                 name="lesson_id"
                                 id="lesson_id"
+                                required
                                 value={formData.lesson_id}
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
@@ -181,10 +189,12 @@ const AddGrammarPage = () => {
                             for="grammar_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="grammar_status"
                             id="grammar_status"
+                            required
                             value={formData.grammar_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
