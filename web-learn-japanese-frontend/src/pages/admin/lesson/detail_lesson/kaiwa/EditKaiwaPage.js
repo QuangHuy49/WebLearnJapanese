@@ -166,11 +166,13 @@ const EditKaiwaPage = () => {
                             for="kaiwa_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Câu kaiwa
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="kaiwa_name"
                             id="kaiwa_name"
+                            req1
                             placeholder="初めまして。"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={kaiwa.kaiwa_name}
@@ -183,11 +185,13 @@ const EditKaiwaPage = () => {
                             for="kaiwa_mean"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Nghĩa
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="kaiwa_mean"
                             id="kaiwa_mean"
+                            required
                             placeholder="Rất vui được gặp anh/chị"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={kaiwa.kaiwa_mean}
@@ -274,11 +278,13 @@ const EditKaiwaPage = () => {
                             for="lesson_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Bài học
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         {lessons && lessons.length > 0 && (
                             <select
                                 name="lesson_id"
                                 id="lesson_id"
+                                required
                                 value={kaiwa.lesson_id}
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
@@ -297,10 +303,12 @@ const EditKaiwaPage = () => {
                             for="kaiwa_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="kaiwa_status"
                             id="kaiwa_status"
+                            required
                             value={kaiwa.kaiwa_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">

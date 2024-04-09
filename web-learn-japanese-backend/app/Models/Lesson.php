@@ -32,4 +32,14 @@ class Lesson extends Model
     {
         return $this->hasMany(Grammar::class, 'lesson_id');
     }
+
+    public function lessonUsers()
+    {
+        return $this->hasMany(LessonUser::class, 'lesson_id', 'lesson_id');
+    }
+
+    public function test()
+    {
+        return $this->hasMany(Test::class, 'lesson_id', 'lesson_id');
+    }
 }

@@ -78,14 +78,14 @@ class GrammarController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $grammar=Grammar::findOrFail($id);
+        $grammar = Grammar::findOrFail($id);
         if(!$grammar){
             return response()->json(['message' => 'Grammar not found'],404);
         }
         $request->validate([
-            'lesson_id'=>'nullable|int|max:10',
+            'lesson_id'=>'required|int|max:10',
             'grammar_title'=>'required|string|max:50',
-            'grammar_mean'=>'nullable|string|max:255',
+            'grammar_mean'=>'required|string|max:255',
             'grammar_detail'=>'required|string|max:2555',
             'grammar_example'=>'nullable|string|max:255',
             'grammar_note'=>'nullable|string|max:255',

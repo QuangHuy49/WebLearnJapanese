@@ -166,11 +166,13 @@ const EditVocabularyPage = () => {
                             for="vocabulary_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Từ vựng
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="vocabulary_name"
                             id="vocabulary_name"
+                            required
                             placeholder="にほんご"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={vocabulary.vocabulary_name}
@@ -217,11 +219,13 @@ const EditVocabularyPage = () => {
                             for="vocabulary_mean"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Nghĩa
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="vocabulary_mean"
                             id="vocabulary_mean"
+                            required
                             placeholder="Tiếng Nhật"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={vocabulary.vocabulary_mean}
@@ -308,11 +312,13 @@ const EditVocabularyPage = () => {
                             for="lesson_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Bài học
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         {lessons && lessons.length > 0 && (
                             <select
                                 name="lesson_id"
                                 id="lesson_id"
+                                required
                                 value={vocabulary.lesson_id}
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
@@ -331,10 +337,12 @@ const EditVocabularyPage = () => {
                             for="vocabulary_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="vocabulary_status"
                             id="vocabulary_status"
+                            required
                             value={vocabulary.vocabulary_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">

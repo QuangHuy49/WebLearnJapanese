@@ -8,6 +8,8 @@ import ButtonAdd from '../../../../../components/button/ButtonAdd';
 import { CSSTransition } from 'react-transition-group';
 import '../../../../../styles/global.css';
 import { toast } from 'react-toastify';
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '../../../../../firebase';
 
 const VocabularyPage = () => {
     let { id } = useParams();
@@ -21,6 +23,7 @@ const VocabularyPage = () => {
     const [csrfToken, setCsrfToken] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
     const [vocabularyIdToDelete, setVocabularyIdToDelete] = useState(null);
+    const [vocabularyAudioToDelete, setVocabularyAudioToDelete] = useState(null);
 
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -67,21 +70,28 @@ const VocabularyPage = () => {
         setShowSubNav(!showSubNav);
     };
 
-    const handleDeleteVocabulary = async (id) => {
+    const handleDeleteVocabulary = async (id, audio) => {
         setVocabularyIdToDelete(id);
+        setVocabularyAudioToDelete(audio);
         setShowConfirmationModal(true);
     };
 
     const confirmDeleteVocabulary = async () => {
-        const response = await deleteVocabulary(vocabularyIdToDelete, csrfToken);
-        if (response === 200) {
+        try {
+            const deleteAudioPromise = vocabularyAudioToDelete ? deleteObject(ref(storage, vocabularyAudioToDelete)) : Promise.resolve();
+            const deleteVocabularyPromise = deleteVocabulary(vocabularyIdToDelete, csrfToken);
+    
+            await Promise.all([deleteAudioPromise, deleteVocabularyPromise]);
+
             toast.success('Xóa từ vựng thành công!');
             navigate(`/admin/lesson/detail-lesson/${id}`);
             window.location.reload();
-        } else {
+        } catch (error) {
+            console.error('Error deleting vocabulary:', error);
             toast.error('Xóa từ vựng thất bại. Vui lòng thử lại!');
+        } finally {
+            setShowConfirmationModal(false);
         }
-        setShowConfirmationModal(false);
     };
 
     const cancelDeleteVocabulary = () => {
@@ -247,7 +257,7 @@ const VocabularyPage = () => {
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                             onClick={() => handleDeleteVocabulary(item.vocabulary_id)} />
+                                                             onClick={() => handleDeleteVocabulary(item.vocabulary_id, item.vocabulary_audio)} />
                                                     </div>
                                                 </td>
                                             </tr>

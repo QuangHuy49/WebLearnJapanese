@@ -101,7 +101,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required|string|min:6',
             'user_avatar' => 'required|string|max:255', 
-            'user_role_id' => 'nullable|integer|between:1,2', 
+            'user_role_id' => 'required|integer|between:1,2', 
         ]);
 
         $user->update([

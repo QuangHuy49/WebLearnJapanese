@@ -14,7 +14,7 @@ import UserAdminPage from '../pages/admin/user/UserPage';
 import AddUserAdminPage from '../pages/admin/user/AddUserPage';
 import EditUserAdminPage from '../pages/admin/user/EditUserPage';
 import DetailLessonAdminLayout from '../pages/admin/lesson/detail_lesson/DetailLessonLayout';
-import TestAdminPage from '../pages/admin/TestPage';
+import TestAdminPage from '../pages/admin/test/TestPage';
 import PostAdminPage from '../pages/admin/PostPage';
 import UserLayout from '../pages/user/UserLayout';
 import HomePage from '../pages/user/HomePage';
@@ -32,6 +32,12 @@ import AddKaiwaPage from '../pages/admin/lesson/detail_lesson/kaiwa/AddKaiwaPage
 import EditKaiwaPage from '../pages/admin/lesson/detail_lesson/kaiwa/EditKaiwaPage';
 import AddGrammarPage from '../pages/admin/lesson/detail_lesson/grammar/AddGrammarPage';
 import EditGrammarPage from '../pages/admin/lesson/detail_lesson/grammar/EditGrammarPage';
+import LessonBasicN5 from '../pages/user/LessonBasicN5';
+import LessonBasicN4 from '../pages/user/LessonBasicN4';
+import AddTestPage from '../pages/admin/test/AddTestPage';
+import EditTestPage from '../pages/admin/test/EditTestPage';
+import QuestionPage from '../pages/admin/test/question/QuestionPage';
+import AddQuestionPage from '../pages/admin/test/question/AddQuestionPage';
 
 function App() {
   return (
@@ -65,6 +71,11 @@ function App() {
         <Route path='/admin/edit-grammar/:id' element={<EditGrammarPage />} />
 
         <Route path='/admin/test' element={<TestAdminPage />} />
+        <Route path='/admin/test/add-test' element={<AddTestPage />} />
+        <Route path='/admin/test/edit-test/:id' element={<EditTestPage />} />
+
+        <Route path='/admin/test/question/:id' element={<QuestionPage />} />
+        <Route path='/admin/test/add-question' element={<AddQuestionPage />} />
 
         <Route path='/admin/user' element={<UserAdminPage />} />
         <Route path='/admin/user/add-user' element={<AddUserAdminPage />} />
@@ -79,6 +90,8 @@ function App() {
         <Route path='/post' element={<PostUserPage />} />
         <Route path='/my-course' element={<MyCoursePage />} />
         <Route path='/lesson-detail/:id' element={<LessonDetailPage />} />
+        <Route path='/lesson-basic-n5' element={<LessonBasicN5 />} />
+        <Route path='/lesson-basic-n4' element={<LessonBasicN4 />} />
       </Route>
     </Routes>
   );

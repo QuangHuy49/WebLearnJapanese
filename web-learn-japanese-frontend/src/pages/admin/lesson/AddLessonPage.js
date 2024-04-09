@@ -131,11 +131,13 @@ const AddLessonPage = () => {
                             for="lesson_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên bài học
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="lesson_name"
                             id="lesson_name"
+                            required
                             placeholder="Bài 1 - Minna no Nihongo"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.lesson_name}
@@ -146,10 +148,11 @@ const AddLessonPage = () => {
                     <div class="mb-6">
                         <label class="block text-base font-medium text-custom-color-blue">
                             Upload File
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
 
                         <div class="mb-8">
-                            <input type="file" name="file" id="file" class="sr-only" onChange={handleFileChange} />
+                            <input type="file" name="file" id="file" class="sr-only" required onChange={handleFileChange} />
                             <label
                                 for="file"
                                 class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
@@ -163,6 +166,10 @@ const AddLessonPage = () => {
                                     <span
                                         class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-custom-color-blue">
                                         Chọn từ máy tính
+                                    </span>
+                                    <span
+                                        class="mb-2 block text-base font-medium text-[#6B7280] mt-4 text-custom-color-red-gray">
+                                        Chỉ nhận file .jpg, .png, .jpeg
                                     </span>
                                 </div>
                             </label>
@@ -208,12 +215,14 @@ const AddLessonPage = () => {
                             for="type_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Thể loại
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         {types && types.length > 0 && (
                             <select
                                 name="type_id"
                                 id="type_id"
                                 value={formData.type_id}
+                                required
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                                 <option value="">Chọn thể loại</option>
@@ -231,11 +240,13 @@ const AddLessonPage = () => {
                             for="lesson_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="lesson_status"
                             id="lesson_status"
                             value={formData.lesson_status}
+                            required
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                             <option value="">Chọn trạng thái</option>

@@ -51,9 +51,16 @@ const VocabularyPage = () => {
                                             return (
                                                 <tr class="text-custom-color-blue" key={index}>
                                                     <td class="px-4 py-3 text-lg border fontJP bg-white">
+                                                        {item.vocabulary_audio !== null ? (
                                                         <span className="hover:text-xl cursor-pointer transition-all" onClick={() => playAudio(item.vocabulary_audio)}>
                                                             {item.vocabulary_name}
                                                         </span>
+                                                    ) : (
+                                                        <span className="">
+                                                            {item.vocabulary_name}
+                                                        </span>
+                                                    )}
+                                                        
                                                     </td>
                                                     <td class="px-4 py-3 text-lg border fontJP bg-white">
                                                         {item.vocabulary_character}
