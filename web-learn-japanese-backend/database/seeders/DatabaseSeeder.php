@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
             GrammarSeeder::class,
             TestSeeder::class,
             QuestionSeeder::class,
-            LessonUserSeeder::class
+            LessonUserSeeder::class,
+            JapaneseAlphabetSeeder::class,
+            AnswerSeeder::class
         ]);
     }
 }

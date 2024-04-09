@@ -35,7 +35,7 @@ const AddVocabularyPage = () => {
             setCsrfToken(token.getAttribute('content'));
         }
 
-        fetchTypes();
+        fetchLessons();
     }, []);
 
     const handleChange = (e) => {
@@ -43,12 +43,12 @@ const AddVocabularyPage = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const fetchTypes = async () => {
+    const fetchLessons = async () => {
         try {
             const response = await getLesson();
             setLessons(response);
         } catch (error) {
-            console.error('Error fetching types:', error);
+            console.error('Error fetching lessons:', error);
         }
     };
 

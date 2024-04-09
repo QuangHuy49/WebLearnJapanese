@@ -26,7 +26,10 @@ class TypeSeeder extends Seeder
     public function getType() {
         return [
             [1, 'Bảng chữ cái', 1],
-            [2, 'Minna no Nihongo', 1],
+            [2, 'Minna no Nihongo (Lộ trình cơ bản N5)', 1],
+            [3, 'Kanji (Lộ trình cơ bản N5)', 1],
+            [4, 'Minna no Nihongo (Lộ trình cơ bản N4)', 1],
+            [5, 'Kanji (Lộ trình cơ bản N4)', 1],
         ];
     }
 }

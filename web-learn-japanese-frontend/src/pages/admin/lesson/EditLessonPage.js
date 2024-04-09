@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { deleteLessonImage, getLessonByid, updateLesson } from '../../../services/LessonServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { getType } from '../../../services/TypeServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
