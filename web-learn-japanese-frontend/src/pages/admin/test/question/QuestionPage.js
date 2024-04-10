@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
-import { getQuestionDataByIdWithPaging } from '../../../../services/QuestionServices';
+import { deleteQuestion, getQuestionDataByIdTestWithPaging } from '../../../../services/QuestionServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faPlay, faEye } from '@fortawesome/free-solid-svg-icons';
 import ButtonAdd from '../../../../components/button/ButtonAdd';
@@ -17,10 +17,10 @@ const QuestionPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const perPage = 10;
-    const [showSubNav, setShowSubNav] = useState(false);
     const [csrfToken, setCsrfToken] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [questionIdToDelete, setQuestionIdToDelete] = useState(null);
+    const [questionImageToDelete, setQuestionImageToDelete] = useState(null);
     const [questionAudioToDelete, setQuestionAudioToDelete] = useState(null);
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const QuestionPage = () => {
     }, [currentPage]);
 
     const getQuestionData = async (page) => {
-        const data = await getQuestionDataByIdWithPaging(id, page, perPage);
+        const data = await getQuestionDataByIdTestWithPaging(id, page, perPage);
         if (data) {
             setQuestions(data.questions);
             setTest(data.test);
@@ -62,6 +62,48 @@ const QuestionPage = () => {
             .catch(error => {
                 console.error('Failed to play audio:', error);
             });
+    };
+
+    const handleDeleteQuestion = async (id, img, audio) => {
+        setQuestionIdToDelete(id);
+        setQuestionImageToDelete(img);
+        setQuestionAudioToDelete(audio);
+        setShowConfirmationModal(true);
+    };
+
+    const confirmDeleteQuestion = async () => {
+        try {
+            // Xóa hình ảnh
+            if (questionImageToDelete) {
+                const imageRef = ref(storage, questionImageToDelete);
+                await deleteObject(imageRef);
+            }
+    
+            // Xóa âm thanh
+            if (questionAudioToDelete) {
+                const audioRef = ref(storage, questionAudioToDelete);
+                await deleteObject(audioRef);
+            }
+    
+            // Tiến hành xóa câu hỏi trên cơ sở dữ liệu
+            const response = await deleteQuestion(questionIdToDelete, csrfToken);
+            if (response === 200) {
+                toast.success('Xóa câu hỏi thành công!');
+                window.location.reload();
+            } else {
+                toast.error('Xóa câu hỏi thất bại. Vui lòng thử lại!');
+            }
+            
+            setShowConfirmationModal(false);
+        } catch (error) {
+            console.error('Error deleting question:', error);
+            toast.error('Đã xảy ra lỗi khi xóa câu hỏi. Vui lòng thử lại!');
+            setShowConfirmationModal(false);
+        }
+    };
+
+    const cancelDeleteQuestion = () => {
+        setShowConfirmationModal(false);
     };
 
     return (
@@ -167,14 +209,14 @@ const QuestionPage = () => {
                                                 )}
                                                 <td className="px-4 py-4 text-sm whitespace-nowrap">
                                                     <div className="flex items-center gap-x-6">
-                                                        <Link to={``}>
+                                                        <Link to={`/admin/test/question/answer/${item.question_id}`}>
                                                             <FontAwesomeIcon icon={faEye} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
-                                                        <Link to={``}>
+                                                        <Link to={`/admin/test/edit-question/${item.question_id}`}>
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                        />
+                                                            onClick={() => handleDeleteQuestion(item.question_id, item.question_img, item.question_audio)}/>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -220,10 +262,10 @@ const QuestionPage = () => {
             {showConfirmationModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white rounded-lg p-6 max-w-md">
-                        <p className="text-lg">Bạn có chắc chắn muốn xóa từ vựng này?</p>
+                        <p className="text-lg">Bạn có chắc chắn muốn xóa câu hỏi này?</p>
                         <div className="flex justify-end mt-9">
-                            <button className="bg-gray-300 hover:bg-gray-400 hover:scale-110 transition-all text-gray-800 font-bold py-2 px-4 mr-2 rounded">Hủy</button>
-                            <button className="bg-custom-color-red-gray hover:bg-red-600 hover:scale-110 transition-all text-white font-bold py-2 px-4 rounded">Xác nhận</button>
+                            <button onClick={cancelDeleteQuestion} className="bg-gray-300 hover:bg-gray-400 hover:scale-110 transition-all text-gray-800 font-bold py-2 px-4 mr-2 rounded">Hủy</button>
+                            <button onClick={confirmDeleteQuestion} className="bg-custom-color-red-gray hover:bg-red-600 hover:scale-110 transition-all text-white font-bold py-2 px-4 rounded">Xác nhận</button>
                         </div>
                     </div>
                 </div>

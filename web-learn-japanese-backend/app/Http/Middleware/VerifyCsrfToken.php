@@ -69,5 +69,18 @@ class VerifyCsrfToken extends Middleware
 
         // question-answer
         '/api/question/add-question-answer',
+        '/api/question/update-question-answer/*',
+        '/api/question/delete-question-image/*',
+        '/api/question/delete-question-audio/*',
+
+        // question
+        '/api/question/edit/*',
+        '/api/question/delete/*',
+
+        // answer
+        '/api/answer/edit',
+        '/api/answer/delete-answer-image/*',
+        '/api/answer/delete-answer-audio/*',
+        '/api/answer/delete/*',
     ];
 }

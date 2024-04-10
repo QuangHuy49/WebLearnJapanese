@@ -21,7 +21,7 @@ const AddQuestionPage = () => {
                 answer_name: '',
                 answer_img: '',
                 answer_audio: '',
-                is_correct: false,
+                answer_correct: false,
                 uploadedImageAnswer: null,
                 uploadProgressUploadImageAnswer: 0,
                 uploadedAudioAnswer: null,
@@ -29,7 +29,6 @@ const AddQuestionPage = () => {
             }
         ]
     });
-    console.log(formData)
     const statusOptions = [
         { value: 1, label: 'Xuất bản' },
         { value: 0, label: 'Chưa xuất bản' }
@@ -48,10 +47,10 @@ const AddQuestionPage = () => {
             setCsrfToken(token.getAttribute('content'));
         }
 
-        fetchLessons();
+        fetchTests();
     }, []);
 
-    const fetchLessons = async () => {
+    const fetchTests = async () => {
         try {
             const response = await getTest();
             setTests(response);
@@ -294,7 +293,7 @@ const AddQuestionPage = () => {
 
     const handleChange = (e, index) => {
         const { name, value } = e.target;
-        if (name === 'is_correct') {
+        if (name === 'answer_correct') {
             const updatedAnswers = formData.answers.map((answer, i) => {
                 if (index === i) {
                     return { ...answer, [name]: true };
@@ -327,7 +326,7 @@ const AddQuestionPage = () => {
     const handleAddAnswer = () => {
         setFormData({
             ...formData,
-            answers: [...formData.answers, { answer_name: '', answer_img: '', answer_audio: '', is_correct: false }]
+            answers: [...formData.answers, { answer_name: '', answer_img: '', answer_audio: '', answer_correct: false }]
         });
     };
 
@@ -335,7 +334,7 @@ const AddQuestionPage = () => {
         try {
             await handleDeleteImageAnswerSubmit(e, index);
             await handleDeleteAudioAnswerSubmit(e, index);
-    
+
             const updatedAnswers = [...formData.answers];
             updatedAnswers.splice(index, 1);
             setFormData({ ...formData, answers: updatedAnswers });
@@ -363,7 +362,7 @@ const AddQuestionPage = () => {
     return (
         <div class="flex items-center justify-center p-2">
             <div class="mx-auto w-full bg-white">
-                <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Thêm Câu hỏi mới</div>
+                <div class="px-9 pt-4 font-medium text-xl text-custom-color-blue">Thêm câu hỏi mới</div>
                 <form class="py-4 px-9" method="POST" type="submit">
                     <div class="mb-5">
                         <label
@@ -573,166 +572,168 @@ const AddQuestionPage = () => {
 
                         {formData.answers.map((answer, index) => (
                             <>
-                                <div className="flex justify-between items-center">
-                                    <div className="block text-base font-medium text-custom-color-blue">
-                                        Câu trả lời số {index + 1}
+                                <div className="border-2 border-dashed p-6 my-4">
+                                    <div className="flex justify-between items-center">
+                                        <div className="block text-base font-medium text-custom-color-blue">
+                                            Câu trả lời số {index + 1}
 
+                                        </div>
+                                        <button
+                                            className="w-1/6 text-sm text-white bg-custom-color-red-gray py-2 rounded-lg font-semibold hover:scale-105 cursor-pointer transition-all"
+                                            onClick={(e) => handleDeleteAnswer(e, index)}>
+                                            Xóa câu trả lời {index + 1}
+                                        </button>
                                     </div>
-                                    <button
-                                        className="w-1/6 text-sm text-white bg-custom-color-red-gray py-2 rounded-lg font-semibold hover:scale-105 cursor-pointer transition-all"
-                                        onClick={(e) => handleDeleteAnswer(e, index)}>
-                                        Xóa câu trả lời {index + 1}
-                                    </button>
-                                </div>
 
-                                <div key={index} className="flex py-2 items-center mb-2">
-                                    <input
-                                        type="text"
-                                        name="answer_name"
-                                        id="answer_name"
-                                        required
-                                        placeholder="い"
-                                        class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 mr-10 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
-                                        value={answer.answer_name}
-                                        onChange={(e) => handleChange(e, index)} />
-                                    <input
-                                        type="radio"
-                                        name="is_correct"
-                                        id="is_correct"
-                                        className="w-5 h-5"
-                                        checked={answer.is_correct}
-                                        onChange={(e) => handleChange(e, index)} />
-                                </div>
+                                    <div key={index} className="flex py-2 items-center mb-2">
+                                        <input
+                                            type="text"
+                                            name="answer_name"
+                                            id="answer_name"
+                                            required
+                                            placeholder="い"
+                                            class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 mr-10 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
+                                            value={answer.answer_name}
+                                            onChange={(e) => handleChange(e, index)} />
+                                        <input
+                                            type="radio"
+                                            name="answer_correct"
+                                            id="answer_correct"
+                                            className="w-5 h-5"
+                                            checked={answer.answer_correct}
+                                            onChange={(e) => handleChange(e, index)} />
+                                    </div>
 
-                                <div class="mb-5">
-                                    <label class="block text-base font-medium text-custom-color-blue mb-2">
-                                        Upload hình ảnh trả lời số {index + 1}
-                                    </label>
+                                    <div class="mb-5">
+                                        <label class="block text-base font-medium text-custom-color-blue mb-2">
+                                            Upload hình ảnh trả lời số {index + 1}
+                                        </label>
+
+                                        <div class="">
+                                            <input type="file" name={`answer_img_${index}`} id={`answer_img_${index}`} class="sr-only" onChange={(e) => handleImageAnswerChange(e, index)} />
+                                            <label
+                                                for={`answer_img_${index}`}
+                                                class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
+                                                <div>
+                                                    <span class="mb-2 block text-xl font-semibold text-custom-color-blue">
+                                                        Kéo thả ảnh ở đây
+                                                    </span>
+                                                    <span class="mb-2 block text-base font-medium text-[#6B7280]">
+                                                        Hoặc
+                                                    </span>
+                                                    <span
+                                                        class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-custom-color-blue">
+                                                        Chọn từ máy tính
+                                                    </span>
+                                                    <span
+                                                        class="mb-2 block text-base font-medium text-[#6B7280] mt-4 text-custom-color-red-gray">
+                                                        Chỉ nhận file .jpg, .png, .jpeg
+                                                    </span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {formData.answers[index].uploadedImageAnswer && (
+                                        <div className="mb-5">
+                                            <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
+                                                <div className="flex items-center">
+                                                    {formData.answers[index].answer_img ? (
+                                                        <>
+                                                            <img src={formData.answers[index].answer_img} alt="answer_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
+                                                            <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                                {formData.answers[index].uploadedImageAnswer.name}
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <LoadingUploadFile />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                                {formData.answers[index].uploadProgressUploadImageAnswer === 100 && (
+                                                    <button
+                                                        className="absolute top-[-80px] right-[20px] text-gray-500 text-xl"
+                                                        onClick={(e) => handleDeleteImageAnswerSubmit(e, index)}>
+                                                        <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
+                                                    </button>)}
+                                                <div
+                                                    className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                                    style={{ width: `${formData.answers[index].uploadProgressUploadImageAnswer}%` }}>
+                                                </div>
+                                                <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                                    {formData.answers[index].uploadProgressUploadImageAnswer}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div class="">
-                                        <input type="file" name={`answer_img_${index}`} id={`answer_img_${index}`} class="sr-only" onChange={(e) => handleImageAnswerChange(e, index)} />
-                                        <label
-                                            for={`answer_img_${index}`}
-                                            class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
-                                            <div>
-                                                <span class="mb-2 block text-xl font-semibold text-custom-color-blue">
-                                                    Kéo thả ảnh ở đây
-                                                </span>
-                                                <span class="mb-2 block text-base font-medium text-[#6B7280]">
-                                                    Hoặc
-                                                </span>
-                                                <span
-                                                    class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-custom-color-blue">
-                                                    Chọn từ máy tính
-                                                </span>
-                                                <span
-                                                    class="mb-2 block text-base font-medium text-[#6B7280] mt-4 text-custom-color-red-gray">
-                                                    Chỉ nhận file .jpg, .png, .jpeg
-                                                </span>
-                                            </div>
+                                        <label class="block text-base font-medium text-custom-color-blue mb-2">
+                                            Upload audio trả lời số {index + 1}
                                         </label>
+
+                                        <div class="">
+                                            <input type="file" name={`answer_audio_${index}`} id={`answer_audio_${index}`} class="sr-only" onChange={(e) => handleAudioAnswerChange(e, index)} />
+                                            <label
+                                                for={`answer_audio_${index}`}
+                                                class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
+                                                <div>
+                                                    <span class="mb-2 block text-xl font-semibold text-custom-color-blue">
+                                                        Kéo thả audio ở đây
+                                                    </span>
+                                                    <span class="mb-2 block text-base font-medium text-[#6B7280]">
+                                                        Hoặc
+                                                    </span>
+                                                    <span
+                                                        class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-custom-color-blue">
+                                                        Chọn từ máy tính
+                                                    </span>
+                                                    <span
+                                                        class="mb-2 block text-base font-medium text-[#6B7280] mt-4 text-custom-color-red-gray">
+                                                        Chỉ nhận file.mp3
+                                                    </span>
+                                                </div>
+                                            </label>
+                                        </div>
                                     </div>
+
+                                    {formData.answers[index].uploadedAudioAnswer && (
+                                        <div className="mb-5">
+                                            <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
+                                                <div className="flex items-center">
+                                                    {formData.answers[index].answer_audio ? (
+                                                        <>
+                                                            <span onClick={() => playAudio(formData.answers[index].answer_audio)}>
+                                                                <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all text-custom-color-blue" />
+                                                            </span>
+                                                            <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                                {formData.answers[index].uploadedAudioAnswer.name}
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <LoadingUploadFile />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                                {formData.answers[index].uploadProgressUploadAudioAnswer === 100 && (
+                                                    <button
+                                                        className="absolute top-[-60px] right-[20px] text-gray-500 text-xl"
+                                                        onClick={(e) => handleDeleteAudioAnswerSubmit(e, index)}>
+                                                        <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
+                                                    </button>)}
+                                                <div
+                                                    className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                                    style={{ width: `${formData.answers[index].uploadProgressUploadAudioAnswer}%` }}>
+                                                </div>
+                                                <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                                    {formData.answers[index].uploadProgressUploadAudioAnswer}%
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-
-                                {formData.answers[index].uploadedImageAnswer && (
-                                    <div className="mb-5">
-                                        <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                            <div className="flex items-center">
-                                                {formData.answers[index].answer_img ? (
-                                                    <>
-                                                        <img src={formData.answers[index].answer_img} alt="answer_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
-                                                        <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                                            {formData.answers[index].uploadedImageAnswer.name}
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <LoadingUploadFile />
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                            {formData.answers[index].uploadProgressUploadImageAnswer === 100 && (
-                                                <button
-                                                    className="absolute top-[-80px] right-[20px] text-gray-500 text-xl"
-                                                    onClick={(e) => handleDeleteImageAnswerSubmit(e, index)}>
-                                                    <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                                </button>)}
-                                            <div
-                                                className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                                style={{ width: `${formData.answers[index].uploadProgressUploadImageAnswer}%` }}>
-                                            </div>
-                                            <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                                {formData.answers[index].uploadProgressUploadImageAnswer}%
-                                            </span>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div class="mb-5">
-                                    <label class="block text-base font-medium text-custom-color-blue mb-2">
-                                        Upload audio trả lời số {index + 1}
-                                    </label>
-
-                                    <div class="">
-                                        <input type="file" name={`answer_audio_${index}`} id={`answer_audio_${index}`} class="sr-only" onChange={(e) => handleAudioAnswerChange(e, index)} />
-                                        <label
-                                            for={`answer_audio_${index}`}
-                                            class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
-                                            <div>
-                                                <span class="mb-2 block text-xl font-semibold text-custom-color-blue">
-                                                    Kéo thả audio ở đây
-                                                </span>
-                                                <span class="mb-2 block text-base font-medium text-[#6B7280]">
-                                                    Hoặc
-                                                </span>
-                                                <span
-                                                    class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-custom-color-blue">
-                                                    Chọn từ máy tính
-                                                </span>
-                                                <span
-                                                    class="mb-2 block text-base font-medium text-[#6B7280] mt-4 text-custom-color-red-gray">
-                                                    Chỉ nhận file.mp3
-                                                </span>
-                                            </div>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                {formData.answers[index].uploadedAudioAnswer && (
-                                    <div className="mb-5">
-                                        <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                            <div className="flex items-center">
-                                                {formData.answers[index].answer_audio ? (
-                                                    <>
-                                                        <span onClick={() => playAudio(formData.answers[index].answer_audio)}>
-                                                            <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all text-custom-color-blue" />
-                                                        </span>
-                                                        <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                                            {formData.answers[index].uploadedAudioAnswer.name}
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <LoadingUploadFile />
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                            {formData.answers[index].uploadProgressUploadAudioAnswer === 100 && (
-                                                <button
-                                                    className="absolute top-[-60px] right-[20px] text-gray-500 text-xl"
-                                                    onClick={(e) => handleDeleteAudioAnswerSubmit(e, index)}>
-                                                    <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                                </button>)}
-                                            <div
-                                                className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                                style={{ width: `${formData.answers[index].uploadProgressUploadAudioAnswer}%` }}>
-                                            </div>
-                                            <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                                {formData.answers[index].uploadProgressUploadAudioAnswer}%
-                                            </span>
-                                        </div>
-                                    </div>
-                                )}
                             </>
                         ))}
 

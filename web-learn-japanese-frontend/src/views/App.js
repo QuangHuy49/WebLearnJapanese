@@ -38,6 +38,9 @@ import AddTestPage from '../pages/admin/test/AddTestPage';
 import EditTestPage from '../pages/admin/test/EditTestPage';
 import QuestionPage from '../pages/admin/test/question/QuestionPage';
 import AddQuestionPage from '../pages/admin/test/question/AddQuestionPage';
+import EditQuestionPage from '../pages/admin/test/question/EditQuestionPage';
+import AnswerPage from '../pages/admin/test/question/answer/AnswerPage';
+import EditAnswerPage from '../pages/admin/test/question/answer/EditAnswerPage';
 
 function App() {
   return (
@@ -76,6 +79,10 @@ function App() {
 
         <Route path='/admin/test/question/:id' element={<QuestionPage />} />
         <Route path='/admin/test/add-question' element={<AddQuestionPage />} />
+        <Route path='/admin/test/edit-question/:id' element={<EditQuestionPage />} />
+
+        <Route path='/admin/test/question/answer/:id' element={<AnswerPage />} />
+        <Route path='/admin/test/question/answer/edit-answer/:id' element={<EditAnswerPage />} />
 
         <Route path='/admin/user' element={<UserAdminPage />} />
         <Route path='/admin/user/add-user' element={<AddUserAdminPage />} />

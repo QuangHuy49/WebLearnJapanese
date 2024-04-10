@@ -26,8 +26,8 @@ class QuestionController extends Controller
         $request->validate([
             'test_id'=>'required|integer',
             'question_name'=>'required|string|max:255',
-            'question_img'=>'required|string|max:255',
-            'question_audio'=>'required|string|max:255',
+            'question_img'=>'nullable|string|max:255',
+            'question_audio'=>'nullable|string|max:255',
             'question_status' => 'required|integer|between:0,1'
         ]);
         
@@ -85,8 +85,8 @@ class QuestionController extends Controller
         $request->validate([
             'test_id'=>'required|integer',
             'question_name'=>'required|string|max:255',
-            'question_img'=>'required|string|max:255',
-            'question_audio'=>'required|string|max:255',
+            'question_img'=>'nullable|string|max:255',
+            'question_audio'=>'nullable|string|max:255',
             'question_status' => 'required|integer|between:0,1'
         ]);
         
@@ -106,13 +106,15 @@ class QuestionController extends Controller
      */
     public function destroy(string $id)
     {
-        $question = Question::find($id);
+        $question = Question::findOrFail($id);
 
         if (!$question) {
             return response()->json(['message' =>'Question not found'], 404);
         }
 
-        $question->delete();
+        $question->answer()->delete(); 
+        $question->delete(); 
+
         return response()->json(['message' =>'Question deleted successfully'], 200);
     }
 
@@ -150,7 +152,7 @@ class QuestionController extends Controller
             'answers.*.answer_name' => 'required|string|max:255',
             'answers.*.answer_img' => 'nullable|string|max:255',
             'answers.*.answer_audio' => 'nullable|string|max:255',
-            'answers.*.is_correct' => 'required|boolean',
+            'answers.*.answer_correct' => 'required|boolean',
         ]);
         
         DB::beginTransaction();
@@ -169,7 +171,7 @@ class QuestionController extends Controller
                     'answer_name' => $answerData['answer_name'],
                     'answer_img' => $answerData['answer_img'],
                     'answer_audio' => $answerData['answer_audio'],
-                    'answer_correct' => $answerData['is_correct'],
+                    'answer_correct' => $answerData['answer_correct'],
                 ]);
                 $question->answer()->save($answer);
             }
@@ -183,5 +185,106 @@ class QuestionController extends Controller
             DB::rollback();
             return response()->json(['message' => 'Failed to create question and answer.'], 500);
         }
+    }
+
+    // update question and answer
+    public function updateQuestionAndAnswer(Request $request, string $id)
+    {
+        $request->validate([
+            'test_id' => 'required|integer',
+            'question_name' => 'required|string|max:255',
+            'question_img' => 'nullable|string|max:255',
+            'question_audio' => 'nullable|string|max:255',
+            'question_status' => 'required|integer|between:0,1',
+            'answers' => 'required|array|min:2',
+            'answers.*.answer_name' => 'required|string|max:255',
+            'answers.*.answer_img' => 'nullable|string|max:255',
+            'answers.*.answer_audio' => 'nullable|string|max:255',
+            'answers.*.answer_correct' => 'required|boolean',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $question = Question::findOrFail($id);
+            $question->update([
+                'test_id' => $request->test_id,
+                'question_name' => $request->question_name,
+                'question_img' => $request->question_img,
+                'question_audio' => $request->question_audio,
+                'question_status' => $request->question_status
+            ]);
+
+            $question->answer()->delete();
+
+            foreach ($request->answers as $answerData) {
+                $answer = new Answer([
+                    'answer_name' => $answerData['answer_name'],
+                    'answer_img' => $answerData['answer_img'],
+                    'answer_audio' => $answerData['answer_audio'],
+                    'answer_correct' => $answerData['answer_correct'],
+                ]);
+                $question->answer()->save($answer);
+            }
+
+            DB::commit();
+
+            $question = Question::with('answer')->find($question->question_id);
+
+            return response()->json($question, 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['message' => 'Failed to update question and answer.'], 500);
+        }
+    }
+
+    // get question by question_id with answer
+    public function getQuestionWithAnswers($id)
+    {
+        try {
+            $question = Question::with('answer')->findOrFail($id);
+
+            return response()->json($question, 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Question not found.'], 404);
+        }
+    }
+
+    // delete question_img by question_id
+    public function deleteQuestionImage($id)
+    {
+        $question = Question::find($id);
+
+        if (!$question) {
+            return response()->json(['message' => 'Question not found'], 404);
+        }
+
+        if (!empty($question->question_img)) {
+            $question->update(['question_img' => null]);
+
+            return response()->json(['message' => 'Question image deleted successfully'], 200);
+        }
+    }
+
+    // delete question_audio by question_id
+    public function deleteQuestionAudio($id)
+    {
+        $question = Question::find($id);
+
+        if (!$question) {
+            return response()->json(['message' => 'Question not found'], 404);
+        }
+
+        if (!empty($question->question_audio)) {
+            $question->update(['question_audio' => null]);
+
+            return response()->json(['message' => 'Question audio deleted successfully'], 200);
+        }
+    }
+
+    public function get_all_question()
+    {
+        $questions = Question::all();
+        return response()->json($questions, 200);
     }
 }

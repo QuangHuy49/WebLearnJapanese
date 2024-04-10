@@ -157,6 +157,7 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'question'
 ], function ($router) {
+    Route::get('all', [QuestionController::class, 'get_all_question']);
     Route::get('list', [QuestionController::class, 'index']);
     Route::post('add', [QuestionController::class, 'create']);
     Route::get('get/{id}', [QuestionController::class, 'show']);
@@ -165,6 +166,28 @@ Route::group([
     Route::get('{id}/question-data-paging', [QuestionController::class, 'getQuestionDataByIdTestPaging']);
     // create question and answer
     Route::post('add-question-answer', [QuestionController::class, 'createQuestionAndAnswer']);
+    // update question and answer
+    Route::post('update-question-answer/{id}', [QuestionController::class, 'updateQuestionAndAnswer']);
+    // get question by question_id with answer
+    Route::get('get-question-answer/{id}', [QuestionController::class, 'getQuestionWithAnswers']);
+    // delete question_img by question_id
+    Route::delete('/delete-question-image/{id}', [QuestionController::class, 'deleteQuestionImage']);
+    // delete question_audio by question_id
+    Route::delete('/delete-question-audio/{id}', [QuestionController::class, 'deleteQuestionAudio']);
+});
+
+// api Answer
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'answer'
+], function ($router) {
+    Route::post('edit', [AnswerController::class, 'update']);
+    Route::delete('delete/{id}', [AnswerController::class, 'destroy']);
+    Route::get('{id}/answer-data', [AnswerController::class, 'getAnswerDataByIdQuestion']);
+    // delete answer_img by answer_id
+    Route::delete('/delete-answer-image/{id}', [AnswerController::class, 'deleteAnswerImage']);
+    // delete answer_audio by answer_id
+    Route::delete('/delete-answer-audio/{id}', [AnswerController::class, 'deleteAnswerAudio']);
 });
 
 // api Read Language

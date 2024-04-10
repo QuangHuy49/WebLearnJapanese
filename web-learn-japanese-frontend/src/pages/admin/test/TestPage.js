@@ -101,7 +101,7 @@ const TestPage = () => {
                                                 </Link>
                                             </a>
                                             <a className="flex item-center items-stretch block rounded-md px-3 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
-                                                <Link to={''} className="self-center ml-2 w-full flex">
+                                                <Link to={'/admin/test/add-question'} className="self-center ml-2 w-full flex">
                                                     <FontAwesomeIcon icon={faQuestion} className="self-center" />
                                                     <div className="self-center ml-3">Thêm câu hỏi</div>
                                                 </Link>
