@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('tbl_test', function (Blueprint $table) {
             $table->increments('test_id')->unsigned();
             $table->unsignedInteger('lesson_id')->nullable();
-            $table->string('test_name', 50);
+            $table->string('test_name', 255);
+            $table->unsignedInteger('test_score');
             $table->tinyInteger('is_complete')->default(0);
-            $table->tinyInteger('test_status')->default(0);
+            $table->tinyInteger('test_status')->default(1);
 
             $table->foreign('lesson_id')->references('lesson_id')->on('tbl_lesson');
         });

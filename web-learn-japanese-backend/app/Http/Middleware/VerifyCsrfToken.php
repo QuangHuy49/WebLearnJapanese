@@ -29,6 +29,7 @@ class VerifyCsrfToken extends Middleware
         '/api/lesson/add',
         '/api/lesson/edit/*',
         '/api/lesson/delete/*',
+        '/api/lesson/delete-lesson-image/*',
 
         // type
         '/api/type/add',
@@ -39,15 +40,19 @@ class VerifyCsrfToken extends Middleware
         '/api/user/add',
         '/api/user/edit/*',
         '/api/user/delete/*',
+        '/api/user/delete-avatar-image/*',
+
         // vocabulary
         '/api/vocabulary/add',
         '/api/vocabulary/edit/*',
         '/api/vocabulary/delete/*',
-
+        '/api/vocabulary/delete-vocabulary-audio/*',
+        
         // kaiwa
         '/api/kaiwa/add',
         '/api/kaiwa/edit/*',
         '/api/kaiwa/delete/*',
+        '/api/kaiwa/delete-kaiwa-audio/*',
 
         // grammar
         '/api/grammar/add',
@@ -56,5 +61,26 @@ class VerifyCsrfToken extends Middleware
 
         // lesson-user
         '/api/lesson-user/add-lesson-user/*',
+
+        // test
+        '/api/test/add',
+        '/api/test/edit/*',
+        '/api/test/delete/*',
+
+        // question-answer
+        '/api/question/add-question-answer',
+        '/api/question/update-question-answer/*',
+        '/api/question/delete-question-image/*',
+        '/api/question/delete-question-audio/*',
+
+        // question
+        '/api/question/edit/*',
+        '/api/question/delete/*',
+
+        // answer
+        '/api/answer/edit',
+        '/api/answer/delete-answer-image/*',
+        '/api/answer/delete-answer-audio/*',
+        '/api/answer/delete/*',
     ];
 }

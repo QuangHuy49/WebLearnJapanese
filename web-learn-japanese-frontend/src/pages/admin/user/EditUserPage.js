@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getUserByid, updateUser } from '../../../services/UserServices';
+import { deleteAvatarImage, getUserByid, updateUser } from '../../../services/UserServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faImage } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../../../firebase';
+import LoadingUploadFile from '../../../components/loading/LoadingUploadFile';
 
 const EditUserPage = () => {
     let { id } = useParams();
@@ -24,7 +26,7 @@ const EditUserPage = () => {
     const navigate = useNavigate();
     const roleOptions = [
         { value: 1, label: 'Admin' },
-        { value: 2, label: 'User' }
+        { value: 2, label: 'Học viên' }
     ];
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -44,36 +46,52 @@ const EditUserPage = () => {
         }
     }
 
-    const createImageUrl = (imageName) => {
-        return `http://127.0.0.1:8000/storage/img/${imageName}`;
-    };
-
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        setUploadProgress(0);
-        setShowProgressBar(true);
-        const response = await handleUploadImage(file, handleProgress);
-        if (response.status === 200) {
-            setUploadedImage(response.data);
-            setUser({ ...user, user_avatar: createImageUrl(response.data.filename) });
-        }
-    };
+        setUploadedImage(file);
+        try {
+            // Create a reference to where you want to store the file in Firebase Storage
+            const storageRef = ref(storage, `images/${file.name}`);
 
-    const handleProgress = (progress) => {
-        setUploadProgress(progress);
+            // Upload the file using uploadBytesResumable method
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            // Track upload progress
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Update upload progress if needed
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    // Handle error during upload
+                    console.error('Error uploading file:', error);
+                },
+                async () => {
+                    // Handle upload completion
+                    console.log('Upload complete');
+                    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Store the download URL of the uploaded file
+                        setUser({ ...user, user_avatar: downloadURL });
+                    });
+                }
+            );
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleDeleteImageSubmit = async () => {
         try {
-            const deleteResult = await handleDeleteImage(uploadedImage.filename);
-            if (deleteResult.success) {
-                setUploadedImage(null);
-                setUploadProgress(0);
-                setShowProgressBar(false);
-                setUser({ ...user, user_avatar: '' });
-            } else {
-                console.error(deleteResult.error);
+            if (!uploadedImage) {
+                return;
             }
+
+            const storageRef = ref(storage, `images/${uploadedImage.name}`);
+            await deleteObject(storageRef);
+
+            setUploadedImage(null);
+            setUploadProgress(0);
         } catch (error) {
             console.error('Error deleting image:', error);
         }
@@ -81,6 +99,7 @@ const EditUserPage = () => {
 
     const handleDeleteButtonClick = (e) => {
         e.preventDefault();
+        handleDeleteAvatarImage();
         handleDeleteImageSubmit();
     };
 
@@ -105,6 +124,14 @@ const EditUserPage = () => {
         }
     };
 
+    const handleDeleteAvatarImage = async () => {
+        const response = await deleteAvatarImage(id, csrfToken);
+        if (response === 200) {
+            setUser({ ...user, user_avatar: null });
+            setUploadedImage(null);
+        }
+    }
+
     return (
         <div class="flex items-center justify-center p-2">
             <div class="mx-auto w-full bg-white">
@@ -115,11 +142,13 @@ const EditUserPage = () => {
                             for="lesson_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên học viên
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="user_name"
                             id="user_name"
+                            required
                             placeholder="Tên học viên"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={user.user_name}
@@ -131,11 +160,13 @@ const EditUserPage = () => {
                             for="email"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Email
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="email"
                             name="email"
                             id="email"
+                            required
                             placeholder="Email"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={user.email}
@@ -147,11 +178,14 @@ const EditUserPage = () => {
                             for="password"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Password
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(Tối thiểu 6 ký tự)</span>
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="password"
                             id="password"
+                            required
                             placeholder="Password"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={user.password}
@@ -184,63 +218,46 @@ const EditUserPage = () => {
                         </div>
                     </div>
 
-                    {user.user_avatar ? (
+                    {(user.user_avatar !== null || uploadedImage) ? (
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
-                                    <FontAwesomeIcon icon={faImage} />
-                                    <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                        {user.user_avatar}
-                                    </span>
+                                    {(user.user_avatar) ? (
+                                        <>
+                                            <img src={user.user_avatar} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
+                                            <span className="truncate w-[600px] pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                {(user.user_avatar || uploadedImage.name)}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <LoadingUploadFile />
+                                    )}
                                 </div>
                             </div>
-                            {showProgressBar && (
-                                <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                            <div className="relative">
+                                {(uploadProgress === 100 || user.user_avatar) && (
                                     <button
-                                        className="absolute top-[-59px] right-4 text-gray-500"
+                                        className="absolute top-[-70px] right-[20px] text-gray-500 text-xl"
                                         onClick={handleDeleteButtonClick}>
                                         <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                    </button>
-                                    <div
-                                        className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                        style={{ width: `${uploadProgress}%` }}>
-                                    </div>
-                                    <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                        {uploadProgress}%
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-
-                    ) : (
-                        uploadedImage && (
-                            <div className="mb-5">
-                                <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
-                                    <div className="flex items-center">
-                                        <FontAwesomeIcon icon={faImage} />
-                                        <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                            {uploadedImage.filename}
-                                        </span>
-                                    </div>
-                                </div>
-                                {showProgressBar && (
-                                    <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                                        <button
-                                            className="absolute top-[-59px] right-4 text-gray-500"
-                                            onClick={handleDeleteButtonClick}>
-                                            <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                        </button>
-                                        <div
-                                            className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                            style={{ width: `${uploadProgress}%` }}>
+                                    </button>)}
+                                {uploadedImage ? (
+                                    <>
+                                        <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                            <div
+                                                className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                                style={{ width: `${uploadProgress}%` }}>
+                                            </div>
+                                            <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                                {uploadProgress}%
+                                            </span>
                                         </div>
-                                        <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                            {uploadProgress}%
-                                        </span>
-                                    </div>
-                                )}
+                                    </>
+                                ) : (null)}
                             </div>
-                        )
+                        </div>
+                    ) : (
+                        null
                     )}
 
                     <div class="mb-5">
@@ -248,6 +265,7 @@ const EditUserPage = () => {
                             for="user_role_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Vai trò
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="user_role_id"

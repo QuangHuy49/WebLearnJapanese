@@ -29,7 +29,7 @@ export async function getLessonPaging(page, perPage) {
 }
 
 export async function addLesson(formData, csrfToken) {
-    try {
+    try {   
         const response = await axios.post('http://127.0.0.1:8000/api/lesson/add', formData, 
         {
             headers: {
@@ -80,7 +80,7 @@ export async function deleteLesson(id, csrfToken) {
 }
 
 // UI user
-// get 5 latest lesson if status = 1
+// get  latest lesson if status = 1
 export async function getLatestLesson(id) {
     try {
         const response = await axios.get(`http://127.0.0.1:8000/api/lesson/latest-lessons/${id}`);
@@ -122,5 +122,50 @@ export async function addLessonUser(formData, userId, csrfToken) {
         return response;
     } catch (error) {
         console.error('Failed to add leson:', error);
+    }
+}
+
+// delete lesson_img by lesson_id
+export async function deleteLessonImage(id, csrfToken) {
+    try {
+        const response = await axios.delete(`http://127.0.0.1:8000/api/lesson/delete-lesson-image/${id}`,
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response.status;
+    } catch (error) {
+        console.error('Failed to delete lesson:', error);
+    }
+}
+
+// get lesson basic N5
+export async function getLessonBasicN5(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lesson/get-lesson-basic-n5/${id}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.log('Error', error.message);
+        return null;
+    }
+}
+
+// get lesson basic N4
+export async function getLessonBasicN4(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/lesson/get-lesson-basic-n4/${id}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.log('Error', error.message);
+        return null;
     }
 }

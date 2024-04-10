@@ -68,11 +68,13 @@ const EditTypePage = () => {
                             for="type_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên thể loại
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="type_name"
                             id="type_name"
+                            required
                             placeholder="Tên thể loại"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={type.type_name}
@@ -85,10 +87,12 @@ const EditTypePage = () => {
                             for="type_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="type_status"
                             id="type_status"
+                            required
                             value={type.type_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">

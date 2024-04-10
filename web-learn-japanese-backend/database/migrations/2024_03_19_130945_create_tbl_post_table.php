@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('post_title', 50); 
             $table->string('post_content', 255); 
             $table->string('post_img', 255)->nullable();
-            $table->dateTime('post_timestamp'); 
             $table->integer('post_view')->default(0); 
             $table->integer('post_like')->default(0); 
             $table->integer('post_comment')->default(0); 
             $table->tinyInteger('post_status')->default(0);
+            $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('tbl_user');
         });

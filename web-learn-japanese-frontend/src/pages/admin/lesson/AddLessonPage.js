@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { getType } from '../../../services/TypeServices';
 import { addLesson } from '../../../services/LessonServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../../../firebase';
+import LoadingUploadFile from '../../../components/loading/LoadingUploadFile';
 
 const AddLessonPage = () => {
     const [uploadedImage, setUploadedImage] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [showProgressBar, setShowProgressBar] = useState(false);
     const [types, setTypes] = useState([]);
     const statusOptions = [
         { value: 1, label: 'Xuất bản' },
@@ -43,35 +44,52 @@ const AddLessonPage = () => {
         }
     };
 
-    const createImageUrl = (imageName) => {
-        return `http://127.0.0.1:8000/storage/img/${imageName}`;
-    };
-
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        setUploadProgress(0);
-        setShowProgressBar(true);
-        const response = await handleUploadImage(file, handleProgress);
-        if (response.status === 200) {
-            setUploadedImage(response.data);
-            setFormData({ ...formData, lesson_img: createImageUrl(response.data.filename) });
-        }
-    };
+        setUploadedImage(file);
+        try {
+            // Create a reference to where you want to store the file in Firebase Storage
+            const storageRef = ref(storage, `images/${file.name}`);
 
-    const handleProgress = (progress) => {
-        setUploadProgress(progress);
+            // Upload the file using uploadBytesResumable method
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            // Track upload progress
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Update upload progress if needed
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    // Handle error during upload
+                    console.error('Error uploading file:', error);
+                },
+                async () => {
+                    // Handle upload completion
+                    console.log('Upload complete');
+                    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Store the download URL of the uploaded file
+                        setFormData({ ...formData, lesson_img: downloadURL });
+                    });
+                }
+            );
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleDeleteImageSubmit = async () => {
         try {
-            const deleteResult = await handleDeleteImage(uploadedImage.filename);
-            if (deleteResult.success) {
-                setUploadedImage(null);
-                setUploadProgress(0);
-                setShowProgressBar(false);
-            } else {
-                console.error(deleteResult.error);
+            if (!uploadedImage) {
+                return;
             }
+
+            const storageRef = ref(storage, `images/${uploadedImage.name}`);
+            await deleteObject(storageRef);
+
+            setUploadedImage(null);
+            setUploadProgress(0);
         } catch (error) {
             console.error('Error deleting image:', error);
         }
@@ -102,7 +120,7 @@ const AddLessonPage = () => {
             toast.error('Đã xảy ra lỗi trong quá trình thêm bài học.');
         }
     };
-    
+
     return (
         <div class="flex items-center justify-center p-2">
             <div class="mx-auto w-full bg-white">
@@ -113,25 +131,28 @@ const AddLessonPage = () => {
                             for="lesson_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên bài học
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="lesson_name"
                             id="lesson_name"
+                            required
                             placeholder="Bài 1 - Minna no Nihongo"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.lesson_name}
-                                onChange={handleChange}
+                            onChange={handleChange}
                         />
                     </div>
 
                     <div class="mb-6">
                         <label class="block text-base font-medium text-custom-color-blue">
                             Upload File
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
 
                         <div class="mb-8">
-                            <input type="file" name="file" id="file" class="sr-only" onChange={handleFileChange} />
+                            <input type="file" name="file" id="file" class="sr-only" required onChange={handleFileChange} />
                             <label
                                 for="file"
                                 class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
@@ -146,6 +167,10 @@ const AddLessonPage = () => {
                                         class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-custom-color-blue">
                                         Chọn từ máy tính
                                     </span>
+                                    <span
+                                        class="mb-2 block text-base font-medium text-[#6B7280] mt-4 text-custom-color-red-gray">
+                                        Chỉ nhận file .jpg, .png, .jpeg
+                                    </span>
                                 </div>
                             </label>
                         </div>
@@ -155,28 +180,33 @@ const AddLessonPage = () => {
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
-                                    <img src={`http://127.0.0.1:8000/storage/img/${uploadedImage.filename}`} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
-                                    <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                        {uploadedImage.filename}
-                                    </span>
+                                    {formData.lesson_img ? (
+                                        <>
+                                            <img src={formData.lesson_img} alt="lesson_img" className="w-[170px] h-[80px] rounded-lg object-cover" />
+                                            <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                {uploadedImage.name}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <LoadingUploadFile />
+                                    )}
                                 </div>
                             </div>
-                            {showProgressBar && (
-                                <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                            <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                {uploadProgress === 100 && (
                                     <button
-                                        className="absolute top-[-59px] right-4 text-gray-500"
+                                        className="absolute top-[-80px] right-[20px] text-gray-500 text-xl"
                                         onClick={handleDeleteButtonClick}>
                                         <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                    </button>
-                                    <div
-                                        className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                        style={{ width: `${uploadProgress}%` }}>
-                                    </div>
-                                    <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                        {uploadProgress}%
-                                    </span>
+                                    </button>)}
+                                <div
+                                    className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                    style={{ width: `${uploadProgress}%` }}>
                                 </div>
-                            )}
+                                <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                    {uploadProgress}%
+                                </span>
+                            </div>
                         </div>
                     )}
 
@@ -185,12 +215,14 @@ const AddLessonPage = () => {
                             for="type_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Thể loại
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         {types && types.length > 0 && (
                             <select
                                 name="type_id"
                                 id="type_id"
                                 value={formData.type_id}
+                                required
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                                 <option value="">Chọn thể loại</option>
@@ -208,11 +240,13 @@ const AddLessonPage = () => {
                             for="lesson_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="lesson_status"
                             id="lesson_status"
                             value={formData.lesson_status}
+                            required
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
                             <option value="">Chọn trạng thái</option>
@@ -226,8 +260,7 @@ const AddLessonPage = () => {
 
                     <div>
                         <button
-                            className={`hover:shadow-form w-full rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none ${uploadProgress < 100 ? 'bg-[#E5E7EB] cursor-not-allowed' : 'bg-[#6A64F1] hover:bg-[#5C59C2] cursor-pointer'}`}
-                            disabled={uploadProgress < 100}
+                            className={"hover:shadow-form w-full rounded-md py-3 px-8 text-center text-base font-semibold text-white outline-none bg-[#6A64F1] hover:bg-[#5C59C2] cursor-pointer"}
                             onClick={handleSubmit}>
                             Thêm bài học mới
                         </button>

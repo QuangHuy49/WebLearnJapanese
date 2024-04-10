@@ -8,6 +8,8 @@ import ButtonAdd from '../../../../../components/button/ButtonAdd';
 import { CSSTransition } from 'react-transition-group';
 import '../../../../../styles/global.css';
 import { toast } from 'react-toastify';
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '../../../../../firebase';
 
 const KaiwaPage = () => {
     let { id } = useParams();
@@ -21,6 +23,7 @@ const KaiwaPage = () => {
     const [csrfToken, setCsrfToken] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
     const [kaiwaIdToDelete, setKaiwaIdToDelete] = useState(null);
+    const [kaiwaAudioToDelete, setKaiwaAudioToDelete] = useState(null);
 
     useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]');
@@ -67,21 +70,28 @@ const KaiwaPage = () => {
             });
     };
 
-    const handleDeleteKaiwa = async (id) => {
+    const handleDeleteKaiwa = async (id, audio) => {
         setKaiwaIdToDelete(id);
+        setKaiwaAudioToDelete(audio);
         setShowConfirmationModal(true);
     };
 
     const confirmDeleteKaiwa = async () => {
-        const response = await deleteKaiwa(kaiwaIdToDelete, csrfToken);
-        if (response === 200) {
+        try {
+            const deleteAudioPromise = kaiwaAudioToDelete ? deleteObject(ref(storage, kaiwaAudioToDelete)) : Promise.resolve();
+            const deleteKaiwaPromise = deleteKaiwa(kaiwaIdToDelete, csrfToken);
+    
+            await Promise.all([deleteAudioPromise, deleteKaiwaPromise]);
+
             toast.success('Xóa câu kaiwa thành công!');
             navigate(`/admin/lesson/detail-lesson/${id}/kaiwa`);
             window.location.reload();
-        } else {
+        } catch (error) {
+            console.error('Error deleting kaiwa:', error);
             toast.error('Xóa câu kaiwa thất bại. Vui lòng thử lại!');
+        } finally {
+            setShowConfirmationModal(false);
         }
-        setShowConfirmationModal(false);
     };
 
     const cancelDeleteKaiwa = () => {
@@ -227,7 +237,7 @@ const KaiwaPage = () => {
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                             onClick={() => handleDeleteKaiwa(item.kaiwa_id)}/>
+                                                             onClick={() => handleDeleteKaiwa(item.kaiwa_id, item.kaiwa_audio)}/>
                                                     </div>
                                                 </td>
                                             </tr>

@@ -41,12 +41,14 @@ class LessonController extends Controller
             'lesson_img'=>'required|string|max:255',
             'lesson_status' => 'required|integer|between:0,1',
         ]);
+        
         $lesson=Lesson::create([
             'type_id'=>$request->type_id,
             'lesson_name'=>$request->lesson_name,
             'lesson_img'=>$request->lesson_img,
             'lesson_status'=>$request->lesson_status
         ]);
+        
         return response()->json($lesson, 201);
     }
 
@@ -140,5 +142,74 @@ class LessonController extends Controller
             ];
         }
         return response()->json($lessonsData);
+    }
+
+    // delete lesson_img by lesson_id
+    public function deleteLessonImage($id)
+    {
+        $lesson = Lesson::find($id);
+
+        if (!$lesson) {
+            return response()->json(['message' => 'Lesson not found'], 404);
+        }
+
+        if (!empty($lesson->lesson_img)) {
+            $lesson->update(['lesson_img' => null]);
+
+            return response()->json(['message' => 'Lesson image deleted successfully'], 200);
+        }
+    }
+
+    // get lesson basic N5
+    public function getLessonBasicN5($userId) {
+        $lessonBasicN5 = Lesson::where(function($query) {
+                                $query->where('type_id', 1)
+                                        ->orWhere('type_id', 2)
+                                        ->orWhere('type_id', 3);
+                            })
+                            ->get();
+
+        $result = [];
+
+        foreach ($lessonBasicN5 as $lesson) {
+            $lessonId = $lesson->lesson_id;
+            $userJoined = LessonUser::where('lesson_id', $lessonId)
+                                    ->where('user_id', $userId)
+                                    ->exists();
+            $totalUsers = LessonUser::where('lesson_id', $lessonId)->count();
+
+            $result[] = [
+                'lesson' => $lesson,
+                'total_users' => $totalUsers,
+                'user_id' => $userJoined ? $userId : null 
+            ];
+        }
+        return response()->json($result);
+    }
+
+    // get lesson basic N4
+    public function getLessonBasicN4($userId) {
+        $lessonBasicN4 = Lesson::where(function($query) {
+                                    $query->where('type_id', 4)
+                                            ->orWhere('type_id', 5);
+                                })
+                                ->get();
+
+        $result = [];
+
+        foreach ($lessonBasicN4 as $lesson) {
+            $lessonId = $lesson->lesson_id;
+            $userJoined = LessonUser::where('lesson_id', $lessonId)
+                                    ->where('user_id', $userId)
+                                    ->exists();
+            $totalUsers = LessonUser::where('lesson_id', $lessonId)->count();
+
+            $result[] = [
+                'lesson' => $lesson,
+                'total_users' => $totalUsers,
+                'user_id' => $userJoined ? $userId : null 
+            ];
+        }
+        return response()->json($result);
     }
 }

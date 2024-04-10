@@ -88,6 +88,7 @@ class KaiwaController extends Controller
             'kaiwa_audio'=>'nullable|string|max:255',
             'kaiwa_status'=>'required|integer|between:0,1'
         ]);
+        
         $kaiwa->update([
             'lesson_id'=>$request->lesson_id,
             'kaiwa_name'=>$request->kaiwa_name,
@@ -144,5 +145,21 @@ class KaiwaController extends Controller
         return response()->json([
             'kaiwas' => $kaiwas
         ], 200);
+    }
+
+    // delete kaiwa_audio by kaiwa_id
+    public function deleteKaiwaAudio($id)
+    {
+        $kaiwa = Kaiwa::find($id);
+
+        if (!$kaiwa) {
+            return response()->json(['message' => 'Kaiwa not found'], 404);
+        }
+
+        if (!empty($kaiwa->kaiwa_audio)) {
+            $kaiwa->update(['kaiwa_audio' => null]);
+
+            return response()->json(['message' => 'Kaiwa audio deleted successfully'], 200);
+        }
     }
 }

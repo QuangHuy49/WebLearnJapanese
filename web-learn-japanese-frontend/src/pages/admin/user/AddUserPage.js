@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { handleDeleteImage, handleUploadImage } from '../../../services/FileServices';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faImage} from '@fortawesome/free-solid-svg-icons';
 import { addUser } from '../../../services/UserServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -55,11 +52,13 @@ const AddUserPage = () => {
                             for="lesson_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Tên học viên
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="user_name"
                             id="user_name"
+                            required
                             placeholder="Tên học viên"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.user_name}
@@ -71,11 +70,13 @@ const AddUserPage = () => {
                             for="lesson_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Email
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="email"
                             name="email"
                             id="email"
+                            required
                             placeholder="Email"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.email}
@@ -87,11 +88,14 @@ const AddUserPage = () => {
                             for="password"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Password
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(Tối thiểu 6 ký tự)</span>
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="password"
                             id="password"
+                            required
                             placeholder="Password"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.password}

@@ -17,12 +17,7 @@ return new class extends Migration
             $table->string('question_name', 255); 
             $table->string('question_img', 255)->nullable();
             $table->string('question_audio', 255)->nullable();
-            $table->string('answer_a', 255); 
-            $table->string('answer_b', 255); 
-            $table->string('answer_c', 255); 
-            $table->string('answer_d', 255); 
-            $table->string('answer_correct', 255);
-            $table->tinyInteger('question_status')->default(0);
+            $table->tinyInteger('question_status')->default(1);
 
             $table->foreign('test_id')->references('test_id')->on('tbl_test');
         });

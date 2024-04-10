@@ -7,6 +7,8 @@ import ButtonAdd from '../../../components/button/ButtonAdd';
 import { CSSTransition } from 'react-transition-group';
 import '../../../styles/global.css';
 import { toast } from 'react-toastify';
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '../../../firebase';
 
 const LessonPage = () => {
     const navigate = useNavigate();
@@ -18,6 +20,7 @@ const LessonPage = () => {
     const [csrfToken, setCsrfToken] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
     const [lessonIdToDelete, setLessonIdToDelete] = useState(null);
+    const [lessonImageToDelete, setLessonImageToDelete] = useState(null);
 
     useEffect(() => {
         loadLessons(currentPage);
@@ -53,12 +56,24 @@ const LessonPage = () => {
         setShowSubNav(!showSubNav);
     };
 
-    const handleDeleteLesson = async (id) => {
+    const handleDeleteLesson = async (id, img) => {
         setLessonIdToDelete(id);
+        setLessonImageToDelete(img);
         setShowConfirmationModal(true);
     };
 
     const confirmDeleteLesson = async () => {
+        // delete file in firebase
+        try {
+            if (!lessonImageToDelete) {
+                return;
+            }
+            const storageRef = ref(storage, `${lessonImageToDelete}`);
+            await deleteObject(storageRef);
+        } catch (error) {
+            console.error('Error deleting image:', error);
+        }
+
         const response = await deleteLesson(lessonIdToDelete, csrfToken);
         if (response === 200) {
             toast.success('Xóa bài học thành công!');
@@ -67,6 +82,7 @@ const LessonPage = () => {
         } else {
             toast.error('Xóa bài học thất bại. Vui lòng thử lại!');
         }
+        
         setShowConfirmationModal(false);
     };
 
@@ -196,7 +212,7 @@ const LessonPage = () => {
                                                             <FontAwesomeIcon icon={faPenToSquare} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-blue" />
                                                         </Link>
                                                         <FontAwesomeIcon icon={faTrash} className="text-lg cursor-pointer hover:scale-125 transition-all text-custom-color-red-gray"
-                                                            onClick={() => handleDeleteLesson(item.lesson_id)} />
+                                                            onClick={() => handleDeleteLesson(item.lesson_id, item.lesson_img)} />
                                                     </div>
                                                 </td>
                                             </tr>

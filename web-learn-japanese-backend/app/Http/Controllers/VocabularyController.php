@@ -91,6 +91,7 @@ class VocabularyController extends Controller
             'vocabulary_audio'=>'nullable|string|max:255',
             'vocabulary_status'=>'required|integer|between:0,1'
         ]);
+        
         $vocabulary->update([
             'lesson_id'=>$request->lesson_id,
             'vocabulary_name'=>$request->vocabulary_name,
@@ -149,5 +150,21 @@ class VocabularyController extends Controller
         return response()->json([
             'vocabularies' => $vocabularies
         ], 200);
+    }
+
+    // delete vocabulary_audio by vocabulary_id
+    public function deleteVocabularyAudio($id)
+    {
+        $vocabulary = Vocabulary::find($id);
+
+        if (!$vocabulary) {
+            return response()->json(['message' => 'Vocabulary not found'], 404);
+        }
+
+        if (!empty($vocabulary->vocabulary_audio)) {
+            $vocabulary->update(['vocabulary_audio' => null]);
+
+            return response()->json(['message' => 'Vocabulary audio deleted successfully'], 200);
+        }
     }
 }

@@ -79,3 +79,18 @@ export async function getVocabularyDataById(id) {
         return null;
     }
 }
+
+// delete vocabulary_audio by vocabulary_id
+export async function deleteVocabularyAudio(id, csrfToken) {
+    try {
+        const response = await axios.delete(`http://127.0.0.1:8000/api/vocabulary/delete-vocabulary-audio/${id}`,
+        {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response.status;
+    } catch (error) {
+        console.error('Failed to delete vocabulary audio:', error);
+    }
+}

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getLesson } from '../../../../../services/LessonServices';
-import { handleDeleteAudio, handleUploadAudio } from '../../../../../services/FileServices';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { addVocabulary } from '../../../../../services/VocabularyServices';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { storage } from '../../../../../firebase';
+import LoadingUploadFile from '../../../../../components/loading/LoadingUploadFile';
 
 const AddVocabularyPage = () => {
     const [formData, setFormData] = useState({
@@ -25,7 +27,6 @@ const AddVocabularyPage = () => {
     const [csrfToken, setCsrfToken] = useState('');
     const [uploadedAudio, setUploadedAudio] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [showProgressBar, setShowProgressBar] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,7 +35,7 @@ const AddVocabularyPage = () => {
             setCsrfToken(token.getAttribute('content'));
         }
 
-        fetchTypes();
+        fetchLessons();
     }, []);
 
     const handleChange = (e) => {
@@ -42,44 +43,61 @@ const AddVocabularyPage = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const fetchTypes = async () => {
+    const fetchLessons = async () => {
         try {
             const response = await getLesson();
             setLessons(response);
         } catch (error) {
-            console.error('Error fetching types:', error);
+            console.error('Error fetching lessons:', error);
         }
-    };
-
-    const createAudioUrl = (audioName) => {
-        return `http://127.0.0.1:8000/storage/audio/${audioName}`;
     };
 
     const handleFileChange = async (event) => {
         const file = event.target.files[0];
-        setUploadProgress(0);
-        setShowProgressBar(true);
-        const response = await handleUploadAudio(file, handleProgress);
-        if (response.status === 200) {
-            setUploadedAudio(response.data);
-            setFormData({ ...formData, vocabulary_audio: createAudioUrl(response.data.filename) });
-        }
-    };
+        setUploadedAudio(file);
+        try {
+            // Create a reference to where you want to store the file in Firebase Storage
+            const storageRef = ref(storage, `audios/${file.name}`);
 
-    const handleProgress = (progress) => {
-        setUploadProgress(progress);
+            // Upload the file using uploadBytesResumable method
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            // Track upload progress
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                    // Update upload progress if needed
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    // Handle error during upload
+                    console.error('Error uploading file:', error);
+                },
+                async () => {
+                    // Handle upload completion
+                    console.log('Upload complete');
+                    await getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        // Store the download URL of the uploaded file
+                        setFormData({ ...formData, vocabulary_audio: downloadURL });
+                    });
+                }
+            );
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleDeleteAudioSubmit = async () => {
         try {
-            const deleteResult = await handleDeleteAudio(uploadedAudio.filename);
-            if (deleteResult.success) {
-                setUploadedAudio(null);
-                setUploadProgress(0);
-                setShowProgressBar(false);
-            } else {
-                console.error(deleteResult.error);
+            if (!uploadedAudio) {
+                return;
             }
+
+            const storageRef = ref(storage, `audios/${uploadedAudio.name}`);
+            await deleteObject(storageRef);
+
+            setUploadedAudio(null);
+            setUploadProgress(0);
         } catch (error) {
             console.error('Error deleting audio:', error);
         }
@@ -124,15 +142,17 @@ const AddVocabularyPage = () => {
                             for="vocabulary_name"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Từ vựng
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="vocabulary_name"
                             id="vocabulary_name"
+                            required
                             placeholder="にほんご"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.vocabulary_name}
-                                onChange={handleChange}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -149,7 +169,7 @@ const AddVocabularyPage = () => {
                             placeholder="日本語"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.vocabulary_character}
-                                onChange={handleChange}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -166,7 +186,7 @@ const AddVocabularyPage = () => {
                             placeholder="NHẬT BỔN NGỮ"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.vocabulary_yin_han}
-                                onChange={handleChange}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -175,15 +195,17 @@ const AddVocabularyPage = () => {
                             for="vocabulary_mean"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Nghĩa
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <input
                             type="text"
                             name="vocabulary_mean"
                             id="vocabulary_mean"
+                            required
                             placeholder="Tiếng Nhật"
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md"
                             value={formData.vocabulary_mean}
-                                onChange={handleChange}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -221,30 +243,35 @@ const AddVocabularyPage = () => {
                         <div className="mb-5">
                             <div className="rounded-md bg-[#F5F7FB] py-4 px-8">
                                 <div className="flex items-center">
-                                    <span onClick={() => playAudio(`http://127.0.0.1:8000/storage/audio/${uploadedAudio.filename}`)}>
-                                        <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all text-custom-color-blue"/>
-                                    </span>
-                                    <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
-                                        {uploadedAudio.filename}
-                                    </span>
+                                    {formData.vocabulary_audio ? (
+                                        <>
+                                            <span onClick={() => playAudio(formData.vocabulary_audio)}>
+                                                <FontAwesomeIcon icon={faPlay} className="text-xl pl-2 hover:scale-125 cursor-pointer transition-all text-custom-color-blue" />
+                                            </span>
+                                            <span className="truncate pr-3 text-base font-medium text-custom-color-blue ml-3">
+                                                {uploadedAudio.name}
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <LoadingUploadFile />
+                                    )}
                                 </div>
                             </div>
-                            {showProgressBar && (
-                                <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                            <div className="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
+                                {uploadProgress === 100 && (
                                     <button
-                                        className="absolute top-[-59px] right-4 text-gray-500"
+                                        className="absolute top-[-60px] right-[20px] text-gray-500 text-xl"
                                         onClick={handleDeleteButtonClick}>
                                         <FontAwesomeIcon icon={faClose} className="hover:scale-110 transition-all" />
-                                    </button>
-                                    <div
-                                        className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
-                                        style={{ width: `${uploadProgress}%` }}>
-                                    </div>
-                                    <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
-                                        {uploadProgress}%
-                                    </span>
+                                    </button>)}
+                                <div
+                                    className="absolute left-0 h-full rounded-lg bg-[#6A64F1]"
+                                    style={{ width: `${uploadProgress}%` }}>
                                 </div>
-                            )}
+                                <span className="absolute top-0 right-0 mt-[-20px] text-sm font-medium text-custom-color-blue">
+                                    {uploadProgress}%
+                                </span>
+                            </div>
                         </div>
                     )}
 
@@ -253,11 +280,13 @@ const AddVocabularyPage = () => {
                             for="lesson_id"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Bài học
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         {lessons && lessons.length > 0 && (
                             <select
                                 name="lesson_id"
                                 id="lesson_id"
+                                required
                                 value={formData.lesson_id}
                                 onChange={handleChange}
                                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">
@@ -276,10 +305,12 @@ const AddVocabularyPage = () => {
                             for="vocabulary_status"
                             class="mb-2 block text-base font-medium text-custom-color-blue">
                             Trạng thái
+                            <span className="ml-2 text-sm text-custom-color-red-gray">(*)</span>
                         </label>
                         <select
                             name="vocabulary_status"
                             id="vocabulary_status"
+                            required
                             value={formData.vocabulary_status}
                             onChange={handleChange}
                             class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-custom-color-blue outline-none focus:border-[#6A64F1] focus:shadow-md">

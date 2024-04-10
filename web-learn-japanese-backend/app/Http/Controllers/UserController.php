@@ -101,7 +101,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required|string|min:6',
             'user_avatar' => 'required|string|max:255', 
-            'user_role_id' => 'nullable|integer|between:1,2', 
+            'user_role_id' => 'required|integer|between:1,2', 
         ]);
 
         $user->update([
@@ -147,5 +147,21 @@ class UserController extends Controller
             'users' => $users,
             'totalPages' => $totalPages
         ]);
+    }
+
+    // delete user_avatar by user_id
+    public function deleteAvatarImage($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if (!empty($user->user_avatar)) {
+            $user->update(['user_avatar' => null]);
+
+            return response()->json(['message' => 'Avatar image deleted successfully'], 200);
+        }
     }
 }
