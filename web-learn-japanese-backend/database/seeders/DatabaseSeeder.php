@@ -25,7 +25,12 @@ class DatabaseSeeder extends Seeder
             QuestionSeeder::class,
             LessonUserSeeder::class,
             JapaneseAlphabetSeeder::class,
-            AnswerSeeder::class
+            AnswerSeeder::class,
+            TestUserSeeder::class,
+            PostSeeder::class,
+            LikeSeeder::class,
+            CommentSeeder::class,
+            ViewSeeder::class
         ]);
     }
 }

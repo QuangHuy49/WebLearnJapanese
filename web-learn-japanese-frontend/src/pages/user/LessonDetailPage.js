@@ -5,6 +5,7 @@ import { getLessonByid } from '../../services/LessonServices';
 import KaiwaPage from './KaiwaPage';
 import GrammarPage from './GrammarPage';
 import { getDakutenAndHandakutenHiraganaJapaneseDataByIdLesson, getDakutenAndHandakutenKatakanaJapaneseDataByIdLesson, getHiraganaJapaneseDataByIdLesson, getKatakanaJapaneseDataByIdLesson, getYoonHiraganaJapaneseDataByIdLesson, getYoonKatakanaJapaneseDataByIdLesson } from '../../services/JapaneseAlphabet';
+import TestLessonPage from './TestLessonPage';
 
 const LessonDetailPage = () => {
     let { id } = useParams();
@@ -15,8 +16,6 @@ const LessonDetailPage = () => {
     const [katakanaAlphabet, setKatakanaAlphabet] = useState([]);
     const [dakutenHadakutenKatakanaAlphabet, setDakutenHadakutenKatakanaAlphabet] = useState([]);
     const [yoonKatakanaAlphabet, setYoonKatakanaAlphabet] = useState([]);
-
-    console.log(dakutenHadakutenHiraganaAlphabet)
 
     useEffect(() => {
         getLesson();
@@ -113,14 +112,14 @@ const LessonDetailPage = () => {
     return (
         <div className="flex justify-between">
             <div className="p-6 flex flex-col">
-                <div className="flex items-center justify-around mt-2">
+                <div className="flex items-center justify-around mt-2 pl-[8rem]">
                     {lesson &&
                         <h1 className="text-2xl text-custom-color-blue fontCoiny">{lesson.lesson_name}</h1>
                     }
                 </div>
                 {hiraganaAlphabet.length > 0 || katakanaAlphabet.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-5 gap-4 py-5">
+                        <div className="grid grid-cols-5 gap-4 py-5 pl-[8rem]">
                             {hiraganaAlphabet.map((alphabet, index) => (
                                 <div key={index} className={alphabet.alphabet_character !== '' ? "relative overflow-hidden px-6 py-1 w-full border border-gray-300 rounded-xl shadow-md hover:scale-110 cursor-pointer transition-all" : "relative overflow-hidden px-6 py-1 w-full border-gray-300 rounded-xl shadow-md"}
                                     onClick={() => playAudio(alphabet.alphabet_audio)}>
@@ -162,7 +161,7 @@ const LessonDetailPage = () => {
 
                         {(dakutenHadakutenHiraganaAlphabet.length > 0 || dakutenHadakutenKatakanaAlphabet.length) > 0 && (
                             <>
-                                <div className="flex flex-col items-center justify-around mt-3 w-[522px]">
+                                <div className="flex flex-col items-center justify-around mt-3 pl-[8rem]">
                                     {lesson &&
                                         <>
                                             <h3 className="text-xl text-custom-color-blue fontCoiny">Biến âm (âm đục, âm bán đục)</h3>
@@ -173,7 +172,7 @@ const LessonDetailPage = () => {
                                         </>
                                     }
                                 </div>
-                                <div className="grid grid-cols-5 gap-4 py-5">
+                                <div className="grid grid-cols-5 gap-4 py-5 pl-[8rem]">
                                     {dakutenHadakutenHiraganaAlphabet.map((alphabet, index) => (
                                         <div key={index} className={alphabet.alphabet_character !== '' ? "relative overflow-hidden px-6 py-1 w-full border border-gray-300 rounded-xl shadow-md hover:scale-110 cursor-pointer transition-all" : "relative overflow-hidden px-6 py-1 w-full border-gray-300 rounded-xl shadow-md"}
                                             onClick={() => playAudio(alphabet.alphabet_audio)}>
@@ -217,14 +216,14 @@ const LessonDetailPage = () => {
 
                         {(yoonHiraganaAlphabet.length > 0 || yoonKatakanaAlphabet.length) > 0 && (
                             <>
-                                <div className="flex flex-col items-center justify-around mt-3 w-[522px]">
+                                <div className="flex flex-col items-center justify-around mt-3 pl-[8rem]">
                                     {lesson &&
                                         <>
                                             <h3 className="text-xl text-custom-color-blue fontCoiny">Âm ghép</h3>
                                         </>
                                     }
                                 </div>
-                                <div className="grid grid-cols-3 gap-4 pb-5 pt-2">
+                                <div className="grid grid-cols-3 gap-4 pb-5 pt-2 pl-[8rem]">
                                     {yoonHiraganaAlphabet.map((alphabet, index) => (
                                         <div key={index} className={alphabet.alphabet_character !== '' ? "relative overflow-hidden px-6 py-1 w-full border border-gray-300 rounded-xl shadow-md hover:scale-110 cursor-pointer transition-all" : "relative overflow-hidden px-6 py-1 w-full border-gray-300 rounded-xl shadow-md"}
                                             onClick={() => playAudio(alphabet.alphabet_audio)}>
@@ -275,7 +274,9 @@ const LessonDetailPage = () => {
                 )}
             </div>
 
-            <div>Kiểm tra</div>
+            <div className="py-6 flex flex-col mt-2">
+                <TestLessonPage />
+            </div>
         </div>
     );
 }

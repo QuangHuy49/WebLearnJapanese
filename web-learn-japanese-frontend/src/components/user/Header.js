@@ -173,10 +173,10 @@ const Header = () => {
                                                     <div className="self-center ml-2">{t('submenu.my_course', { ns: 'submenu' })}</div>
                                                 </Link>
 
-                                                <a className="flex item-center block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
+                                                <Link to={'/post/my-post'} className="flex item-center block rounded-md px-4 py-2 my-1 text-sm text-gray-700 hover:bg-gray-100 active:bg-blue-100 cursor-pointer hover:scale-110 transition-all" role="menuitem">
                                                     <FontAwesomeIcon icon={faLayerGroup} className="self-center" />
                                                     <div className="self-center ml-2">{t('submenu.my_post', { ns: 'submenu' })}</div>
-                                                </a>
+                                                </Link>
                                             </div>
 
                                             <div className="">

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { addTestUser } from '../../services/TestServices';
 
 const LessonBasicN5 = () => {
     const [lessonsBasicN5, setLessonsBasicN5] = useState([]);
@@ -51,17 +52,22 @@ const LessonBasicN5 = () => {
         formData.append('lesson_id', lesson_id);
 
         try {
-            const response = await addLessonUser(formData, user.user_id, csrfToken);
-            if (response.status === 200) {
-                // navigate('/my-course');
+            const response_lesson = await addLessonUser(formData, user.user_id, csrfToken);
+            const response_test = await addTestUser(formData, user.user_id, lesson_id, csrfToken);
+            if (response_lesson.status === 200 && response_test.status === 200) {
+                // toast.success('Thành công');
             } else {
                 toast.error('Có lỗi! Thử lại dùm mình nhé!');
             }
         } catch (error) {
             console.error('Failed to register:', error);
-            toast.error('Oops! Thử lại dùm mình nhé!');
+            if (error.response && error.response.status === 429) {
+                setTimeout(() => handleAddLessonUser(lesson_id), 1000);
+            } else {
+                toast.error('Oops! Thử lại dùm mình nhé!');
+            }
         }
-    };
+    }
 
     return (
         <div className="relative flex flex-col overflow-hidden py-6">
@@ -85,7 +91,7 @@ const LessonBasicN5 = () => {
                                     Ngữ pháp cơ bản: Học viên sẽ học các cấu trúc ngữ pháp cơ bản, giúp họ hiểu và sử dụng câu trình bày đơn giản, giao tiếp hàng ngày.
                                 </li>
                                 <li>
-                                    Từ vựng: Học viên sẽ học các từ vựng phổ biến và cơ bản, từ các chủ đề như gia đình, công việc, mua sắm, thời tiết, ... 
+                                    Từ vựng: Học viên sẽ học các từ vựng phổ biến và cơ bản, từ các chủ đề như gia đình, công việc, mua sắm, thời tiết, ...
                                 </li>
                                 <li>
                                     Đọc hiểu: Luyện tập đọc và hiểu các văn bản đơn giản, bao gồm thông tin về cuộc sống hàng ngày và giao tiếp cơ bản.

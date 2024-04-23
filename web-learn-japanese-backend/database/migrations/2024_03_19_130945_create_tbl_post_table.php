@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('tbl_post', function (Blueprint $table) {
             $table->increments('post_id')->unsigned(); 
             $table->unsignedInteger('user_id'); 
-            $table->string('post_title', 50); 
-            $table->string('post_content', 255); 
+            $table->string('post_title', 255); 
+            $table->text('post_content'); 
             $table->string('post_img', 255)->nullable();
             $table->integer('post_view')->default(0); 
             $table->integer('post_like')->default(0); 

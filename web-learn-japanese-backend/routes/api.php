@@ -150,6 +150,7 @@ Route::group([
     Route::get('get/{id}', [TestController::class, 'show']);
     Route::post('edit/{id}', [TestController::class, 'update']);
     Route::delete('delete/{id}', [TestController::class, 'destroy']);
+    Route::get('{id}/test-data', [TestController::class, 'getTestDataByIdLesson']);
 });
 
 // api Question
@@ -174,6 +175,8 @@ Route::group([
     Route::delete('/delete-question-image/{id}', [QuestionController::class, 'deleteQuestionImage']);
     // delete question_audio by question_id
     Route::delete('/delete-question-audio/{id}', [QuestionController::class, 'deleteQuestionAudio']);
+
+    Route::get('get-question-by-id-test/{id}', [QuestionController::class, 'getQuestionsByTestId']);
 });
 
 // api Answer
@@ -224,6 +227,14 @@ Route::group([
     Route::post('add-lesson-user/{id}', [LessonUserController::class, 'addLessonUser']);
 });
 
+// api test-user
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'test-user'
+], function ($router) {
+    Route::post('add-test-user/{lessonId}/{userId}', [TestUserController::class, 'addTestsToUserByLesson']);
+});
+
 // api japanese alphabet
 Route::group([
     'middleware' => 'api',
@@ -241,4 +252,51 @@ Route::group([
     Route::get('dakuten-handakuten-katakana-alphabet/{id}', [JapaneseAlphabetController::class, 'getDakutenAndHandakutenKatakanaAlphabetDataByIdLesson']);
     // get data yoon_katakana alphabet by lesson_id
     Route::get('yoon-katakana-alphabet/{id}', [JapaneseAlphabetController::class, 'getYoonKatakanaAlphabetDataByIdLesson']);
+});
+
+// admin
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'admin'
+], function ($router) {
+    // get total
+    Route::get('get-total', [AdminController::class, 'getTotal']);
+});
+
+// api post
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'post'
+], function ($router) {
+    Route::get('get/{id}', [PostController::class, 'show']);
+    Route::post('add-admin/{id}', [PostController::class, 'addPostAdmin']);
+    Route::post('add-user/{id}', [PostController::class, 'addPostUser']);
+    // get post by user_id
+    Route::get('{id}/post-data', [PostController::class, 'getPostDataByIdUser']);
+    // get 10 latest post
+    Route::get('/latest-post-data', [PostController::class, 'getPostLatest']);
+});
+
+// api like post
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'like'
+], function ($router) {
+    Route::post('/add-like', [LikeController::class, 'likePost']);
+});
+
+// api view post
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'view'
+], function ($router) {
+    Route::post('/add-view', [ViewController::class, 'viewPost']);
+});
+
+// api comment post
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'comment'
+], function ($router) {
+    Route::get('/get-comment-by-id-post/{id}', [CommentController::class, 'getByPostId']);
 });

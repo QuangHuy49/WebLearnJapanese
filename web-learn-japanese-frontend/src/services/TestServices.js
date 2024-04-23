@@ -78,3 +78,34 @@ export async function deleteTest(id, csrfToken) {
         console.error('Failed to delete test:', error);
     }
 }
+
+// get test by id lesson if status = 1
+export async function getTestDataByIdLesson(id, user_id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/test/${id}/test-data?user_id=${user_id}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.error('Failed to get test data:', error);
+        return null;
+    }
+}
+
+// user
+// add test into user
+export async function addTestUser(formData, userId, lessonId, csrfToken) {
+    try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/test-user/add-test-user/${lessonId}/${userId}`, formData, {
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+        return response;
+    } catch (error) {
+        console.error('Failed to add lesson:', error);
+        throw error;
+    }
+}

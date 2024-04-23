@@ -6,6 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { addTestUser } from '../../services/TestServices';
 
 const LessonBasicN4 = () => {
     const [lessonsBasicN4, setLessonsBasicN4] = useState([]);
@@ -51,15 +52,20 @@ const LessonBasicN4 = () => {
         formData.append('lesson_id', lesson_id);
 
         try {
-            const response = await addLessonUser(formData, user.user_id, csrfToken);
-            if (response.status === 200) {
+            const response_lesson = await addLessonUser(formData, user.user_id, csrfToken);
+            const response_test = await addTestUser(formData, user.user_id, lesson_id, csrfToken);
+            if (response_lesson.status === 200 && response_test.status === 200) {
                 // navigate('/my-course');
             } else {
                 toast.error('Có lỗi! Thử lại dùm mình nhé!');
             }
         } catch (error) {
             console.error('Failed to register:', error);
-            toast.error('Oops! Thử lại dùm mình nhé!');
+            if (error.response && error.response.status === 429) {
+                setTimeout(() => handleAddLessonUser(lesson_id), 1000);
+            } else {
+                toast.error('Oops! Thử lại dùm mình nhé!');
+            }
         }
     };
 

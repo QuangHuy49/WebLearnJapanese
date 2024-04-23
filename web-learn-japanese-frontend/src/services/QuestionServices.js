@@ -108,3 +108,19 @@ export async function deleteQuestionAudio(id, csrfToken) {
         console.error('Failed to delete question audio:', error);
     }
 }
+
+// user
+// get question by test_id if question_status = 1
+export async function getQuestionDataByIdTest(id) {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/question/get-question-by-id-test/${id}`);
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            return null;
+        } 
+    } catch (error) {
+        console.error('Failed to get vocabulary data:', error);
+        return null;
+    }
+}

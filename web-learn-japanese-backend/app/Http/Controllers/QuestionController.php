@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Test;
 use App\Models\Question;
 use App\Models\Answer;
+use App\Models\TestUser;
 use Illuminate\Support\Facades\DB;
 
 class QuestionController extends Controller
@@ -286,5 +287,30 @@ class QuestionController extends Controller
     {
         $questions = Question::all();
         return response()->json($questions, 200);
+    }
+
+    public function getQuestionsByTestId(Request $request, $test_id)
+    {
+        $testUserData = TestUser::where('test_id', $test_id)->first();
+
+        if (!$testUserData) {
+            return response()->json(['error' => 'Test not found'], 404);
+        }
+
+        $questions = Question::with('answer')->where('test_id', $test_id)->get();
+
+        $totalQuestions = $questions->count();
+
+        $questions->each(function ($question) {
+            $question->answer;
+        });
+
+        $responseData = [
+            'test_user' => $testUserData,
+            'questions' => $questions,
+            'total_questions' => $totalQuestions,
+        ];
+
+        return response()->json($responseData);
     }
 }

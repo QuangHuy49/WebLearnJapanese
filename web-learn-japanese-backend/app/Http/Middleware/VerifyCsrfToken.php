@@ -62,6 +62,9 @@ class VerifyCsrfToken extends Middleware
         // lesson-user
         '/api/lesson-user/add-lesson-user/*',
 
+        // test-user
+        '/api/test-user/add-test-user/*',
+
         // test
         '/api/test/add',
         '/api/test/edit/*',
@@ -82,5 +85,15 @@ class VerifyCsrfToken extends Middleware
         '/api/answer/delete-answer-image/*',
         '/api/answer/delete-answer-audio/*',
         '/api/answer/delete/*',
+
+        // post
+        '/api/post/add-admin/*',
+        '/api/post/add-user/*',
+
+        // like post
+        '/api/like/add-like',
+
+        // view post
+        '/api/view/add-view',
     ];
 }

@@ -15,7 +15,7 @@ import AddUserAdminPage from '../pages/admin/user/AddUserPage';
 import EditUserAdminPage from '../pages/admin/user/EditUserPage';
 import DetailLessonAdminLayout from '../pages/admin/lesson/detail_lesson/DetailLessonLayout';
 import TestAdminPage from '../pages/admin/test/TestPage';
-import PostAdminPage from '../pages/admin/PostPage';
+import PostAdminPage from '../pages/admin/post/PostPage';
 import UserLayout from '../pages/user/UserLayout';
 import HomePage from '../pages/user/HomePage';
 import LessonUserPage from '../pages/user/LessonPage';
@@ -41,6 +41,10 @@ import AddQuestionPage from '../pages/admin/test/question/AddQuestionPage';
 import EditQuestionPage from '../pages/admin/test/question/EditQuestionPage';
 import AnswerPage from '../pages/admin/test/question/answer/AnswerPage';
 import EditAnswerPage from '../pages/admin/test/question/answer/EditAnswerPage';
+import QuestionUserPage from '../pages/user/QuestionPage';
+import AddPostPage from '../pages/admin/post/AddPostPage';
+import MyPostPage from '../pages/user/MyPostPage';
+import PostDetailPage from '../pages/user/PostDetailPage';
 
 function App() {
   return (
@@ -89,6 +93,7 @@ function App() {
         <Route path='/admin/user/edit-user/:id' element={<EditUserAdminPage />} />
 
         <Route path='/admin/post' element={<PostAdminPage />} />
+        <Route path='/admin/post/add-post' element={<AddPostPage />} />
       </Route>
       <Route path='/' element={<UserLayout />}>
         <Route path='/' element={<HomePage />} />
@@ -99,6 +104,9 @@ function App() {
         <Route path='/lesson-detail/:id' element={<LessonDetailPage />} />
         <Route path='/lesson-basic-n5' element={<LessonBasicN5 />} />
         <Route path='/lesson-basic-n4' element={<LessonBasicN4 />} />
+        <Route path='/lesson/question/:id' element={<QuestionUserPage />} />
+        <Route path='/post/my-post' element={<MyPostPage />} />
+        <Route path='/post/detail-post/:id' element={<PostDetailPage />} />
       </Route>
     </Routes>
   );

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Test;
+use App\Models\Lesson;
+use App\Models\TestUser;
 
 class TestController extends Controller
 {
@@ -124,5 +126,35 @@ class TestController extends Controller
     {
         $tests = Test::all();
         return response()->json($tests, 200);
+    }
+
+    // get test data by lesson_id with no paging
+    public function getTestDataByIdLesson(Request $request, $id)
+    {
+        try {
+            $user_id = $request->input('user_id');
+            $tests = Test::where('lesson_id', $id)
+                        ->where('test_status', 1)
+                        ->get();
+
+            foreach ($tests as $test) {
+                $testUser = TestUser::where('test_id', $test->test_id)
+                                    ->where('user_id', $user_id) 
+                                    ->first();
+                $test->test_user_info = $testUser;
+            }
+
+            $lesson = Lesson::find($id);
+
+            return response()->json([
+                'lesson' => $lesson,
+                'tests' => $tests
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to retrieve test data by lesson ID',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
