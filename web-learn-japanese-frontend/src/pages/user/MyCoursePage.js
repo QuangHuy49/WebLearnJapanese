@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 const MyCoursePage = () => {
     const [user, setUser] = useState([]);
     const [lessonsUser, setLessonsUser] = useState([]);
-    const { t } = useTranslation('course', 'lesson_button');
+    const { t } = useTranslation('course', 'lesson_button', 'my_course', 'button');
 
     useEffect(() => {
         fetchUserData();
@@ -82,12 +82,12 @@ const MyCoursePage = () => {
                         <div className="flex justify-between px-[12rem] py-20">
                             <div className="flex flex-col items-center text-custom-color-blue">
                                 <h1 className="fontCoiny text-[150px] text-custom-color-red-gray">Oops!</h1>
-                                <span className="text-3xl font-semibold mb-2">Bạn chưa tham gia khóa học nào cả</span>
-                                <span className="text-xl mb-5">Đăng ký khóa học tại nút bên dưới nè</span>
+                                <span className="text-3xl font-semibold mb-2">{t('my_course.text', { ns: 'my_course' })}</span>
+                                <span className="text-xl mb-5">{t('my_course.sub_test', { ns: 'my_course' })}</span>
                                 <FontAwesomeIcon icon={faArrowDown} className="mb-2 text-xl" />
                                 <Link to={'/'}>
                                     <button className="px-4 py-2 text-xl text-white hover:scale-110 transition-all duration-150 bg-custom-color-blue rounded-lg shadow outline-none active:bg-teal-600 hover:shadow-md focus:outline-none">
-                                        Đăng ký
+                                        {t('button.register', { ns: 'button' })}
                                     </button>
                                 </Link>
                             </div>

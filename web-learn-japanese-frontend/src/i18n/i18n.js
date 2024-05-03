@@ -21,6 +21,9 @@ import COURSE_JP from '../locales/jp/page.json';
 import LESSON_BUTTON_VI from '../locales/vi/button.json';
 import LESSON_BUTTON_EN from '../locales/en/button.json';
 import LESSON_BUTTON_JP from '../locales/jp/button.json';
+import MY_COURSE_VI from '../locales/vi/page.json';
+import MY_COURSE_EN from '../locales/en/page.json';
+import MY_COURSE_JP from '../locales/jp/page.json';
 
 const resources = {
     vi: {
@@ -30,7 +33,8 @@ const resources = {
         login: LOGIN_VI,
         submenu: SUBMENU_VI,
         course: COURSE_VI,
-        lesson_button: LESSON_BUTTON_VI
+        lesson_button: LESSON_BUTTON_VI,
+        my_course: MY_COURSE_VI
     },
     en: {
         sidebar: SIDEBAR_EN,
@@ -39,7 +43,8 @@ const resources = {
         login: LOGIN_EN,
         submenu: SUBMENU_EN,
         course: COURSE_EN,
-        lesson_button: LESSON_BUTTON_EN
+        lesson_button: LESSON_BUTTON_EN,
+        my_course: MY_COURSE_EN
     },
     jp: {
         sidebar: SIDEBAR_JP,
@@ -48,7 +53,8 @@ const resources = {
         login: LOGIN_JP,
         submenu: SUBMENU_JP,
         course: COURSE_JP,
-        lesson_button: LESSON_BUTTON_JP
+        lesson_button: LESSON_BUTTON_JP,
+        my_course: MY_COURSE_JP
     }
 };
 
@@ -57,7 +63,7 @@ const defaultNS = 'sidebar';
 i18n.use(initReactI18next).init({
     resources,
     lng: 'vi',
-    ns: ['sidebar', 'search', 'button', 'login', 'submenu', 'course', 'lesson_button'],
+    ns: ['sidebar', 'search', 'button', 'login', 'submenu', 'course', 'lesson_button', 'my_course'],
     fallbackLng: 'vi',
     defaultNS,
     nterpolation: {

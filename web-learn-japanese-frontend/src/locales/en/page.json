@@ -2,5 +2,9 @@
     "course": {
         "new_course": "New courses",
         "my_course": "My courses"
+    },
+    "my_course": {
+        "text": "You have not participated in any courses yet",
+        "sub_test": "Register for the course at the button below"
     }
 }

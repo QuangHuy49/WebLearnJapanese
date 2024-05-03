@@ -2,5 +2,9 @@
     "course": {
         "new_course": "Các khóa học mới",
         "my_course": "Khóa học của tôi"
+    },
+    "my_course": {
+        "text": "Bạn chưa tham gia khóa học nào cả",
+        "sub_test": "Đăng ký khóa học tại nút bên dưới nè"
     }
 }
