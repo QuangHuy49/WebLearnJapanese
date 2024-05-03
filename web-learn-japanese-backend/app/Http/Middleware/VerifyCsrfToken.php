@@ -89,6 +89,9 @@ class VerifyCsrfToken extends Middleware
         // post
         '/api/post/add-admin/*',
         '/api/post/add-user/*',
+        '/api/post/delete-post-image/*',
+        '/api/post/edit/*',
+        '/api/post/delete/*',
 
         // like post
         '/api/like/add-like',

@@ -86,17 +86,38 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    public function update( Request $request, $id){
+        $post = Post::findOrFail($id);
+        if (!$post){
+            return response()->json(['mesage'=>'Post not found'], 404);
+        }
+        $request->validate([
+            'post_title'=>'required|string|max:255',
+            'post_content'=>'required|string|max:255',
+            'post_img'=>'required|string|max:255',
+            'post_status' => 'nullable|integer|between:0,1',
+        ]);
+        
+        $post->update([
+            'post_title'=>$request->post_title,
+            'post_content'=>$request->post_content,
+            'post_img'=>$request->post_img,
+            'post_status'=>$request->post_status
+        ]);
+        return response()->json($post, 201);
+    } 
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        $post = Post::find($id);
+        if (!$post) {
+            return response()->json(['message' =>'Post not found'], 404);
+        }
+        $post->delete();
+        return response()->json(['message' =>'Post deleted successfully'], 200);
     }
 
     public function addPostAdmin(Request $request, $user_id)
@@ -148,6 +169,7 @@ class PostController extends Controller
     public function getPostDataByIdUser(Request $request, $user_id)
     {
         $posts = Post::where('user_id', $user_id)
+                    ->where('post_status', 1)
                     ->with('user')
                     ->get();
 
@@ -181,5 +203,41 @@ class PostController extends Controller
         return response()->json([
             'posts' => $posts
         ], 200);
+    }
+
+    // get all post latest
+    public function getAllPost(Request $request) 
+    {
+        $perPage = $request->input('perPage', 10);
+        $page = $request->input('page', 1);
+    
+        $totalPosts = Post::count();
+        $totalPages = ceil($totalPosts / $perPage);
+        $posts = Post::orderBy('created_at', 'desc')
+                        ->with('user')
+                        ->skip(($page - 1) * $perPage)
+                        ->take($perPage)
+                        ->get();
+                        
+        return response()->json([
+            'posts' => $posts,
+            'totalPages' => $totalPages
+        ]);
+    }
+
+    // delete post_img by post_id
+    public function deletePostImage($id)
+    {
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        if (!empty($post->post_img)) {
+            $post->update(['post_img' => null]);
+
+            return response()->json(['message' => 'Post image deleted successfully'], 200);
+        }
     }
 }

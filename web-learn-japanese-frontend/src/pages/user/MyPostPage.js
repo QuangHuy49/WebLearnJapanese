@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowDown, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faEye, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
 import { faComment as farComment } from '@fortawesome/free-regular-svg-icons';
 import { faClock as farClock } from '@fortawesome/free-regular-svg-icons';
@@ -92,6 +92,14 @@ const MyPostPage = () => {
                                 </div>
                             </>
                         ))}
+                        <Link to={'/post/add-post'}>
+                            <div class="h-[162px] pr-6 items-center justify-center rounded-xl group sm:flex space-x-2 bg-white border-dashed border-2 transition-all cursor-pointer hover:border-gray-400">
+                                <div className="flex items-center justify-center text-custom-color-blue">
+                                    <FontAwesomeIcon icon={faPlus} className="text-xl mr-2" />
+                                    <span>Thêm bài viết</span>
+                                </div>
+                            </div>
+                        </Link>
                     </div>
                 ) : (
                     <div className="flex justify-between px-[12rem] py-20">
@@ -100,7 +108,7 @@ const MyPostPage = () => {
                             <span className="text-3xl font-semibold mb-2">Bạn chưa đăng bài viết nào cả</span>
                             <span className="text-xl mb-5">Thêm bài viết tại nút bên dưới nè</span>
                             <FontAwesomeIcon icon={faArrowDown} className="mb-2 text-xl" />
-                            <Link to={'/'}>
+                            <Link to={'/post/add-post'}>
                                 <button className="px-4 py-2 text-lg text-white hover:scale-110 transition-all duration-150 bg-custom-color-blue rounded-lg shadow outline-none active:bg-teal-600 hover:shadow-md focus:outline-none">
                                     Đăng bài viết
                                 </button>

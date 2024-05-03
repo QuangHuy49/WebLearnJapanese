@@ -269,12 +269,18 @@ Route::group([
     'prefix' => 'post'
 ], function ($router) {
     Route::get('get/{id}', [PostController::class, 'show']);
+    Route::post('edit/{id}', [PostController::class, 'update']);
+    Route::delete('delete/{id}', [PostController::class, 'destroy']);
     Route::post('add-admin/{id}', [PostController::class, 'addPostAdmin']);
     Route::post('add-user/{id}', [PostController::class, 'addPostUser']);
     // get post by user_id
     Route::get('{id}/post-data', [PostController::class, 'getPostDataByIdUser']);
     // get 10 latest post
     Route::get('/latest-post-data', [PostController::class, 'getPostLatest']);
+    // get all post
+    Route::get('/get-all-post', [PostController::class, 'getAllPost']);
+    // delete post_img by post_id
+    Route::delete('/delete-post-image/{id}', [PostController::class, 'deletePostImage']);
 });
 
 // api like post

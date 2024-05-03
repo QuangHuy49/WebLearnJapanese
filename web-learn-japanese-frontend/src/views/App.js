@@ -45,6 +45,8 @@ import QuestionUserPage from '../pages/user/QuestionPage';
 import AddPostPage from '../pages/admin/post/AddPostPage';
 import MyPostPage from '../pages/user/MyPostPage';
 import PostDetailPage from '../pages/user/PostDetailPage';
+import AddPostUserPage from '../pages/user/AddPostUserPage';
+import EditPostPage from '../pages/admin/post/EditPostPage';
 
 function App() {
   return (
@@ -94,6 +96,7 @@ function App() {
 
         <Route path='/admin/post' element={<PostAdminPage />} />
         <Route path='/admin/post/add-post' element={<AddPostPage />} />
+        <Route path='/admin/post/edit-post/:id' element={<EditPostPage />} />
       </Route>
       <Route path='/' element={<UserLayout />}>
         <Route path='/' element={<HomePage />} />
@@ -107,6 +110,7 @@ function App() {
         <Route path='/lesson/question/:id' element={<QuestionUserPage />} />
         <Route path='/post/my-post' element={<MyPostPage />} />
         <Route path='/post/detail-post/:id' element={<PostDetailPage />} />
+        <Route path='/post/add-post' element={<AddPostUserPage />} />
       </Route>
     </Routes>
   );
